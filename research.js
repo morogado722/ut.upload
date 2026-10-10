@@ -11,7 +11,9 @@
   'use strict';
   // 서버 없이 올린 미리보기 사이트에서는 기록할 곳이 없어서 꺼 둬요.
   if (window.MOROGARO_SITE) { window.MorogaroResearch = Object.freeze({ hasConsent: () => false, beforeShow: async () => {}, afterDetail: () => {}, state: () => ({ consent: 'off' }) }); return; }
-  const ENDPOINT = '/api/research';
+  // Apps Script 주소가 있으면 그쪽으로 바로, 없으면 파이썬 서버(/api/research)로 보내요.
+  const APPS = (window.MOROGARO_CONFIG?.appsScriptUrl || '').trim();
+  const ENDPOINT = APPS || '/api/research';
   const $ = id => document.getElementById(id);
   const root = document.documentElement;
   const nowMs = () => Date.now();
@@ -53,9 +55,10 @@
   function send(payload, { beacon = false } = {}) {
     if (consent !== 'yes') return Promise.resolve(false);
     const body = JSON.stringify(payload);
-    if (beacon && navigator.sendBeacon) { try { return Promise.resolve(navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }))); } catch { /* fetch로 */ } }
-    return fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, keepalive: body.length < 60000 })
-      .then(r => r.ok).catch(() => false);
+    const type = APPS ? 'text/plain;charset=utf-8' : 'application/json';   // Apps Script는 단순 요청(text/plain)만 받아요.
+    if (beacon && navigator.sendBeacon) { try { return Promise.resolve(navigator.sendBeacon(ENDPOINT, new Blob([body], { type }))); } catch { /* fetch로 */ } }
+    return fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': type }, body, keepalive: body.length < 60000, ...(APPS ? { mode: 'no-cors' } : {}) })
+      .then(r => r.ok || r.type === 'opaque').catch(() => false);
   }
   function progress() {
     clearTimeout(progressTimer);

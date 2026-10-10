@@ -89,9 +89,14 @@
     busy=true;controller=new AbortController();const timeout=setTimeout(()=>controller?.abort(),60000);$('generate-note').disabled=true;$('suggest-ideas').disabled=true;
     status.textContent='확인한 자료로 제안을 작성하고 있어요…';syncBubble();
     try{
-      const response=await fetch('/api/baton-note',{method:'POST',headers:{'Content-Type':'application/json','X-Morogaro-Client':'maker-v14'},body:JSON.stringify({useAI:true,action,context:contextForAI()}),signal:controller.signal});
+      // Apps Script 주소가 설정돼 있으면 그쪽으로, 아니면 파이썬 서버로 보내요.
+      const apps=(window.MOROGARO_CONFIG?.appsScriptUrl||'').trim();
+      const response=apps
+        ?await fetch(apps,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'note',noteAction:action,context:contextForAI()}),signal:controller.signal})
+        :await fetch('/api/baton-note',{method:'POST',headers:{'Content-Type':'application/json','X-Morogaro-Client':'maker-v14'},body:JSON.stringify({useAI:true,action,context:contextForAI()}),signal:controller.signal});
       let data;try{data=await response.json();}catch{throw new Error('AI 응답을 읽지 못했어요. 작성한 내용은 그대로예요.');}
       if(!response.ok)throw new Error(typeof data.detail==='string'?data.detail:'AI 제안을 받지 못했어요.');
+      if(apps&&data.ok===false)throw new Error(String(data.error||'AI 제안을 받지 못했어요.'));
       if(review.getContext()?.fingerprint!==fingerprint)return;
       if(data.mode!=='ai')throw new Error('AI 초안이 없어 내용을 변경하지 않았어요.');
       const text=typeof data.note==='string'?data.note.slice(0,5000):'';

@@ -19,7 +19,7 @@ from file_extractors import public_capabilities
 BASE=Path(__file__).resolve().parent
 load_dotenv(BASE/'.env')
 MAX_BODY=MAX_TOTAL+512*1024
-STATIC={'index.html','app.js','styles.css','header.css','header.js','refinement.css','buttons.css','loading.css','loading.js','review.css','review.js','file-analysis.js','stepper.css','stepper.js','ambient.css','ambient.js','note.css','note.js','detail.css','detail.js','download-bundle.js','fonts.css','note-snap.js','research.js','research.css','vendor/modern-screenshot.js'}
+STATIC={'index.html','app.js','styles.css','header.css','header.js','refinement.css','buttons.css','loading.css','loading.js','review.css','review.js','file-analysis.js','stepper.css','stepper.js','ambient.css','ambient.js','note.css','note.js','detail.css','detail.js','download-bundle.js','fonts.css','note-snap.js','research.js','research.css','vendor/modern-screenshot.js','config.js','vendor/pdfjs/pdf.min.js','vendor/pdfjs/pdf.worker.min.js'}
 # v10 상세페이지(바톤 결과 화면). 메이커 안에서 iframe으로 열려요.
 BATON_STATIC={'baton/index.html','baton/styles.css','baton/app.js','baton/baton-data.js','baton/baton-render.js','baton/baton-live.css'}
 lock=asyncio.Semaphore(2);recent=deque()
@@ -264,6 +264,7 @@ async def static_file(path:str):
     target=(BASE/path).resolve()
     allowed=(path in STATIC or path in BATON_STATIC
         or (path.startswith('assets/') and target.suffix in ('.svg','.png') and (BASE/'assets').resolve() in target.parents)
+        or (path.startswith('vendor/pdfjs/') and target.suffix in ('.bcmap','.pfb','.ttf') and (BASE/'vendor'/'pdfjs').resolve() in target.parents)
         or (path.startswith('baton/assets/') and target.suffix in ('.svg','.png') and target.parent==(BASE/'baton'/'assets').resolve()))
     if not allowed or not target.is_file():raise HTTPException(404,'Not found')
     return FileResponse(target)

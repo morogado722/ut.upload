@@ -84,6 +84,63 @@
       source.status='read';source.coverage='첫 프레임의 픽셀 크기·미리보기·대표 색상';
     } finally { URL.revokeObjectURL(blobURL); }
   }
+  /* PDF: 브라우저에서 pdf.js로 본문(앞 40쪽)과 앞 8쪽 미리보기, 첫 쪽 크기를 읽어요. 처음 필요할 때만 불러와요. */
+  const PDF_BASE = new URL('./vendor/pdfjs/', location.href).href;
+  let pdfLoader = null;
+  function loadPdf() {
+    if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+    if (!pdfLoader) pdfLoader = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = PDF_BASE + 'pdf.min.js';
+      script.onload = () => { const lib = window.pdfjsLib; if (!lib) { reject(new Error('PDF 도구를 불러오지 못했어요.')); return; } lib.GlobalWorkerOptions.workerSrc = PDF_BASE + 'pdf.worker.min.js'; resolve(lib); };
+      script.onerror = () => { pdfLoader = null; reject(new Error('PDF 도구를 불러오지 못했어요.')); };
+      document.head.append(script);
+    });
+    return pdfLoader;
+  }
+  function sampleColors(ctx, source, result, image) {
+    const canvas = ctx.canvas; canvas.width = 64; canvas.height = 64; ctx.clearRect(0, 0, 64, 64); ctx.drawImage(image, 0, 0, 64, 64);
+    const pixels = ctx.getImageData(0, 0, 64, 64).data, bins = new Map();
+    for (let i = 0; i < pixels.length; i += 4) { if (pixels[i + 3] < 180) continue; const rgb = [pixels[i], pixels[i + 1], pixels[i + 2]], key = rgb.map(n => Math.round(n / 24)).join(','); let b = bins.get(key); if (!b) { b = {n: 0, sum: [0, 0, 0]}; bins.set(key, b); } b.n++; rgb.forEach((n, j) => b.sum[j] += n); }
+    const colors = []; for (const bin of [...bins.values()].sort((a, b) => b.n - a.n)) { const c = bin.sum.map(v => Math.round(v / bin.n)); if (colors.some(prev => Math.sqrt(prev.reduce((s, v, i) => s + (v - c[i]) ** 2, 0)) < 38)) continue; colors.push(c); if (colors.length === 14) break; }
+    const hex = colors.map(c => '#' + c.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase());
+    result.colors = unique([...result.colors, ...hex]).slice(0, 14);
+    addEvidence(result, 'colors', source, '첫 쪽 미리보기 픽셀 표본의 대표 RGB 색상. 인쇄 원색이 아닙니다.', 'measured');
+  }
+  async function inspectPdf(file, source, result, signal) {
+    const lib = await loadPdf(); abort(signal);
+    const task = lib.getDocument({data: new Uint8Array(await file.arrayBuffer()), cMapUrl: PDF_BASE + 'cmaps/', cMapPacked: true, standardFontDataUrl: PDF_BASE + 'standard_fonts/', isEvalSupported: false, disableFontFace: false});
+    const onAbort = () => task.destroy(); signal?.addEventListener('abort', onAbort, {once: true});
+    try {
+      const doc = await task.promise; abort(signal);
+      const pages = Math.min(doc.numPages, 40); let text = '';
+      for (let n = 1; n <= pages && text.length < 24000; n++) {
+        const page = await doc.getPage(n); abort(signal);
+        const content = await page.getTextContent();
+        text += content.items.map(item => item.str + (item.hasEOL ? '\n' : ' ')).join('') + '\n';
+        if (n === 1) {
+          const v = page.getViewport({scale: 1});
+          result.dimensions.push({id: source.id + '-size', sourceId: source.id, label: source.name, width: Math.round(v.width * 25.4 / 72), height: Math.round(v.height * 25.4 / 72), unit: 'mm', basis: 'PDF 첫 쪽 크기(재단 여백 포함 가능)'});
+        }
+        if (n <= 8) {
+          const v = page.getViewport({scale: 1}), scale = Math.min(2, 640 / Math.max(v.width, v.height)), view = page.getViewport({scale});
+          const canvas = document.createElement('canvas'); canvas.width = Math.max(1, Math.round(view.width)); canvas.height = Math.max(1, Math.round(view.height));
+          const ctx = canvas.getContext('2d', {willReadFrequently: true}); ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+          await page.render({canvasContext: ctx, viewport: view}).promise; abort(signal);
+          result.thumbnails.push({id: `${source.id}-p${n}`, sourceId: source.id, label: `${source.name} · ${n}쪽`, page: n, kind: 'page', dataUrl: canvas.toDataURL('image/jpeg', 0.85)});
+          if (n === 1) { const copy = document.createElement('canvas'), c2 = copy.getContext('2d', {willReadFrequently: true}); sampleColors(c2, source, result, canvas); }
+        }
+        page.cleanup(); await tick();
+      }
+      text = text.replace(/[ \t]{2,}/g, ' ').replace(/[ \t]+\n/g, '\n').trim();
+      source.text = text.slice(0, 12000);
+      source.status = doc.numPages > pages || text.length >= 24000 ? 'partial' : 'read';
+      source.coverage = `PDF ${doc.numPages}쪽 중 앞 ${pages}쪽 본문 · 앞 ${Math.min(8, pages)}쪽 미리보기`;
+      if (!text) source.warnings.push('글자를 읽을 수 없는 PDF예요(이미지로만 된 문서일 수 있어요). 미리보기는 만들었어요.');
+      inspectText(text, source, result);
+      await doc.destroy();
+    } finally { signal?.removeEventListener('abort', onAbort); }
+  }
   async function inspectBrowser(payload, {signal}={}) {
     const result=newResult(payload);
     if(payload.files.length>20 || payload.files.reduce((s,f)=>s+f.size,0)>MAX_TOTAL)result.warnings.push('분석 범위를 초과한 파일은 기본 정보만 유지합니다 (20개 / 합계 100MB).');
@@ -96,9 +153,10 @@
       if(file.size>MAX_FILE||i>=20||bytes>MAX_TOTAL){source.warnings.push('브라우저 분석 크기 제한을 초과했어요.');continue;}
       try {
         if(/^(png|jpe?g|webp|gif|bmp|avif)$/.test(extension))await inspectImage(file,source,result,signal);
+        else if(extension==='pdf')await inspectPdf(file,source,result,signal);
         else if(/^(txt|md|html?|css|json|svg|csv|js|ts|xml)$/.test(extension)||file.type.startsWith('text/')){
           const text=await file.slice(0,TEXT_LIMIT).text();abort(signal);source.text=text.slice(0,12000);source.status=file.size>TEXT_LIMIT?'partial':'read';source.coverage=file.size>TEXT_LIMIT?'본문 앞 128KB':'텍스트 본문';inspectText(text,source,result);
-        } else {source.warnings.push('이 형식의 본문은 브라우저에서 해석하지 않았어요. PDF·DOCX는 함께 제공된 분석 서버로 읽을 수 있어요.');}
+        } else {source.warnings.push('이 형식의 본문은 브라우저에서 해석하지 않았어요. 이미지·PDF·텍스트 파일은 내용까지 읽어요.');}
       } catch(error){if(error.name==='AbortError')throw error;source.warnings.push(String(error.message));}
       await tick();
     }
@@ -109,10 +167,12 @@
     if(result.values.startDate&&result.values.endDate&&result.values.endDate<result.values.startDate){result.values.endDate=null;result.warnings.push('종료일이 시작일보다 빨라 자동 입력하지 않았어요.');}
     return result;
   }
+  const APPS=(window.MOROGARO_CONFIG?.appsScriptUrl||'').trim();
   let configPromise;
   async function getConfig(refresh=false) {
     if(refresh)configPromise=null;
     if(location.protocol==='file:')return {available:false,aiAvailable:false};
+    if(APPS){if(!configPromise)configPromise=(async()=>{try{const r=await fetch(APPS+'?action=config',{signal:AbortSignal.timeout(8000)});const c=await r.json();return c.service==='morogaro-apps-script'?{...c,available:false,apps:true}:{available:false,aiAvailable:false};}catch{return {available:false,aiAvailable:false};}})();return configPromise;}
     if(!configPromise)configPromise=(async()=>{try{const response=await fetch('./api/config',{signal:AbortSignal.timeout(2500)});if(!response.ok)throw new Error();const c=await response.json();return ['morogaro-analysis-v1','morogaro-analysis-v2'].includes(c.service)?{...c,available:true}:{available:false,aiAvailable:false};}catch{return {available:false,aiAvailable:false};}})();
     return configPromise;
   }
@@ -132,6 +192,7 @@
   }
   async function inspect(payload,{signal,useAI=false}={}) {
     abort(signal);const config=await getConfig();abort(signal);
+    if(config.apps)return inspectWithAppsScript(payload,{signal,useAI:useAI&&config.aiAvailable});
     if(!config.available)return inspectBrowser(payload,{signal});
     const form=new FormData();payload.files.forEach(file=>form.append('files',file,file.name));form.append('projectType',payload.projectType);form.append('urls',JSON.stringify(payload.urls));form.append('useAI',useAI?'true':'false');
     try{
@@ -144,6 +205,87 @@
       if(!STAGES.includes(result.values.stage))result.values.stage=null;
       return result;
     }catch(error){if(error.name==='AbortError'||signal?.aborted)throw error;const result=await inspectBrowser(payload,{signal});result.warnings.unshift('서버 분석을 완료하지 못해 브라우저에서 읽을 수 있는 정보만 채웠어요. '+String(error.message).slice(0,160));return result;}
+  }
+  /* ───────── Apps Script 모드: 브라우저에서 읽은 내용을 AI에 보내고, 근거가 확인된 값만 채워요 ─────────
+   * (server.py의 apply_ai와 같은 규칙) */
+  const progress=(phase,message)=>document.dispatchEvent(new CustomEvent('morogaro:analysis-progress',{detail:{event:'progress',phase,message}}));
+  const norm=t=>String(t).replace(/\s+/g,' ').trim();
+  const TOOL_MAP={...TOOLS,psb:'Adobe Photoshop',hwp:'한글',hwpx:'한글',kra:'Krita'};
+  const SENSITIVE=new Set(['startDate','endDate','physical','materials','lessons']);
+  async function inspectWithAppsScript(payload,{signal,useAI}={}){
+    progress('extract','파일 형식을 확인하고 내용을 읽고 있어요.');
+    const result=await inspectBrowser(payload,{signal});abort(signal);
+    result.fieldStatus=result.fieldStatus||{};
+    if(!useAI)return result;
+    // 미리보기는 파일마다 돌아가며 최대 10장(뒤쪽 파일이 빠지지 않게).
+    const groups=result.sources.map(s=>result.thumbnails.filter(t=>t.sourceId===s.id)),previews=[];
+    for(let i=0;i<4;i++)for(const g of groups)if(g[i]&&previews.length<10)previews.push(g[i]);
+    const per=Math.min(12000,Math.max(1000,Math.floor(60000/Math.max(1,result.sources.length))));
+    const sources=result.sources.map(s=>({id:s.id,name:s.name,ext:s.ext,kind:s.kind,coverage:s.coverage,text:(s.text||'').slice(0,per),warnings:s.warnings}));
+    progress('ai','캡처와 본문을 함께 보고 제목·진척도·분류를 제안하고 있어요.');
+    let data;
+    try{
+      const response=await fetch(APPS,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'analyze',projectType:payload.projectType,sources,previews:previews.map(p=>({id:p.id,sourceId:p.sourceId,label:p.label,kind:p.kind||null,page:p.page||null,dataUrl:p.dataUrl})),links:result.links}),signal});
+      data=await response.json();
+    }catch(error){if(error.name==='AbortError'||signal?.aborted)throw error;result.warnings.unshift('AI 응답을 받지 못해 파일에서 읽은 정보만 채웠어요.');return result;}
+    if(!data?.ok||!data.proposal){result.warnings.unshift(data?.error?String(data.error).slice(0,160)+' 파일에서 읽은 정보만 채웠어요.':'AI 제안을 받지 못했어요.');return result;}
+    progress('apply','추출한 값과 썸네일 후보를 정리하고 있어요.');
+    applyAI(result,data.proposal,new Set(previews.map(p=>p.sourceId)),sources,previews);
+    result.aiCoverage={textCharacters:sources.reduce((n,s)=>n+s.text.length,0),sourcesSent:sources.length,imagesSent:previews.length,previewIds:previews.map(p=>p.id)};
+    return result;
+  }
+  function applyAI(base,proposal,visualIds,sentSources,previews){
+    const originals=Object.fromEntries(base.sources.map(s=>[s.id,s])),sent=Object.fromEntries(sentSources.map(s=>[s.id,s])),previewMap=Object.fromEntries(previews.map(p=>[p.id,p]));
+    const accepted=[];
+    for(const ev of proposal.evidence||[]){
+      const s=sent[ev.fileId];if(!s||!ev.quote||!String(ev.quote).trim()||ev.quote.length>800)continue;
+      if(ev.basis==='text'&&!norm(s.text||'').includes(norm(ev.quote)))continue;
+      if(ev.basis==='visual'){const pv=previewMap[ev.previewId];if(!visualIds.has(ev.fileId)||!pv||pv.sourceId!==ev.fileId)continue;}
+      if(SENSITIVE.has(ev.field)&&ev.basis!=='text')continue;
+      if(ev.field==='tools'){
+        if(ev.basis==='extension'){if((TOOL_MAP[s.ext]||'').toLowerCase()!==String(ev.value).toLowerCase())continue;}
+        else if(ev.basis==='text'){if(!ev.quote.toLowerCase().includes(String(ev.value).toLowerCase()))continue;}
+        else continue;
+      }
+      if(ev.basis==='filename'&&(!['title','sourceKind'].includes(ev.field)||!norm(s.name).includes(norm(ev.quote))))continue;
+      if(ev.basis==='extension'&&(!['tools','sourceKind'].includes(ev.field)||!ev.quote.toLowerCase().includes(s.ext.toLowerCase())))continue;
+      if(ev.field==='stage'&&(!['text','visual'].includes(ev.basis)||ev.confidence==='low'))continue;
+      if(ev.field==='startDate'||ev.field==='endDate'){const label=ev.field==='startDate'?/(시작일|start\s*date)/i:/(종료일|end\s*date)/i;if(!label.test(ev.quote)||safeDate(ev.quote)!==safeDate(ev.value))continue;}
+      if(ev.field==='physical'&&!/(실물|제작|인쇄|physical|print|manufactur)/i.test(ev.quote))continue;
+      accepted.push({field:ev.field,fileId:ev.fileId,location:String(ev.location||'').slice(0,120),quote:String(ev.quote).slice(0,400),basis:ev.basis,value:String(ev.value),previewId:ev.previewId||null,confidence:ev.confidence});
+    }
+    const vals=proposal.values||{},applied=[];
+    for(const [key,raw] of Object.entries(vals)){
+      if(key==='stageReason'||raw===null||raw===undefined)continue;
+      let value=raw,proof=accepted.filter(e=>e.field===key);
+      if(Array.isArray(value)){
+        value=unique(value.map(x=>String(x).trim().slice(0,50)).filter(x=>x&&proof.some(e=>e.value===x))).slice(0,12);
+        if(!value.length)continue;
+        if(key==='tools')value=unique([...base.values.tools,...value]).slice(0,12);
+      }else{
+        const canonical=typeof value==='boolean'?String(value):String(value);
+        proof=proof.filter(e=>e.value===canonical);if(!proof.length)continue;
+        if(typeof value==='string')value=value.slice(0,['materials','lessons'].includes(key)?2000:120);
+        if(key==='startDate'||key==='endDate'){value=safeDate(value);if(!value)continue;}
+        if(key==='stage'&&!STAGES.includes(value))continue;
+      }
+      base.values[key]=value;applied.push(key);
+      base.fieldStatus[key]={status:'suggested',basis:'AI 제안 · 확인/수정 가능',sourceIds:unique(proof.map(e=>e.fileId)),confidence:proof.some(e=>e.confidence!=='high')?'medium':'high'};
+    }
+    if(applied.includes('stage'))base.values.stageReason=String(vals.stageReason||'').slice(0,500);
+    for(const item of proposal.sourceKinds||[]){
+      if(originals[item.fileId]&&accepted.some(e=>e.fileId===item.fileId&&e.field==='sourceKind'&&e.value===item.kind)){originals[item.fileId].kind=String(item.kind).slice(0,60);originals[item.fileId].kindBasis='AI 제안 · 직접 수정 가능';}
+    }
+    const selected=unique((proposal.thumbnailOrder||[]).filter(id=>previewMap[id])).slice(0,10);
+    if(selected.length){base.recommendedThumbnails=selected;base.thumbnailRanking='ai';}
+    base.evidence.push(...accepted.filter(e=>e.field==='sourceKind'||applied.includes(e.field)));
+    base.fieldNotes=(proposal.fieldNotes||[]).slice(0,15);
+    base.summary=String(proposal.summary||'').slice(0,600);base.mode='ai';base.aiAppliedFields=applied;
+    base.stageRubric='검토용 AI 판단 기준 · 서비스의 확정 심사 기준이 아님';
+    base.warnings=base.warnings.filter(w=>!w.startsWith('브라우저 기본 추출 모드'));
+    if(!applied.length)base.warnings.push('AI는 응답했지만 충분한 근거가 확인된 새 입력값이 없어 기본 추출 결과를 유지했어요.');
+    const v=base.values;if(v.startDate&&v.endDate&&v.endDate<v.startDate){v.endDate=null;base.warnings.push('AI가 제안한 기간 순서가 맞지 않아 종료일을 비웠어요.');}
+    return base;
   }
   window.MorogaroAnalysis=Object.freeze({inspect,inspectBrowser,getConfig,safeURL,isPreviewURL,STAGES});
 })();
