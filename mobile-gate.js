@@ -6,7 +6,8 @@
   const mobileUA = /Android|iPhone|iPad|iPod|Mobile|SamsungBrowser|KAKAOTALK/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   if (!(coarse || mobileUA) || new URLSearchParams(location.search).has('desktop')) return;
   // 카톡 안 브라우저면 들어오자마자 기본 브라우저(Safari·크롬)로 넘겨요. 카톡 안에선 공유·복사가 막혀 있어요.
-  if (/KAKAOTALK/i.test(navigator.userAgent) && !sessionStorage.getItem('mg-ext')) {
+  let seen = false; try { seen = !!sessionStorage.getItem('mg-ext'); } catch { /* */ }
+  if (/KAKAOTALK/i.test(navigator.userAgent) && !seen) {
     try { sessionStorage.setItem('mg-ext', '1'); } catch { /* */ }
     location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href);
   }
