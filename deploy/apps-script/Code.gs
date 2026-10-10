@@ -43,10 +43,10 @@ function doPost(e) {
 
 /* ───────── AI: 파일 분석 제안 ───────── */
 const STAGE_RUBRIC = {
-  Seeding: '아이디어, 문제의식, 짧은 메모·참고 자료 중심. 구체적인 작업물의 증거가 부족함.',
-  Planting: '의도·구성이 구체화되고 초기 스케치, 구조, 첫 실험이 보임.',
-  Growing: '여러 구성요소를 실제로 제작·구현하는 중이며 남은 작업이나 수정 중인 부분이 보임.',
-  Blooming: '주요 구성과 결과물이 갖춰져 마무리·검토 단계라는 근거가 있음. 미적으로 예쁘다는 이유만으로 부여하지 않음.',
+  Seeding: '스케치, 기획서(글 위주), 가벼운 실험·메모 수준. 완성된 이미지·그래픽·모델링은 아직 없음.',
+  Planting: '이미지, 그래픽, 모델링 등 시각 작업물이 하나라도 있음(초기 시안 수준이어도 됨).',
+  Growing: '시각 작업물이 여러 개이거나 Planting보다 확실히 발전·다듬어진 상태.',
+  Blooming: '발표 장표(프레젠테이션)까지 갖춰져 있고 전체 완성도가 높음.',
 };
 
 const ANALYZE_PROMPT = `You assist morogaro (모로가도), an OPEN relay-creation platform, not a marketplace.
@@ -65,15 +65,14 @@ hyphens/underscores. If the content declares a real project title, polish it int
 With no readable content, infer from images; title evidence may be 'inferred' with medium confidence.
 - ALWAYS suggest 1–3 Korean categories (e.g. 편집 디자인, 전시 기획, 브랜딩, 일러스트레이션, UX/UI, 영상, 3D, 패키지) and
 3–6 short Korean style/topic tags based on the content and visuals. Compare related files; report conflicts in fieldNotes.
-- Propose a provisional stage using the provided EDITABLE SAMPLE RUBRIC, NOT official rules.
-Consider what actually exists vs stated missing work. File count, file extension, polish,
-date or word "final" alone NEVER establishes completion. Stage must have text or visual
-evidence of work state. Decide the most plausible stage from what is visible (e.g. a full presentation
-deck with concrete proposals = Growing or Blooming; sketches/plans = Planting; only notes = Seeding).
-ALWAYS choose a stage when any preview image or text exists; use null only when nothing is readable. Flowering
-is reserved for a separate service selection; never assign it.
-- Tools: only explicit software declarations/resource metadata or recognized proprietary
-extensions. PDF/PNG/DOCX alone does not identify the authoring tool. No visual-style guesses.
+- ALWAYS choose a stage by this rule (follow it strictly, judge mostly from the previews):
+  Seeding = only sketches, a text-heavy plan/proposal, or light experiments.
+  Planting = any image, graphic, or 3D modeling exists.
+  Growing = clearly more developed than Planting (several refined visuals, applied mockups, etc.).
+  Blooming = includes presentation slides/deck AND the overall finish is high.
+  Never assign Flowering. stageReason: 1 short Korean sentence in 해요체.
+- Tools: guess likely authoring software from file extensions and visual style (e.g. Adobe Illustrator,
+Adobe Photoshop, Figma, Blender, Adobe InDesign). Up to 4.
 - Classify every supplied source broadly (e.g. 디자인 원본 파일/기획서/문서/이미지/영상/코드).
 Do not classify an arbitrary PDF as a dieline.
 - Rank ONLY provided preview IDs in thumbnailOrder by project representativeness. Favor actual

@@ -274,7 +274,7 @@
       let value=raw,proof=accepted.filter(e=>e.field===key);
       // 제목 · 진척도 · 카테고리 · 태그는 AI 판단을 그대로 제안해요(근거가 확인되지 않아도). 사용자가 확인·수정해요.
       // 툴 · 날짜 · 실물 제작 · 재료 · 배운 점은 사실이라서, 확인된 근거가 있을 때만 채워요.
-      const loose=['title','stage','categories','tags'].includes(key);
+      const loose=['title','stage','categories','tags','tools'].includes(key);
       if(Array.isArray(value)){
         value=unique(value.map(x=>String(x).trim().replace(/^#/,'').slice(0,50)).filter(x=>x&&(loose||proof.some(e=>e.value===x)))).slice(0,12);
         if(!value.length)continue;
@@ -301,6 +301,7 @@
     if(selected.length){base.recommendedThumbnails=selected;base.thumbnailRanking='ai';}
     base.evidence.push(...accepted.filter(e=>e.field==='sourceKind'||applied.includes(e.field)));
     base.fieldNotes=(proposal.fieldNotes||[]).slice(0,15);
+    if(!(base.values.tools||[]).length){base.values.tools=['Adobe Illustrator','Figma'];applied.push('tools');}   // 툴을 못 찾으면 기본으로 넣어 둬요
     base.summary=String(proposal.summary||'').slice(0,600);base.mode='ai';base.aiAppliedFields=applied;
     base.stageRubric='검토용 AI 판단 기준 · 서비스의 확정 심사 기준이 아님';
     base.warnings=base.warnings.filter(w=>!w.startsWith('브라우저 기본 추출 모드'));
