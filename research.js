@@ -152,6 +152,21 @@
     const { uploadImage, values: v } = pending; pending = null;
     const total = Math.round((marks.batonCreated - started) / 100) / 10;
     void send({ ...base('complete'), lastStep: 6, totalSeconds: total, batonId: id, values: v, images: { upload: uploadImage, detail: detailImage || null } });
+    setTimeout(showSurvey, 1200);
+  }
+
+  /* ───────── 완성 후 설문 버튼 ───────── */
+  let formShown = false;
+  async function showSurvey() {
+    if (formShown || !APPS) return; formShown = true;
+    let c; try { c = await (await fetch(APPS + '?action=config')).json(); } catch { formShown = false; return; }
+    if (!c.formUrl) { formShown = false; return; }
+    const url = c.formUrl.replace(/\/(viewform|edit).*$/, '/viewform') + (c.formEntry ? `?usp=pp_url&entry.${c.formEntry}=${encodeURIComponent(sessionId)}` : '');
+    const a = document.createElement('a');
+    a.className = 'survey-cta'; a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    a.innerHTML = '<strong>설문 작성하고 선물 받기 🎁</strong><span>3분이면 끝나요</span>';
+    document.body.appendChild(a);
+    requestAnimationFrame(() => a.classList.add('is-in'));
   }
 
   // 들어온 순간에도 한 줄 남겨요(아무것도 안 하고 나간 사람까지 '이탈 (1 파일 올리기)'로 보이도록).

@@ -20,7 +20,7 @@ const DEFAULT_MODEL = 'gpt-4.1-mini';
 /* ───────── 입구 ───────── */
 function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || 'config';
-  if (action === 'config') return reply({ service: 'morogaro-apps-script', version: 1, aiAvailable: aiRemaining() !== 0 && !!prop('OPENAI_API_KEY') });
+  if (action === 'config') return reply({ service: 'morogaro-apps-script', version: 1, aiAvailable: aiRemaining() !== 0 && !!prop('OPENAI_API_KEY'), formUrl: prop('FORM_URL') || '', formEntry: prop('FORM_ENTRY') || '' });
   return reply({ ok: true });
 }
 
@@ -326,4 +326,33 @@ function 연결_테스트() {
   rootFolder();
   UrlFetchApp.fetch('https://api.openai.com/v1/models', { muteHttpExceptions: true, headers: { Authorization: 'Bearer ' + prop('OPENAI_API_KEY') } });
   Logger.log('시트 두 개와 드라이브 폴더 "' + FOLDER_NAME + '" 준비 완료. OpenAI 키: ' + (prop('OPENAI_API_KEY') ? '설정됨' : '아직 없음(스크립트 속성에 OPENAI_API_KEY 추가)'));
+}
+
+
+// 편집기에서 한 번 실행: 사용성 평가 설문(구글 폼)을 만들고, 응답이 이 시트에 쌓이게 연결해요.
+// 실행 후 '새 버전으로 배포'까지 하면 바톤 완성 화면에 설문 버튼이 나타나요.
+function 설문_만들기() {
+  if (prop('FORM_URL')) { Logger.log('이미 만든 설문이 있어요: ' + prop('FORM_EDIT_URL')); return; }
+  const form = FormApp.create('모로가도 사용성 평가 설문');
+  form.setDescription('바톤 업로드를 끝까지 해 주셔서 감사해요! 3분이면 끝나요.\n작성해 주신 분께 소정의 선물을 드려요 🎁\n연락처는 선물 전달에만 쓰고, 졸업 전시가 끝나면 지워요.');
+  form.setCollectEmail(false);
+  const sid = form.addTextItem().setTitle('참여 번호').setHelpText('자동으로 채워져 있어요. 그대로 두세요.');
+  form.addTextItem().setTitle('이름').setRequired(true);
+  form.addTextItem().setTitle('선물 받을 연락처 (전화번호)').setRequired(true);
+  const scale = (t, lo, hi) => form.addScaleItem().setTitle(t).setBounds(1, 5).setLabels(lo, hi).setRequired(true);
+  scale('바톤 업로드는 전반적으로 쉬웠나요?', '매우 어려움', '매우 쉬움');
+  scale('AI가 자동으로 채워준 정보(진척도·카테고리·태그 등)는 정확했나요?', '전혀 아님', '매우 정확');
+  scale('AI 자동 입력이 작업 시간을 줄여줬나요?', '전혀 아님', '매우 그렇다');
+  scale('바톤 노트(다음 사람에게 넘길 메모)를 쓰는 게 자연스러웠나요?', '매우 어색', '매우 자연스러움');
+  scale('완성된 바톤 상세페이지가 내 작업을 잘 보여줬나요?', '전혀 아님', '매우 그렇다');
+  scale('내 미완성 작업을 모로가도에 실제로 올려볼 의향이 있나요?', '전혀 없음', '꼭 올리고 싶음');
+  form.addCheckboxItem().setTitle('가장 헷갈렸던 단계는? (여러 개 선택 가능)').setChoiceValues(['파일 올리기', '소스 확인', '썸네일 고르기', '프로젝트 정보', '파일 정보', '바톤 노트', '헷갈린 곳 없음']);
+  form.addParagraphTextItem().setTitle('좋았던 점');
+  form.addParagraphTextItem().setTitle('불편했거나 바꿨으면 하는 점');
+  form.addParagraphTextItem().setTitle('누군가의 미완성 작업을 이어받는다면 어떤 작업을 이어보고 싶나요?');
+  form.setDestination(FormApp.DestinationType.SPREADSHEET, SHEET_ID);
+  const props = PropertiesService.getScriptProperties();
+  props.setProperties({ FORM_URL: form.getPublishedUrl(), FORM_ENTRY: String(sid.getId()), FORM_EDIT_URL: form.getEditUrl() });
+  Logger.log('설문 완성! 수정: ' + form.getEditUrl());
+  Logger.log('응답 주소: ' + form.getPublishedUrl());
 }
