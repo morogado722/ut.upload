@@ -55,9 +55,18 @@
       try { await navigator.clipboard.writeText(url); msg.textContent = '복사했어요! 노트북 주소창에 붙여넣어 열어보세요.'; }
       catch { msg.textContent = '위 주소를 길게 눌러 복사해 주세요.'; }
     });
+    // 공유 시트를 열고, 안 되면(카톡 인앱 브라우저 등) 주소를 복사한 뒤 카카오톡 앱을 열어 붙여넣게 해요.
     gate.querySelector('[data-share]').addEventListener('click', async () => {
-      if (navigator.share) { try { await navigator.share({ title: '모로가도 바톤 메이커', text: '노트북에서 열어보기', url }); return; } catch { return; } }
-      gate.querySelector('[data-copy]').click();
+      const inKakao = /KAKAOTALK/i.test(navigator.userAgent);
+      if (navigator.share && !inKakao) {
+        try { await navigator.share({ title: '모로가도 사용성 평가', text: '노트북에서 열어보기 👉 ' + url }); return; }
+        catch (e) { if (e && e.name === 'AbortError') return; }
+      }
+      gate.querySelector('[data-url]').classList.add('is-on');
+      let copied = false;
+      try { await navigator.clipboard.writeText(url); copied = true; } catch { /* 복사 막힘 */ }
+      msg.textContent = copied ? '주소를 복사했어요! 카카오톡 ‘나와의 채팅’에 붙여넣어 주세요.' : '위 주소를 길게 눌러 복사한 뒤 카카오톡 ‘나와의 채팅’에 붙여넣어 주세요.';
+      if (copied && !inKakao) setTimeout(() => { location.href = 'kakaotalk://'; }, 600);
     });
   }
   if (document.body) mount(); else document.addEventListener('DOMContentLoaded', mount);
