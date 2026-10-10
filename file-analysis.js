@@ -14,7 +14,7 @@
   const unique = xs => [...new Set(xs.filter(Boolean))];
   const abort = signal => { if (signal?.aborted) throw new DOMException('Cancelled', 'AbortError'); };
   const tick = () => new Promise(resolve => setTimeout(resolve, 0));
-  const cleanTitle = name => name.replace(/\.[^.]+$/, '').replace(/[_-](?:ai|pdf|docx|png|jpg)$/i, '').replace(/[_]+/g, ' ').slice(0,120);
+  const cleanTitle = name => (name.replace(/\.[^.]+$/, '').replace(/[_-](?:ai|pdf|docx|png|jpg)$/i, '').replace(/[_\-]+/g, ' ').replace(/(최종|final|수정본?|진짜|v\d+|ver\.?\d*|\d{6,8}|\(\d+\))/gi, ' ').replace(/\s+/g, ' ').trim() || '새 바톤').slice(0,120);
   const safeDate = value => {
     const m = String(value).match(/(\d{4})[.\-/년\s]+(\d{1,2})[.\-/월\s]+(\d{1,2})/);
     if (!m) return null;
