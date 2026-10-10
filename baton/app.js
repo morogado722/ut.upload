@@ -241,6 +241,7 @@
     if (!gallery.length) return;
     galleryIndex = (index + gallery.length) % gallery.length;
     const data = gallery[galleryIndex];
+    if (live?.thumbRatio && galleryIndex === 0) Object.assign($('#main-artwork').style, { aspectRatio: live.thumbRatio, objectFit: 'cover', height: 'auto' }); else Object.assign($('#main-artwork').style, { aspectRatio: '', objectFit: '', height: '' });
     $('#main-artwork').src = asset(data.src); $('#main-artwork').alt = data.alt;
     $('#open-artwork').setAttribute('aria-label', `${data.title} 크게 보기`);
     $$('.thumbnail').forEach((button, i) => {

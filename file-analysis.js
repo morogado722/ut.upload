@@ -185,7 +185,7 @@
   async function getConfig(refresh=false) {
     if(refresh)configPromise=null;
     if(location.protocol==='file:')return {available:false,aiAvailable:false};
-    if(APPS){if(!configPromise)configPromise=(async()=>{try{const r=await fetch(APPS+'?action=config',{signal:AbortSignal.timeout(8000)});const c=await r.json();return c.service==='morogaro-apps-script'?{...c,available:false,apps:true}:{available:false,aiAvailable:false};}catch{return {available:false,aiAvailable:false};}})();return configPromise;}
+    if(APPS)return {service:'morogaro-apps-script',available:false,apps:true,aiAvailable:true};   // Apps Script는 묻지 않고 바로 AI를 써요(상한은 서버에서 막아요).
     if(!configPromise)configPromise=(async()=>{try{const response=await fetch('./api/config',{signal:AbortSignal.timeout(2500)});if(!response.ok)throw new Error();const c=await response.json();return ['morogaro-analysis-v1','morogaro-analysis-v2'].includes(c.service)?{...c,available:true}:{available:false,aiAvailable:false};}catch{return {available:false,aiAvailable:false};}})();
     return configPromise;
   }
@@ -237,9 +237,10 @@
     const sources=result.sources.map(s=>({id:s.id,name:s.name,ext:s.ext,kind:s.kind,coverage:s.coverage,text:(s.text||'').slice(0,per),warnings:s.warnings}));
     progress('ai','캡처와 본문을 함께 보고 제목·진척도·분류를 제안하고 있어요.');
     let data;
+    const call=async()=>{const response=await fetch(APPS,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'analyze',projectType:payload.projectType,sources,previews:previews.map(p=>({id:p.id,sourceId:p.sourceId,label:p.label,kind:p.kind||null,page:p.page||null,dataUrl:p.dataUrl})),links:result.links}),signal});return response.json();};
     try{
-      const response=await fetch(APPS,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'analyze',projectType:payload.projectType,sources,previews:previews.map(p=>({id:p.id,sourceId:p.sourceId,label:p.label,kind:p.kind||null,page:p.page||null,dataUrl:p.dataUrl})),links:result.links}),signal});
-      data=await response.json();
+      try{data=await call();}catch(e){if(e.name==='AbortError'||signal?.aborted)throw e;data=null;}
+      if(!data?.ok){abort(signal);progress('ai','AI 응답이 늦어 한 번 더 요청하고 있어요.');data=await call();}
     }catch(error){if(error.name==='AbortError'||signal?.aborted)throw error;result.warnings.unshift('AI 응답을 받지 못해 파일에서 읽은 정보만 채웠어요.');return result;}
     if(!data?.ok||!data.proposal){result.warnings.unshift(data?.error?String(data.error).slice(0,160)+' 파일에서 읽은 정보만 채웠어요.':'AI 제안을 받지 못했어요.');return result;}
     progress('apply','추출한 값과 썸네일 후보를 정리하고 있어요.');
@@ -295,6 +296,7 @@
     for(const item of proposal.sourceKinds||[]){
       if(originals[item.fileId]&&accepted.some(e=>e.fileId===item.fileId&&e.field==='sourceKind'&&e.value===item.kind)){originals[item.fileId].kind=String(item.kind).slice(0,60);originals[item.fileId].kindBasis='AI 제안 · 직접 수정 가능';}
     }
+    if(!base.fonts.length)for(const name of (proposal.fontGuesses||[]).slice(0,4)){const n=String(name).trim().slice(0,100);if(n&&!base.fonts.some(f=>f.name===n))base.fonts.push({name:n,weights:'',downloadUrl:'',sourceId:base.sources[0]?.id||'',basis:'AI가 이미지로 추정한 글꼴'});}
     const selected=unique((proposal.thumbnailOrder||[]).filter(id=>previewMap[id])).slice(0,10);
     if(selected.length){base.recommendedThumbnails=selected;base.thumbnailRanking='ai';}
     base.evidence.push(...accepted.filter(e=>e.field==='sourceKind'||applied.includes(e.field)));

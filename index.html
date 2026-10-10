@@ -244,9 +244,9 @@
         </section>
         <section class="review-panel thumbnails-panel" id="review-thumbnails-section" data-maker-section="3" aria-labelledby="thumbnails-heading" data-node-id="3516:28837">
           <div class="review-section-heading"><div class="heading-with-meta"><h2 id="thumbnails-heading" tabindex="-1">바톤 썸네일 설정</h2><button class="info-button" type="button" data-info="thumbnails" aria-label="썸네일 설정 안내"><img src="./assets/review-info.svg" alt=""></button></div><div class="thumbnail-count"><img src="./assets/review-count.svg" alt=""><span><strong id="selected-count">0</strong>/10</span></div></div>
-          <div class="thumbnail-toolbar"><span id="thumbnail-candidate-count">파일에서 캡처한 후보</span><label>파일별 보기 <select id="thumbnail-source-filter" aria-label="썸네일 후보의 원본 파일"><option value="all">전체 파일</option></select></label></div>
+          <div class="thumbnail-toolbar"><span id="thumbnail-candidate-count">파일에서 캡처한 후보</span><label hidden><select id="thumbnail-source-filter" aria-hidden="true"><option value="all">전체 파일</option></select></label></div>
           <div class="thumbnail-layout">
-            <div class="cover-card"><div class="cover-preview" id="cover-preview"><span>대표 이미지를 골라주세요</span></div><button class="text-action" id="custom-thumbnail" type="button">썸네일 설정하기</button></div>
+            <div class="cover-card"><div class="cover-preview" id="cover-preview"><span>대표 이미지를 골라주세요</span></div><div class="ratio-picker" id="ratio-picker" role="radiogroup" aria-label="썸네일 화면비"><button type="button" data-ratio="original" aria-pressed="true">원본</button><button type="button" data-ratio="1/1">1:1</button><button type="button" data-ratio="4/5">4:5</button><button type="button" data-ratio="3/4">3:4</button><button type="button" data-ratio="16/9">16:9</button></div><button class="text-action" id="custom-thumbnail" type="button">썸네일 설정하기</button></div>
             <div class="thumbnail-candidates"><div class="thumbnail-grid" id="thumbnail-grid"></div><p class="thumbnail-empty" id="thumbnail-empty">캡처 가능한 이미지·페이지가 없어요.<br>썸네일 설정하기에서 이미지를 추가할 수 있어요.</p></div>
           </div>
           <input id="thumbnail-input" type="file" accept="image/png,image/jpeg,image/webp" class="sr-only" tabindex="-1" aria-label="바톤 썸네일 이미지 선택">

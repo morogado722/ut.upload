@@ -84,7 +84,7 @@
     clearStatus();const status=$(action==='ideas'?'idea-status':'note-draft-status');
     const config=await analysis.getConfig(true);
     if(!config.aiAvailable){status.textContent=window.MOROGARO_SITE?'공유 사이트에서는 AI 초안을 쓸 수 없어요. 가이드를 보며 직접 적어주세요.':'AI 초안은 서버의 API 키를 연결한 뒤 사용할 수 있어요. 지금은 직접 작성할 수 있어요.';syncBubble();return;}
-    if(!await consent())return;
+    if(!(window.MOROGARO_CONFIG?.appsScriptUrl)&&!await consent())return;   // Apps Script 사이트는 묻지 않고 바로 써요
     const fingerprint=review.getContext().fingerprint,rev=editRevision;
     busy=true;controller=new AbortController();const timeout=setTimeout(()=>controller?.abort(),60000);$('generate-note').disabled=true;$('suggest-ideas').disabled=true;
     status.textContent='확인한 자료로 제안을 작성하고 있어요…';syncBubble();
@@ -166,7 +166,7 @@
       $('idea-status').textContent='AI가 이어받을 방향을 미리 적어뒀어요. 자유롭게 고치거나 지울 수 있어요.';
     }catch{/* 실패하면 비워 둬요 */}
   }
-  document.addEventListener('morogaro:analysis-ready',()=>setTimeout(autoIdeas,300));
+  document.addEventListener('morogaro:analysis-ready',()=>setTimeout(async()=>{await autoIdeas();const ctx=review.getContext();if(ctx?.result.mode==='ai'&&!$('baton-note').value.trim())void generate('draft');},300));
   window.addEventListener('pagehide',()=>controller?.abort());
   window.MorogaroNote=Object.freeze({render,cancel:()=>controller?.abort()});render();
 })();

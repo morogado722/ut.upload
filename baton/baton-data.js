@@ -96,6 +96,7 @@
           ? '공개 전 미리보기예요. 아직 이 바톤을 저장하지 않았어요. 수정하기를 눌러 이어서 작성할 수 있어요.'
           : '이 브라우저에 보관한 바톤이에요. 아직 다른 사용자에게 공개되지 않았어요.',
       },
+      thumbRatio: /^\d+\/\d+$/.test(d.thumbRatio || '') ? d.thumbRatio : null,
       gallery: (d.selectedThumbnails || []).filter(t => isImageData(t?.dataUrl)).slice(0, 10)
         .map((t, i) => ({ src: t.dataUrl, title: clean(t.label) || `바톤 이미지 ${i + 1}`, alt: `${title} · ${clean(t.label) || `이미지 ${i + 1}`}` })),
       tools: list(d.tools),

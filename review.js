@@ -115,7 +115,7 @@
       if(index===current){const bubble=button('','stage-bubble',()=>openEvidence('stage'));bubble.append(img('./assets/review-bubble.svg'));const label=E('span','',review.touched.includes('stage')?'내가 선택한 단계 · ':'왜 '+name+'? ');label.append(E('strong','','근거 보기'));bubble.append(label);card.append(bubble);}
       host.append(card);
     });
-    $('stage-provenance').textContent=review.touched.includes('stage')?'직접 선택한 단계예요. 배경 색상은 API 연결 없이 바로 바뀌어요.':review.form.stage?review.result.values.stageReason:'현재 바톤의 단계를 선택해 주세요. API 연결 없이도 단계에 맞춰 배경 색상이 바뀌어요.';
+    $('stage-provenance').textContent=review.touched.includes('stage')?'직접 선택한 단계예요.':review.form.stage?review.result.values.stageReason:'현재 바톤의 단계를 선택해 주세요.';
   }
   function renderThumbnails(){
     $('thumbnail-candidate-count').textContent=`파일에서 추출한 후보 ${review.result.thumbnails.length}개`;
@@ -123,6 +123,7 @@
     $('selected-count').textContent=review.selectedThumbnails.length;
     const cover=review.result.thumbnails.find(t=>t.id===review.selectedThumbnails[0]);$('cover-preview').replaceChildren();
     if(cover){const im=img(cover.dataUrl);im.alt='대표 썸네일: '+cover.label;$('cover-preview').append(im);}else $('cover-preview').append(E('span','','대표 이미지를 골라주세요'));
+    applyRatio();
     const grid=$('thumbnail-grid');grid.replaceChildren();$('thumbnail-empty').hidden=review.result.thumbnails.length>0;
     for(const thumb of review.result.thumbnails.filter(t=>thumbnailFilter==='all'||t.sourceId===thumbnailFilter)){
       const selected=review.selectedThumbnails.indexOf(thumb.id);
@@ -269,6 +270,7 @@
       const saved=savedReview(),config=await analysis.getConfig(reanalyze);
       const reusable=!reanalyze&&saved&&saved.fingerprint===fingerprint()&&saved.result.pipelineVersion==='2.0';
       if(reusable)useAI=false;
+      else if(config.apps)useAI=true;
       else if(config.aiAvailable){const choice=sessionChoice||await askConsent();if(choice==='cancel')return;useAI=choice==='ai';}
       else {useAI=false;if(reanalyze)say('AI 자동 제안은 서버의 API 키 설정이 필요해요. 지금은 파일에서 읽을 수 있는 정보를 다시 추출해요.');}
       await window.MorogaroLoading.start(maker.getPayload());
@@ -319,6 +321,14 @@
   document.querySelectorAll('input[name="color-mode"]').forEach(r=>r.addEventListener('change',()=>{colorMode=r.value;review.form.colorMode=colorMode;persist('colorMode');renderPalette();}));
   $('custom-color').addEventListener('change',()=>{const hex=$('custom-color').value.toUpperCase();if(!review.result.colors.includes(hex))review.result.colors.push(hex);if(review.form.palette.length<6&&!review.form.palette.includes(hex))review.form.palette.push(hex);persist('palette');renderPalette();});
   $('add-font').addEventListener('click',()=>{if(review.form.fonts.length>=40){say('폰트는 최대 40개까지 정리할 수 있어요.');return;}review.form.fonts.push({name:'',weights:'',downloadUrl:'',basis:'직접 입력'});persist('fonts');renderFonts();$('review-fonts').lastElementChild?.querySelector('input')?.focus();});
+  function applyRatio(){
+    const r=review?.form?.thumbRatio||'original',box=$('cover-preview'),im=box.querySelector('img');
+    box.dataset.ratio=r;
+    if(r==='original'){if(im){const set=()=>{if(im.naturalWidth)box.style.aspectRatio=im.naturalWidth+'/'+im.naturalHeight;};im.complete?set():im.addEventListener('load',set,{once:true});}else box.style.aspectRatio='';}
+    else box.style.aspectRatio=r;
+    document.querySelectorAll('#ratio-picker [data-ratio]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ratio===r)));
+  }
+  $('ratio-picker').addEventListener('click',e=>{const b=e.target.closest('[data-ratio]');if(!b||!review)return;review.form.thumbRatio=b.dataset.ratio;applyRatio();});
   $('custom-thumbnail').addEventListener('click',()=>$('thumbnail-input').click());
   $('thumbnail-input').addEventListener('change',async()=>{
     const f=$('thumbnail-input').files?.[0];if(!f)return;
