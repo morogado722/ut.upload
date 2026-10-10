@@ -14,6 +14,7 @@
  */
 
 const FOLDER_NAME = '모로가도 사용성 평가';
+const SHEET_ID = '1NssMB5_Iwh99b-IE0uTfYXfauSxk2285ejZ4vscujPA';   // 드라이브 '모로가도 사용성 평가' 시트
 const DEFAULT_MODEL = 'gpt-4.1-mini';
 
 /* ───────── 입구 ───────── */
@@ -289,7 +290,8 @@ function appendDone(d) {
 
 /* ───────── 도우미 ───────── */
 function sheetWith(name, headers) {
-  const book = SpreadsheetApp.getActiveSpreadsheet();
+  // 시트에서 연 스크립트면 그 시트를, 따로 만든 스크립트면 아래 ID의 시트를 써요.
+  const book = SpreadsheetApp.getActiveSpreadsheet() || SpreadsheetApp.openById(SHEET_ID);
   let sheet = book.getSheetByName(name);
   if (!sheet) {
     sheet = book.insertSheet(name);
