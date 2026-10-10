@@ -5,6 +5,11 @@
   const coarse = matchMedia('(pointer: coarse)').matches && !matchMedia('(any-pointer: fine)').matches;
   const mobileUA = /Android|iPhone|iPad|iPod|Mobile|SamsungBrowser|KAKAOTALK/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   if (!(coarse || mobileUA) || new URLSearchParams(location.search).has('desktop')) return;
+  // 카톡 안 브라우저면 들어오자마자 기본 브라우저(Safari·크롬)로 넘겨요. 카톡 안에선 공유·복사가 막혀 있어요.
+  if (/KAKAOTALK/i.test(navigator.userAgent) && !sessionStorage.getItem('mg-ext')) {
+    try { sessionStorage.setItem('mg-ext', '1'); } catch { /* */ }
+    location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href);
+  }
   document.documentElement.classList.add('is-mobile-gate');
   const url = location.origin + location.pathname;
   const css = `html.is-mobile-gate body > *:not(.mobile-gate){display:none!important}
@@ -28,7 +33,7 @@
   .mobile-gate .mg-body p{margin:0 0 19px}
   .mobile-gate .mg-body b{font-weight:700;color:#626262}
   .mobile-gate .mg-actions{width:100%;margin-top:52px;display:flex;flex-direction:column;gap:7px}
-  .mobile-gate button{width:100%;border:0;background:none;font:inherit;color:#262626;cursor:pointer}
+  .mobile-gate button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;position:relative;z-index:1;width:100%;border:0;background:none;font:inherit;color:#262626;cursor:pointer}
   .mobile-gate .mg-primary{height:52px;border:1px solid #81CEB0;border-radius:38px;font-size:14px;font-weight:700;letter-spacing:.01em;background:radial-gradient(60% 140% at 8% 30%,rgb(226 245 120/.75),transparent 70%),radial-gradient(70% 160% at 98% 60%,rgb(120 250 215/.8),transparent 70%),radial-gradient(60% 120% at 50% 120%,rgb(190 250 200/.6),transparent 70%),#FFF}
   .mobile-gate .mg-secondary{padding:16px;font-size:15px}
   .mobile-gate .mg-url{display:none;margin:2px auto 0;padding:12px 16px;border-radius:12px;background:rgb(38 38 38/6%);font-size:13px;font-weight:700;word-break:break-all;user-select:all;-webkit-user-select:all}
