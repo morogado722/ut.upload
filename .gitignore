@@ -1,0 +1,6 @@
+# 비밀값 · 로컬 기록은 저장소에 올리지 않아요.
+.env
+research-logs/
+__pycache__/
+*.pyc
+.DS_Store

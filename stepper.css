@@ -1,0 +1,255 @@
+/* v12 / Figma 3571:3018 — six steps, on the page itself, not in a card.
+   Original badges (43 x 24), 14px labels and dotted SVG are retained.
+   All left edges share the workspace gutter; surrounding content is untouched. */
+:root {
+  --stepper-width: 204px;
+  --stepper-label-gap: 34px;
+  --stepper-row: 67px;
+}
+.sidebar {
+  width: var(--stepper-width);
+  max-width: 100%;
+  min-width: 0;
+}
+.sidebar .step-card,
+.has-files .sidebar .step-card {
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.sidebar .step-list-wrap { position: relative; }
+.sidebar .step-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(5, var(--stepper-row)) 44px;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+}
+.sidebar .step { position: relative; min-width: 0; }
+.sidebar .step-button {
+  display: grid;
+  grid-template-columns: 43px minmax(0, 1fr);
+  column-gap: var(--stepper-label-gap);
+  align-items: center;
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 8px;
+  text-align: left;
+}
+.sidebar .step-number {
+  width: 43px;
+  height: 24px;
+  border-radius: 12px;
+  background: rgb(38 38 38 / 10%);
+  color: #FAFAFA;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.sidebar .step-label,
+.sidebar .step.is-current .step-label {
+  max-width: none;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #A2A2A2;
+  white-space: nowrap;
+  text-align: left;
+}
+.sidebar .step.is-current .step-number { color: var(--relay-black); background: rgb(38 38 38 / 10%); }
+.sidebar .step.is-current .step-label { color: var(--relay-black); font-weight: 700; }
+.sidebar .step-button:hover:not([aria-disabled='true']) .step-label { color: var(--relay-black); }
+.sidebar .step-button:focus-visible { outline-offset: 5px; }
+/* Original 2 x 292 SVG at native size. Segment pitch is 67px.
+   At rest the first badge starts at y=10; the connector starts at y=38. */
+.stepper-connector-art {
+  position: absolute;
+  top: 38px;
+  left: 20.5px;
+  pointer-events: none;
+}
+.sidebar .sidebar-divider-slot { width: 195px; height: 1px; margin: 24px 0 0; }
+.sidebar .sidebar-divider { transform: none; }
+.sidebar .completion { display: block; margin: 24px 0 0; }
+.sidebar .completion-label { font-size: 14px; line-height: 20px; }
+.sidebar .completion-value { font-size: 14px; font-weight: 700; }
+.sidebar .completion-track { width: 100%; margin-top: 8px; }
+.sidebar .completion-hint { display: none; }
+.sidebar .sidebar-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  width: 100%;
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+/* Keep the existing preview function as a quiet text action, not a new box. */
+.sidebar .preview-button,
+.has-files .sidebar .preview-button {
+  height: 36px;
+  min-height: 36px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.sidebar .save-button {
+  height: 44px;
+  min-height: 44px;
+  width: 100%;
+  margin: 0;
+  padding: 0 16px;
+  background: rgb(38 38 38 / 10%);
+  font-size: 14px;
+  font-weight: 700;
+}
+.sidebar .save-button:hover { background: rgb(38 38 38 / 14%); }
+.sidebar .save-status,
+.has-files .sidebar .save-status {
+  margin: 12px 0 0;
+  justify-content: flex-start;
+  font-size: 12px;
+  line-height: 20px;
+}
+@media (min-width: 1024px) {
+  /* The step list starts with the source panel, not with an invisible card inset. */
+  .workspace.is-review .sidebar { grid-column: 1; grid-row: 2; margin-top: 0; }
+}
+@media (min-width: 1024px) {
+  .workspace.is-review .sidebar { position: sticky; top: calc(var(--header-visible-height) + 24px); }
+}
+@media (max-width: 1023px) {
+  /* Existing mobile order is kept: summary above files, quiet actions below.
+     display:contents lets the children keep their original workspace order. */
+  .sidebar { display: contents; width: auto; }
+  .sidebar .step-card,
+  .has-files .sidebar .step-card { width: 100%; padding: 0 0 8px; }
+  .sidebar .step-summary {
+    display: flex;
+    min-height: 44px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+  .sidebar .step-summary > span:first-child { gap: 12px; }
+  .sidebar .step-summary-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 48px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 12px;
+    color: var(--relay-black);
+    background: rgb(38 38 38 / 10%);
+    font-size: 12px;
+  }
+  .sidebar .step-summary strong { font-size: 14px; line-height: 20px; }
+  .sidebar .step-list-wrap { display: none; }
+  .sidebar .steps-expanded .step-list-wrap { display: block; margin: 12px 0 16px; }
+  .sidebar .steps-expanded .step-list {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(5, var(--stepper-row)) 44px;
+    padding: 0;
+    gap: 0;
+  }
+  .sidebar .step-button { grid-template-columns: 43px minmax(0, 1fr); gap: var(--stepper-label-gap); }
+  .sidebar .stepper-connector-art { display: block; }
+  .sidebar .sidebar-divider-slot { display: none; }
+  .sidebar .completion { margin: 12px 0 0; }
+  .sidebar .completion-label { font-size: 13px; }
+  .sidebar .completion-value { font-size: 14px; }
+  .sidebar .sidebar-actions,
+  .workspace.is-review .sidebar-actions {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+    margin: 0;
+  }
+  .sidebar .preview-button,
+  .has-files .sidebar .preview-button { height: 44px; min-height: 44px; }
+  .sidebar .save-status,
+  .has-files .sidebar .save-status { margin: -8px 0 0; justify-content: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar .step-button { transition: none; }
+}
+
+
+/* ── 확인 페이지 ↔ 노트 페이지 (note-snap.js) ──
+   한 번에 한 페이지만 문서에 있어요. 그래서 파일 정보 카드에서 스크롤이 '탁' 멈춰요. */
+html[data-maker-page='check'] #review-content > .note-transition,
+html[data-maker-page='check'] #review-content > #review-note-section,
+html[data-maker-page='check'] #review-content > .review-bottom { display: none; }
+html[data-maker-page='note'] .workspace.is-review #review-intro,
+html[data-maker-page='note'] #review-content > [data-maker-section]:not([data-maker-section='6']) { display: none; }
+html[data-maker-page='note'] #review-content > .note-transition { margin-top: 8px; }
+
+/* 슬라이드: 확인 페이지가 위로 빠지고 → 문구, 이어서 노트 카드가 아래에서 올라와요. 돌아갈 땐 반대. */
+#review-content[data-snap='out-down'] > [data-maker-section]:not([data-maker-section='6']),
+#review-content[data-snap='out-down'] > .check-next { animation: maker-out-up 420ms cubic-bezier(.55, 0, .85, .35) forwards; }
+#review-content[data-snap='down'] > .note-transition { animation: maker-in-up 900ms cubic-bezier(.16, 1, .3, 1) both; }
+#review-content[data-snap='down'] > #review-note-section { animation: maker-in-up-far 1000ms cubic-bezier(.16, 1, .3, 1) 300ms both; }
+#review-content[data-snap='down'] > .review-bottom { animation: maker-fade-in 500ms ease 900ms both; }
+#review-content[data-snap='out-up'] > .note-transition,
+#review-content[data-snap='out-up'] > #review-note-section,
+#review-content[data-snap='out-up'] > .review-bottom { animation: maker-out-down 420ms cubic-bezier(.55, 0, .85, .35) forwards; }
+#review-content[data-snap='up'] > [data-maker-section]:not([data-maker-section='6']) { animation: maker-in-down 900ms cubic-bezier(.16, 1, .3, 1) both; }
+@keyframes maker-out-up { to { opacity: 0; transform: translate3d(0, -45vh, 0); } }
+@keyframes maker-out-down { to { opacity: 0; transform: translate3d(0, 45vh, 0); } }
+@keyframes maker-in-up { from { opacity: .2; transform: translate3d(0, 60vh, 0); } }
+@keyframes maker-in-up-far { from { opacity: 0; transform: translate3d(0, 90vh, 0); } }
+@keyframes maker-in-down { from { opacity: .2; transform: translate3d(0, -70vh, 0); } }
+@keyframes maker-fade-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { #review-content[data-snap] > * { animation: none !important; } }
+
+/* ── 다음이 있어요: 파일 정보 끝 안내 (note-snap.js) ──
+   확인 페이지에서만 파일 정보 카드 아래에 여백을 두고, 0.5초 멈춘 뒤 그 가운데에 안내가 스윽 떠올라요. */
+.check-next { display: none; }
+html[data-maker-page='check'] .workspace.is-review .check-next {
+  display: grid; place-items: center; height: 96px; margin-bottom: -24px; pointer-events: none;
+}
+.check-next-hint {
+  margin: 0; display: grid; justify-items: center; gap: 4px;
+  font-size: 14px; line-height: 20px; font-weight: 400; color: #7A7A7A;
+  opacity: 0; transform: translate3d(0, 10px, 0);
+  transition: opacity 700ms ease, transform 900ms cubic-bezier(.16, 1, .3, 1);
+}
+/* 겹친 화살표 두 개(≫를 아래로 돌린 모양) */
+.check-next-hint i { position: relative; width: 14px; height: 14px; }
+.check-next-hint i::before,
+.check-next-hint i::after {
+  content: ''; position: absolute; left: 50%; width: 8px; height: 8px;
+  border: solid #262626; border-width: 0 1.5px 1.5px 0;
+  transform: translateX(-50%) rotate(45deg);
+}
+.check-next-hint i::before { top: -2px; }
+.check-next-hint i::after { top: 3px; }
+.check-next.is-shown .check-next-hint { opacity: 1; transform: none; }
+.check-next.is-shown .check-next-hint i { animation: next-chevron 1.6s cubic-bezier(.45, 0, .55, 1) 900ms infinite; }
+@keyframes next-chevron { 0%, 100% { transform: none; } 45% { transform: translate3d(0, 4px, 0); } }
+/* 기다리는 중 스크롤하면: 페이지가 살짝 올라갔다 돌아와요(아래에 무언가 있다는 느낌). */
+#review-content.is-tug > [data-maker-section] { animation: maker-tug 520ms cubic-bezier(.3, 0, .2, 1); }
+@keyframes maker-tug { 35% { transform: translate3d(0, -10px, 0); } 100% { transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .check-next.is-shown .check-next-hint i { animation: none; }
+  .check-next-hint { transition: opacity 200ms ease; transform: none; }
+}

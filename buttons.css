@@ -1,0 +1,58 @@
+/* Shared action surface, adapted from Figma Planting Button.
+   The loading return action is slightly more transparent and uses white text
+   so it reads more softly above the darkened overlay. */
+:root {
+  --glass-button-height: 52px;
+  --glass-button-radius: 38px;
+  --glass-button-fill: rgb(255 255 255 / 60%);
+  --glass-button-hover: rgb(255 255 255 / 78%);
+  --glass-button-pressed: rgb(255 255 255 / 52%);
+  --glass-button-border: #FFF;
+  --glass-button-highlight: inset -7px -6px 4px rgb(255 255 255 / 25%);
+}
+.glass-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--glass-button-height);
+  height: var(--glass-button-height);
+  padding: 0 20px;
+  border: 1px solid var(--glass-button-border);
+  border-radius: var(--glass-button-radius);
+  background: var(--glass-button-fill);
+  background-clip: padding-box;
+  box-shadow: var(--glass-button-highlight);
+  color: var(--relay-black);
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  opacity: 1;
+  cursor: pointer;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+.glass-button:hover:not(:disabled) { background-color: var(--glass-button-hover); }
+.glass-button:active:not(:disabled) { background-color: var(--glass-button-pressed); }
+.glass-button:focus-visible { outline: 2px solid var(--dark-forest-green); outline-offset: 4px; }
+/* The live Next button does not change appearance underneath the dimmed screen. */
+.glass-button:disabled { cursor: wait; }
+.glass-button:disabled:not([aria-busy='true']) { background-color: rgb(255 255 255 / 45%); }
+.glass-button > span, .glass-button img { opacity: 1; }
+.analysis-return {
+  width: 223px;
+  max-width: 100%;
+  flex: none;
+  background: rgb(255 255 255 / 34%);
+  color: #FAFAFA;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset -7px -6px 4px rgb(255 255 255 / 18%);
+}
+.analysis-return:hover:not(:disabled) { background: rgb(255 255 255 / 42%); }
+.analysis-return:active:not(:disabled) { background: rgb(255 255 255 / 28%); }
+@media (prefers-reduced-motion: reduce) {
+  .glass-button { transition: none; }
+}

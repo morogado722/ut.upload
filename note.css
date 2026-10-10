@@ -1,0 +1,129 @@
+/* Figma 3666:4124 — 카드 · 바톤 노트 (피그마는 Noto Sans KR, 구현은 Spoqa Han Sans Neo).
+   노트 행(라벨 176 + 입력) | 바톤노트 가이드 260, 구분선, 이어받을 아이디어 행.
+   초록 요소는 모두 --accent 계열이라 진척도 색을 따라가요. */
+
+/* 전환 문구 (Figma 3579:31) — 세로선 없이 큰 제목으로.
+   위쪽 여백을 넉넉히 둬서, 노트가 올라온 뒤에는 파일 정보 카드가 화면 위에 남지 않아요. */
+.note-transition { display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-top:180px;padding:8px 0 18px 4px;text-align:left;color:#262626; }
+.note-transition > span { display:none; }
+.note-transition strong { font-size:30px;line-height:1.35;font-weight:700;letter-spacing:-0.02em;text-wrap:balance; }
+.note-transition p { font-size:17px;line-height:1.6;color:#7A7A7A;letter-spacing:-0.01em; }
+
+/* 카드 */
+.note-panel { padding:33px 31px;display:flex;flex-direction:column;gap:24px; }
+.note-panel > h2 { margin:0;font-size:16px;line-height:23px;font-weight:700;color:#262626; }
+.note-body { display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;align-items:start; }
+.note-row { display:grid;grid-template-columns:176px minmax(0,1fr);align-items:start;min-width:0; }
+.note-label { display:flex;flex-direction:column;gap:2px;color:#7A7A7A; }
+.review-panel .note-label h3 { margin:0;font-size:16px;line-height:23px;font-weight:700;color:#7A7A7A; }
+.note-label p { margin:0;font-size:12px;line-height:17px;font-weight:300; }
+
+/* 노트 입력 */
+.note-controls { display:flex;flex-direction:column;gap:12px;min-width:0; }
+.note-ai-row { display:flex;align-items:flex-end;justify-content:space-between;gap:16px;min-height:44px; }
+.note-ai-actions { display:flex;align-items:center;gap:7px;margin-left:auto;flex:none; }
+
+/* AI 버튼 (Figma 3666:4220): 흰 바탕 + 강조색 테두리·그림자 */
+.ai-pill { display:inline-flex;align-items:center;gap:6px;padding:6px 12px 6px 10px;border:1.25px solid var(--accent);border-radius:99px;background:#FFF;box-shadow:0 2px 10px rgb(var(--accent-rgb) / 28%);font-size:12px;line-height:17px;font-weight:500;color:#262626;white-space:nowrap;transition:box-shadow 160ms ease,transform 160ms ease; }
+.ai-pill img { width:15px;height:auto;flex:none; }
+.ai-pill:hover { box-shadow:0 3px 14px rgb(var(--accent-rgb) / 42%);transform:translateY(-1px); }
+.ai-pill:disabled { opacity:.55;cursor:progress;transform:none; }
+.ai-pill--large { gap:8px;padding:9px 16px 9px 14px;font-size:14px;line-height:20px; }
+.note-clear { font-size:12px;line-height:17px;font-weight:300;color:#7A7A7A;text-decoration:underline;text-underline-offset:2px;white-space:nowrap;min-height:28px; }
+
+/* 말풍선 (Figma 3668:4255): AI 초안 안내 · 오류 */
+.note-bubble { position:relative;margin:0 0 8px;max-width:min(100%, 420px);padding:10px 14px;border-radius:12px;background:var(--accent);color:var(--accent-deep);font-size:11px;line-height:16px;animation:bubble-in 260ms cubic-bezier(.2,.8,.2,1); }
+.note-bubble::after { content:'';position:absolute;left:104px;bottom:-6px;width:12px;height:12px;background:inherit;transform:rotate(45deg);border-radius:0 0 2px 0; }
+.note-bubble.is-error { background:#FBE9E6;color:var(--error); }
+.note-bubble-action { font:inherit;font-weight:700;color:inherit;text-decoration:underline;text-underline-offset:2px; }
+@keyframes bubble-in { from { opacity:0;transform:translateY(4px); } }
+
+.note-box { display:flex;flex-direction:column;height:200px;padding:14px 16px;border:1px solid #D9D9D9;border-radius:12px;background:#FFF;transition:border-color 160ms ease; }
+.note-box:focus-within { border-color:var(--accent); }
+#baton-note { flex:1;min-height:0;width:100%;padding:0;border:0;outline:0;resize:none;background:transparent;color:#262626;font:400 16px/1.6 var(--font); }
+#baton-note::placeholder { color:#A2A2A2; }
+#note-count { margin-top:4px;font-size:12px;line-height:17px;color:#A2A2A2;font-variant-numeric:tabular-nums; }
+.note-status { margin:0;font-size:12px;line-height:19px;color:#686868;overflow-wrap:anywhere; }
+.note-status:empty { display:none; }
+.note-status.is-error { color:var(--error); }
+
+/* 바톤노트 가이드 (Figma 3666:4151) */
+.note-guide { display:flex;flex-direction:column;gap:14px;min-width:0; }
+.review-panel .note-guide h3 { margin:0;font-size:12px;line-height:17px;font-weight:700;color:#7A7A7A; }
+.guide-groups { display:flex;flex-direction:column;gap:14px; }
+.guide-group { display:flex;flex-direction:column;gap:8px; }
+.guide-line { display:flex;align-items:center;gap:8px; }
+.guide-check { display:grid;place-items:center;flex:none;width:18px;height:18px;border-radius:50%; }
+.guide-check img { width:18px;height:18px; }
+.guide-name { min-height:20px;font-size:14px;line-height:20px;color:#262626;text-align:left; }
+.guide-name:hover { text-decoration:underline;text-underline-offset:3px; }
+.guide-item.is-done:not(.is-open) .guide-name { color:#7A7A7A; }
+.guide-item.is-open { display:flex;flex-direction:column;gap:10px;padding:12px 14px;border:0;border-radius:12px;background:rgb(255 255 255 / 60%);animation:guide-open 220ms ease; }
+.guide-item.is-open .guide-name { font-weight:700; }
+.guide-help { margin:0;font-size:12px;line-height:17px;font-weight:300;color:#7A7A7A; }
+.guide-example { margin:0;padding:8px 10px;border:1px solid #D9D9D9;border-radius:8px;background:rgb(255 255 255 / 70%);font-size:12px;line-height:17px;font-weight:300;color:#7A7A7A; }
+.guide-actions { display:flex; }
+.guide-insert { padding:5px 14px;border-radius:99px;background:rgb(38 38 38 / 10%);color:#262626;font-size:12px;line-height:17px;font-weight:500; }
+.guide-insert:hover { background:rgb(38 38 38 / 16%); }
+@keyframes guide-open { from { opacity:0;transform:translateY(-3px); } }
+
+.note-divider { height:1px;background:rgb(38 38 38 / 10%); }
+
+/* 이어받을 아이디어 (Figma 3666:4190) */
+.ideas-controls { display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-width:0; }
+.idea-fields { display:flex;flex-direction:column;gap:10px;width:100%; }
+.idea-field { position:relative;display:flex;align-items:center;gap:10px;width:100%;min-width:0; }
+.idea-number { flex:none;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:rgb(38 38 38 / 10%);font-size:10px;font-weight:700;color:#7A7A7A; }
+.idea-input { flex:1;min-width:0;padding:9px 44px 9px 16px;border:1px solid #D9D9D9;border-radius:12px;background:#FFF;color:#262626;font:400 16px/23px var(--font);outline:0;transition:border-color 160ms ease; }
+.idea-input::placeholder { color:#A2A2A2; }
+.idea-input:focus { border-color:var(--accent); }
+.idea-remove { position:absolute;right:8px;width:28px;height:28px;border-radius:50%;color:#7A7A7A;font-size:18px;opacity:0;transition:opacity 140ms ease; }
+.idea-field:hover .idea-remove, .idea-field:focus-within .idea-remove { opacity:1; }
+.idea-remove:hover { background:rgb(38 38 38 / 6%); }
+.idea-add { padding:7px 20px;border-radius:12px;background:rgb(38 38 38 / 10%);color:#262626;font-size:14px;line-height:20px;font-weight:500; }
+.idea-add:hover { background:rgb(38 38 38 / 16%); }
+.idea-add[hidden] { display:none; }
+.idea-suggestions { width:100%;max-width:640px; }
+.idea-suggestion { display:flex;gap:10px;justify-content:space-between;align-items:center;width:100%;margin-bottom:6px;padding:10px 12px;border:1px solid #D9D9D9;border-radius:10px;background:rgb(255 255 255 / 60%);font-size:13px;line-height:21px;text-align:left; }
+.idea-suggestion > span:last-child { white-space:nowrap;font-size:12px;color:var(--accent-ink); }
+
+/* 레퍼런스 이미지 (프로젝트 정보)
+   처음엔 + 칸 하나만. 이미지를 올리면 왼쪽부터 칸이 쌓이고 + 칸은 맨 끝에 남아요.
+   넘치면 옆으로 스크롤(세로 휠도 옆으로 넘겨요), 파일을 줄 위로 끌어다 놓아도 돼요. */
+.reference-field { position:relative;min-width:0; }
+.reference-bubble { position:relative;display:inline-block;margin:0 0 14px;padding:8px 16px;border-radius:14px;background:rgb(var(--accent-rgb, 0 249 152) / 55%);font-size:13px;line-height:19px;color:#262626;animation:ref-bubble-in 420ms cubic-bezier(.16,1,.3,1); }
+.reference-bubble::after { content:'';position:absolute;left:52px;bottom:-6px;border:6px solid transparent;border-bottom:0;border-top-color:rgb(var(--accent-rgb, 0 249 152) / 55%); }
+.reference-bubble strong { font-weight:700;text-decoration:underline;text-underline-offset:2px; }
+.reference-bubble[hidden] { display:none; }
+.reference-strip { display:flex;gap:9px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding-bottom:6px;scrollbar-width:thin;scrollbar-color:rgb(38 38 38 / 18%) transparent; }
+.reference-tiles { display:contents; }
+.reference-tile, .reference-add { position:relative;flex:none;width:122px;height:122px;border-radius:12px;background:rgb(38 38 38 / 8%);overflow:hidden;scroll-snap-align:start; }
+.reference-tile { animation:ref-tile-in 360ms cubic-bezier(.16,1,.3,1); }
+.reference-tile img { width:100%;height:100%;object-fit:cover;display:block; }
+.reference-remove { position:absolute;right:6px;top:6px;width:20px;height:20px;border-radius:50%;background:rgb(38 38 38 / 55%); }
+.reference-remove::before, .reference-remove::after { content:'';position:absolute;left:50%;top:50%;width:9px;height:1.6px;border-radius:1px;background:#FFF;transform:translate(-50%,-50%) rotate(45deg); }
+.reference-remove::after { transform:translate(-50%,-50%) rotate(-45deg); }
+.reference-remove:hover { background:rgb(38 38 38 / 75%); }
+.reference-add { display:grid;place-items:center;color:#262626;font-size:24px;font-weight:300;line-height:1;transition:background-color 160ms ease, box-shadow 160ms ease; }
+.reference-add:hover { background:rgb(38 38 38 / 12%); }
+.reference-field.is-dragover .reference-add { background:rgb(var(--accent-rgb, 0 249 152) / 22%);box-shadow:inset 0 0 0 1.5px var(--accent, #00F998); }
+.reference-field.is-dragover .reference-strip { outline:1.5px dashed rgb(38 38 38 / 25%);outline-offset:6px;border-radius:12px; }
+#reference-status:empty { display:none; }
+@keyframes ref-tile-in { from { opacity:0;transform:scale(.94); } }
+@keyframes ref-bubble-in { from { opacity:0;transform:translate3d(0,6px,0); } }
+@media(prefers-reduced-motion:reduce) { .reference-tile, .reference-bubble { animation:none; } }
+
+/* Keep all six steps and save reachable in short desktop viewports. */
+@media(min-width:1024px) { .sidebar { max-height:calc(100dvh - var(--header-visible-height) - 40px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#D9D9D9 transparent; } }
+@media(max-width:1199px) { .note-body { grid-template-columns:minmax(0,1fr); }.note-guide { max-width:520px; } }
+@media(max-width:767px) {
+  .note-panel { padding:24px 20px; }
+  .note-row { grid-template-columns:minmax(0,1fr);gap:12px; }
+  .note-transition { margin-top:120px;padding:4px 0 10px; }
+  .note-transition strong { font-size:24px; }
+  .note-transition p { font-size:15px; }
+  .note-ai-row { flex-direction:column;align-items:stretch; }
+  .note-ai-actions { margin-left:0; }
+  .reference-tile, .reference-add { width:96px;height:96px; }
+}
+@media (prefers-reduced-motion: reduce) { .note-bubble, .guide-item.is-open { animation:none; } }

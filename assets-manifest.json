@@ -1,0 +1,831 @@
+{
+  "version": 15,
+  "sources": [
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3423:5019",
+      "role": "header"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3421:2057",
+      "role": "existing empty state"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3421:2193",
+      "role": "existing loaded state"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3421:2377",
+      "role": "loading overlay and source mark 3421:2564"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3463:26802",
+      "role": "project switch planning-active reference"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3421:2367",
+      "role": "translucent white next button"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3491:27012",
+      "role": "shared loading return-button surface (refresh of 3421:2377)"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3491:27021",
+      "role": "loading guidance copy and placement"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3516:28759",
+      "role": "file information review"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3571:3018",
+      "role": "six-step sidebar without outer panel"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3579:35",
+      "role": "note editor"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3421:2586",
+      "role": "local result detail"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3625:3446",
+      "role": "result detail visual reference"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3635:3855",
+      "role": "separate file-tab visuals"
+    },
+    {
+      "fileKey": "FZXlQEh3aOOazKfZSfIYZA",
+      "nodeId": "3516:28768",
+      "role": "header seam cleanup reference, retaining approved shared header composition"
+    }
+  ],
+  "method": "Previous v9 SVGs remain byte-identical. New SVGs were exported read-only from the referenced Figma nodes. UI is native HTML/CSS/JS; user previews are dynamic rasterizations of actual uploaded files. No font binaries or full-page screenshot UI assets are included.",
+  "verification": "v15: all new assets present and non-empty; Figma file-tab visual reviewed at desktop/mobile; natural-size/render aspect checks and integration checks are recorded in verification.json and QA.md.",
+  "assets": [
+    {
+      "file": "assets/autosave.svg",
+      "sourceNode": "3421:2153",
+      "bytes": 4114,
+      "sha256": "ac20929efd751dbdc486dee95e48551b6796b7af80d423118a5ec1bca5bcbeeb",
+      "rootWidth": "10",
+      "rootHeight": "10",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/avatar.svg",
+      "sourceNode": "3423:4750",
+      "bytes": 170,
+      "sha256": "9a5517c98a38c9e2eed25f9e1e265e65512c41d3d99a6a06dfc2b6f00d3681f6",
+      "rootWidth": "28",
+      "rootHeight": "28",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/bell.svg",
+      "sourceNode": "3423:4741",
+      "bytes": 1386,
+      "sha256": "f799a0fbec86a47eb36b33d33e0f9a48e85391e9441e80fc47c2bb6280e78b2f",
+      "rootWidth": "24",
+      "rootHeight": "24",
+      "usedIn": [],
+      "note": "Unchanged prior asset, not used in the new visible header."
+    },
+    {
+      "file": "assets/bookmark.svg",
+      "sourceNode": "3423:4737",
+      "bytes": 1031,
+      "sha256": "014f3744c1e4c4342a1987c5103fa6c8e6000e626a2a1db919ab80cdd791a560",
+      "rootWidth": "24",
+      "rootHeight": "24",
+      "usedIn": [],
+      "note": "Unchanged prior asset, not used in the new visible header."
+    },
+    {
+      "file": "assets/brand.svg",
+      "sourceNode": "3423:5029",
+      "bytes": 1278,
+      "sha256": "45d2130db797059c0e5bb52a4a5ce5b987c2ff96b7084e3a026ff9c775bdf582",
+      "rootWidth": "48",
+      "rootHeight": "33",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/divider.svg",
+      "sourceNode": "3421:2142",
+      "bytes": 155,
+      "sha256": "0355b1ef2582c01a2e29176bca37e27d07ad195dc365279887f475bcf432ccf2",
+      "rootWidth": "195",
+      "rootHeight": "1",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/glow-bottom-loaded.svg",
+      "sourceNode": "3421:2195",
+      "bytes": 610,
+      "sha256": "7f0dd139d55a47bae0e996c8f523fcddc4f5297edbcde6ba76d73ceb756bb8f4",
+      "rootWidth": "865",
+      "rootHeight": "958",
+      "usedIn": [
+        "app.js"
+      ]
+    },
+    {
+      "file": "assets/glow-bottom.svg",
+      "sourceNode": "3421:2059",
+      "bytes": 610,
+      "sha256": "6e59a0b64d69caf73711fb15d1cd7284cad7629e705602bcb22f6fc61a903623",
+      "rootWidth": "940",
+      "rootHeight": "873",
+      "usedIn": [
+        "index.html",
+        "app.js"
+      ]
+    },
+    {
+      "file": "assets/glow-top-loaded.svg",
+      "sourceNode": "3421:2194",
+      "bytes": 619,
+      "sha256": "29c7a7f67968a8a4edc370a66c237705a16598ff425e4cbfded44900ce542637",
+      "rootWidth": "1289",
+      "rootHeight": "1024",
+      "usedIn": [
+        "app.js"
+      ]
+    },
+    {
+      "file": "assets/glow-top.svg",
+      "sourceNode": "3421:2058",
+      "bytes": 619,
+      "sha256": "a6344c34bc9ed426ccbe4001cb2f6ae3a6bed6b7febf53436c785858ced13574",
+      "rootWidth": "1104",
+      "rootHeight": "1024",
+      "usedIn": [
+        "index.html",
+        "app.js"
+      ]
+    },
+    {
+      "file": "assets/header-subtract.svg",
+      "sourceNode": "3423:5020",
+      "bytes": 1202,
+      "sha256": "ef1e4619da80fb70c9a71ebc8412f6d7a1d2fbc171fa98d94cc1926bacaf3a30",
+      "rootWidth": "1439",
+      "rootHeight": "148",
+      "usedIn": [],
+      "status": "historical asset retained on disk, no longer rendered"
+    },
+    {
+      "file": "assets/header-surface.svg",
+      "sourceNode": "3423:5025",
+      "bytes": 1157,
+      "sha256": "e6c6e64b49dc856f35b34a79fd46bbdde113e19fd1a16949722cab96a021e618",
+      "rootWidth": "1439",
+      "rootHeight": "148",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/link.svg",
+      "sourceNode": "3421:2169",
+      "bytes": 624,
+      "sha256": "3a19ffaf78023c64ad9ef858ef170c8e552e6b4120e4629c75bc3c6342acea87",
+      "rootWidth": "24",
+      "rootHeight": "24",
+      "usedIn": [
+        "index.html",
+        "app.js"
+      ]
+    },
+    {
+      "file": "assets/loader-circle-a.svg",
+      "bytes": 310,
+      "sha256": "7aa366f63bcc20036b3ab29cc57ade00037b090d1354f5dc39fda0eb47ab9582",
+      "rootWidth": "27",
+      "rootHeight": "27",
+      "sourceNode": "3421:2566",
+      "usedIn": [
+        "index.html"
+      ],
+      "role": "unmodified loader shape animated by parent CSS"
+    },
+    {
+      "file": "assets/loader-circle-b.svg",
+      "bytes": 310,
+      "sha256": "7aa366f63bcc20036b3ab29cc57ade00037b090d1354f5dc39fda0eb47ab9582",
+      "rootWidth": "27",
+      "rootHeight": "27",
+      "sourceNode": "3421:2567",
+      "usedIn": [
+        "index.html"
+      ],
+      "role": "unmodified loader shape animated by parent CSS"
+    },
+    {
+      "file": "assets/loader-circle-c.svg",
+      "bytes": 310,
+      "sha256": "7aa366f63bcc20036b3ab29cc57ade00037b090d1354f5dc39fda0eb47ab9582",
+      "rootWidth": "27",
+      "rootHeight": "27",
+      "sourceNode": "3421:2568",
+      "usedIn": [
+        "index.html"
+      ],
+      "role": "unmodified loader shape animated by parent CSS"
+    },
+    {
+      "file": "assets/loader-point.svg",
+      "bytes": 217,
+      "sha256": "40193717afd2c4673ed0fdf80dad573c0cf1c2bca27737d62f8b3dd8c8c783f4",
+      "rootWidth": "28",
+      "rootHeight": "28",
+      "sourceNode": "3421:2565",
+      "usedIn": [
+        "index.html"
+      ],
+      "role": "unmodified loader shape animated by parent CSS"
+    },
+    {
+      "file": "assets/panel-file-loaded.svg",
+      "sourceNode": "3421:2261",
+      "bytes": 1016,
+      "sha256": "3ed5f9d84f6adabf60a9462b52279f958f1c721257723a10b55a2af346a4066b",
+      "rootWidth": "1051",
+      "rootHeight": "479",
+      "usedIn": [
+        "styles.css"
+      ]
+    },
+    {
+      "file": "assets/panel-file.svg",
+      "sourceNode": "3421:2126",
+      "bytes": 1017,
+      "sha256": "7ecc6abc69f4df1c33d37fcd0320cfca9205275177f8f64d6cc2047194ec5f0e",
+      "rootWidth": "1051",
+      "rootHeight": "342",
+      "usedIn": [
+        "styles.css"
+      ]
+    },
+    {
+      "file": "assets/panel-url.svg",
+      "sourceNode": "3421:2156",
+      "bytes": 1016,
+      "sha256": "a35ad2d6ed0f9b8db4644c3000e8950e8d37063e8cca3128f911cd7283cd3803",
+      "rootWidth": "1051",
+      "rootHeight": "120",
+      "usedIn": [
+        "styles.css"
+      ]
+    },
+    {
+      "file": "assets/path-bottom.svg",
+      "sourceNode": "3421:2096",
+      "bytes": 707,
+      "sha256": "f90988e55d29dda5b542e06aa1b5b56f5b56894a81b610c99ed4036d3a3d7737",
+      "rootWidth": "250",
+      "rootHeight": "190",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/path-top.svg",
+      "sourceNode": "3421:2060",
+      "bytes": 575,
+      "sha256": "b9e2972256e11d614e477d72479796b503236c6ea89613bc886b7c79bee712ea",
+      "rootWidth": "674",
+      "rootHeight": "205",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/project-design-inactive.svg",
+      "sourceNode": "3463:26806",
+      "bytes": 5599,
+      "sha256": "36788fcd9722a42b4b1d6451b747fa206b3069b3fa620c985cf2ad25603fefeb",
+      "rootWidth": "25",
+      "rootHeight": "25",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/project-design.svg",
+      "sourceNode": "3421:2102",
+      "bytes": 5599,
+      "sha256": "ebefc252676284bf774be1959a2234be9c013ceaaff565e499e6f84d94add8a2",
+      "rootWidth": "25",
+      "rootHeight": "25",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/project-planning-active.svg",
+      "sourceNode": "3463:26817",
+      "bytes": 5104,
+      "sha256": "6e355e10ca231effd3343ba44db7da16a2418d929c9bc9888674d590db61969b",
+      "rootWidth": "27",
+      "rootHeight": "24",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/project-planning.svg",
+      "sourceNode": "3421:2113",
+      "bytes": 5104,
+      "sha256": "43ac3e6f977fe8f322187345ab85335a0095cc74ed8436ddc235f19d939a4673",
+      "rootWidth": "27",
+      "rootHeight": "24",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/review-bubble.svg",
+      "sourceNode": "3516:29005",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 388,
+      "sha256": "71116edbf8cfb35ec67abb3d33c18c60da6caf9ba0e049198a62bb4e3c1b51e3",
+      "rootWidth": "168",
+      "rootHeight": "45"
+    },
+    {
+      "file": "assets/review-calendar.svg",
+      "sourceNode": "3516:29043",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 516,
+      "sha256": "8ec926a874f22373d46ba5d60f3a0f28d9e04158223638b3965ff12879ae956d",
+      "rootWidth": "20",
+      "rootHeight": "21"
+    },
+    {
+      "file": "assets/review-check-off.svg",
+      "sourceNode": "3516:28942",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 261,
+      "sha256": "04b21da28d00a96f72d35df0bd6e87280951ef36067bb94ff42e01eca7fdf0a0",
+      "rootWidth": "20",
+      "rootHeight": "20"
+    },
+    {
+      "file": "assets/review-check-on.svg",
+      "sourceNode": "3516:28945",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 261,
+      "sha256": "a36667cc57d5919aae2c50c5e344c54156572f8ac7100b946f8e955cf60df873",
+      "rootWidth": "20",
+      "rootHeight": "20"
+    },
+    {
+      "file": "assets/review-count.svg",
+      "sourceNode": "3535:29188",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 878,
+      "sha256": "b8b2edf058e1564aa597e137c152f90eba94f747550495c818358e14eab0c16e",
+      "rootWidth": "20",
+      "rootHeight": "24"
+    },
+    {
+      "file": "assets/review-down.svg",
+      "sourceNode": "3516:28850",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 223,
+      "sha256": "fade59ef8665582de26c344cf8ffa20ed85f3ce206e6300f42553d24cc0af5b8",
+      "rootWidth": "9",
+      "rootHeight": "4"
+    },
+    {
+      "file": "assets/review-external.svg",
+      "sourceNode": "3556:931",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 449,
+      "sha256": "5fbd563726d3c3390c32c785de4bf104b1d9efef9f9d56621260f890ff1c2678",
+      "rootWidth": "12",
+      "rootHeight": "12"
+    },
+    {
+      "file": "assets/review-height.svg",
+      "sourceNode": "3543:29241",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 956,
+      "sha256": "d348b7666056ac315ff4abb30919288a52b8fff71a467dfa10246d9607fb5a58",
+      "rootWidth": "28",
+      "rootHeight": "28"
+    },
+    {
+      "file": "assets/review-info.svg",
+      "sourceNode": "3516:28882",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 612,
+      "sha256": "955d162714db194ea0ad74e2c4cb502914ebe6648d5e3e9ce17c31b9bcb251d6",
+      "rootWidth": "20",
+      "rootHeight": "20"
+    },
+    {
+      "file": "assets/review-pencil.svg",
+      "sourceNode": "3516:28929",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 1270,
+      "sha256": "496cdddec9f39ce138347c018d278dc27922075d34eae59b66837ada9e648c8f",
+      "rootWidth": "19",
+      "rootHeight": "145"
+    },
+    {
+      "file": "assets/review-width.svg",
+      "sourceNode": "3543:29240",
+      "usedIn": [
+        "index.html / review.js / review.css"
+      ],
+      "bytes": 955,
+      "sha256": "f6efb8c5fd8506c3c0a96563823b6a358c466250e4ffc2aba8ae0b3d38188001",
+      "rootWidth": "28",
+      "rootHeight": "28"
+    },
+    {
+      "file": "assets/search.svg",
+      "sourceNode": "3423:5037",
+      "bytes": 1277,
+      "sha256": "ac5d66911873edc435d1ec216e23b3cc744b800cf9cdf939b4aa358bdab50aee",
+      "rootWidth": "14",
+      "rootHeight": "14",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/send.svg",
+      "sourceNode": "3421:2372",
+      "bytes": 539,
+      "sha256": "891f442f3c270475f1caf3805b59fd5f8329127a7fad695b13d8fa37e50654f3",
+      "rootWidth": "20",
+      "rootHeight": "20",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/stage-blooming.svg",
+      "sourceNode": "3516:29026",
+      "usedIn": [
+        "review.js"
+      ],
+      "bytes": 2323,
+      "sha256": "741df1567479683f91002977c53cc1e8b3021f88f451d298a8bdbca0a0135e48",
+      "rootWidth": "107",
+      "rootHeight": "107"
+    },
+    {
+      "file": "assets/stage-flowering.svg",
+      "sourceNode": "3516:29031",
+      "usedIn": [
+        "review.js"
+      ],
+      "bytes": 2973,
+      "sha256": "211b18a1f69d34ff1342b1a88b6d4082b9c882263c43d5d14a62a6aac05d9da4",
+      "rootWidth": "106",
+      "rootHeight": "97"
+    },
+    {
+      "file": "assets/stage-growing.svg",
+      "sourceNode": "3516:29022",
+      "usedIn": [
+        "review.js"
+      ],
+      "bytes": 1549,
+      "sha256": "936b9a6c89256e93b6096199aaef94801b2aac469a4a8485e6aab5fe70cdc34a",
+      "rootWidth": "116",
+      "rootHeight": "99"
+    },
+    {
+      "file": "assets/stage-planting.svg",
+      "sourceNode": "3516:29018",
+      "usedIn": [
+        "review.js"
+      ],
+      "bytes": 2703,
+      "sha256": "9d2d8c0d95ebe984117883e1d0489e84e41e17dec0cac2da64eae5db84673e95",
+      "rootWidth": "117",
+      "rootHeight": "105"
+    },
+    {
+      "file": "assets/stage-seeding.svg",
+      "sourceNode": "3516:29017",
+      "usedIn": [
+        "review.js"
+      ],
+      "bytes": 1910,
+      "sha256": "d86d817d3441425b6f5d7084fa3f6ee43a197d36f76248871a4532b96f3247c4",
+      "rootWidth": "41",
+      "rootHeight": "86"
+    },
+    {
+      "file": "assets/step-connector.svg",
+      "sourceNode": "3421:2189",
+      "bytes": 197,
+      "sha256": "eab9cf6bb231fd6d5fd42f199ca18f3f15d2e0588a1639f7db32eb55ac5ce28a",
+      "rootWidth": "1",
+      "rootHeight": "39",
+      "usedIn": [],
+      "note": "Legacy five-step segment. v12 uses the original complete six-step connector instead."
+    },
+    {
+      "file": "assets/trash.svg",
+      "sourceNode": "3421:2335",
+      "bytes": 807,
+      "sha256": "f6ae5ef44784916f8b09708a101d36406a326870cb2357f6a92ea71eb31a0a92",
+      "rootWidth": "24",
+      "rootHeight": "24",
+      "usedIn": [
+        "app.js"
+      ]
+    },
+    {
+      "file": "assets/upload.svg",
+      "sourceNode": "3421:2135",
+      "bytes": 730,
+      "sha256": "b0466f33b204c557265dbd704c1e4493344a901af3c2a5a5900da89c585611d8",
+      "rootWidth": "77",
+      "rootHeight": "77",
+      "usedIn": [
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/stepper-six-connectors.svg",
+      "sourceNode": "3571:2173",
+      "bytes": 543,
+      "sha256": "0bb5550e387db406706632d77beebc23c0578176fdf3c405c846041e8e1d8361",
+      "rootWidth": "2",
+      "rootHeight": "292",
+      "usedIn": [
+        "index.html"
+      ],
+      "note": "Whole unchanged SVG exported by the read-only Figma connector after the download host was unavailable. Rendered at its native size."
+    },
+    {
+      "file": "assets/note-spark.svg",
+      "sourceNode": "3579:46",
+      "bytes": 319,
+      "sha256": "722ad7f47b6d2f44eed86561bc0193dd0f04b23cef0816ba7f366d466d9f48ce",
+      "rootWidth": "14",
+      "rootHeight": "14",
+      "usedIn": [
+        "index.html",
+        "note.js"
+      ]
+    },
+    {
+      "file": "assets/note-check-on.svg",
+      "sourceNode": "3579:71",
+      "bytes": 279,
+      "sha256": "215f405012597a677dea02cad772fb191ef3699d34bfb4c50ec098092092ccca",
+      "rootWidth": "16",
+      "rootHeight": "16",
+      "usedIn": [
+        "index.html",
+        "note.js"
+      ]
+    },
+    {
+      "file": "assets/note-check-off.svg",
+      "sourceNode": "3579:97",
+      "bytes": 183,
+      "sha256": "4cc3f64eac71238620f004dbdb972b657440a0b575b69ae2060fb23aaa57d487",
+      "rootWidth": "16",
+      "rootHeight": "16",
+      "usedIn": [
+        "index.html",
+        "note.js"
+      ]
+    },
+    {
+      "file": "assets/detail-panel-base.svg",
+      "sourceNode": "3421:2587",
+      "bytes": 270,
+      "sha256": "ba737141e944d103b5ef2e755bd675c93212402ffa2a2bee59b40bc738f498ff",
+      "rootWidth": "432",
+      "rootHeight": "448",
+      "usedIn": [
+        "index.html",
+        "detail.js",
+        "detail.css"
+      ]
+    },
+    {
+      "file": "assets/detail-panel-tab.svg",
+      "sourceNode": "3421:2590",
+      "bytes": 560,
+      "sha256": "0d1ccbb82f2cf0fd21abdf23d0edf7e8c5079aae63d5368df3c2b863e56ff3bf",
+      "rootWidth": "432",
+      "rootHeight": "486",
+      "usedIn": [
+        "index.html",
+        "detail.js",
+        "detail.css"
+      ]
+    },
+    {
+      "file": "assets/detail-panel-front.svg",
+      "sourceNode": "3421:2594",
+      "bytes": 1279,
+      "sha256": "5d89b92f46c326c4019508019e040182aef22f36639674fc90905bfe592f899d",
+      "rootWidth": "448",
+      "rootHeight": "537",
+      "usedIn": [
+        "index.html",
+        "detail.js",
+        "detail.css"
+      ]
+    },
+    {
+      "file": "assets/detail-bottom.svg",
+      "sourceNode": "3480:160",
+      "bytes": 1108,
+      "sha256": "d1d30c88ecda3ef8a1d0cdc4ea6d0ac61045725a88a6744df22a3ad6634f43f1",
+      "rootWidth": "1440",
+      "rootHeight": "84",
+      "usedIn": [],
+      "status": "historical asset retained on disk, no longer rendered"
+    },
+    {
+      "file": "assets/detail-arrow-back.svg",
+      "sourceNode": "3421:2655",
+      "bytes": 226,
+      "sha256": "d5a031f171a98334fb6c340a26a93142b83302808983b14bf0f3c8be5cc9a199",
+      "rootWidth": "36",
+      "rootHeight": "36",
+      "usedIn": [
+        "index.html",
+        "detail.js",
+        "detail.css"
+      ]
+    },
+    {
+      "file": "assets/detail-share.svg",
+      "sourceNode": "3421:2758",
+      "bytes": 1195,
+      "sha256": "12bf0dd830bc967937ad39e66c5c63c39b3da3120bc0176b8449f6cddfe3f08a",
+      "rootWidth": "30",
+      "rootHeight": "30",
+      "usedIn": [
+        "index.html",
+        "detail.js",
+        "detail.css"
+      ]
+    },
+    {
+      "file": "assets/detail-bookmark.svg",
+      "sourceNode": "3421:2763",
+      "bytes": 1100,
+      "sha256": "b87e27f8ba1768412b35037a0dfc6889cbdb1cb4c94a48c4bacf65f1fb71371e",
+      "rootWidth": "30",
+      "rootHeight": "30",
+      "usedIn": [
+        "index.html",
+        "detail.js",
+        "detail.css"
+      ]
+    },
+    {
+      "file": "assets/detail-relay-surface.svg",
+      "sourceNode": "3421:2768",
+      "bytes": 2774,
+      "sha256": "1cf1b940a07706a0f5ca1d78939fcc077efe76de0599cdfa978d2ad651998b2f",
+      "rootWidth": "319",
+      "rootHeight": "52",
+      "usedIn": [
+        "index.html",
+        "detail.js",
+        "detail.css"
+      ]
+    },
+    {
+      "file": "assets/detail-files-inactive.svg",
+      "sourceNode": "3625:3438",
+      "bytes": 1297,
+      "sha256": "f1c7e640f99caeaa7cb82f46be8d18a54e99ea9d0c3bf1e944a1cd0a6bc49570",
+      "rootWidth": "448",
+      "rootHeight": "537",
+      "usedIn": [
+        "detail.css",
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/detail-files-front.svg",
+      "sourceNode": "3625:3442",
+      "bytes": 456,
+      "sha256": "7b5f3ba1b3348662442c692efa2daabca72608ffe74640d5386c99fb12d5b504",
+      "rootWidth": "432",
+      "rootHeight": "516",
+      "usedIn": [
+        "detail.css",
+        "index.html"
+      ]
+    },
+    {
+      "file": "assets/detail-download.svg",
+      "sourceNode": "3625:3739",
+      "bytes": 1132,
+      "sha256": "12fa7c2da09e9f5033130a35bd1dfaf323dbb6493850a0188c268fbfad08eeb6",
+      "rootWidth": "28",
+      "rootHeight": "28",
+      "usedIn": [
+        "detail.css",
+        "detail.js"
+      ]
+    },
+    {
+      "file": "assets/detail-evidence-check.svg",
+      "sourceNode": "3625:3776",
+      "bytes": 1388,
+      "sha256": "76c8fb046bdad6e25f672e89a6a32d0f97dace0dc24ba3ee56fa3073a9b57d96",
+      "rootWidth": "20",
+      "rootHeight": "20",
+      "usedIn": [
+        "detail.css",
+        "detail.js"
+      ]
+    },
+    {
+      "file": "assets/detail-stage-planting.svg",
+      "sourceNode": "3625:3767",
+      "bytes": 3428,
+      "sha256": "c2da580c83a971179bf80caf91f508d7e53680678c5593e9acb2b54d79263d53",
+      "rootWidth": "67",
+      "rootHeight": "60",
+      "usedIn": [
+        "detail.css",
+        "detail.js"
+      ]
+    },
+    {
+      "file": "assets/detail-files-divider.svg",
+      "sourceNode": "3625:3764",
+      "bytes": 155,
+      "sha256": "e3321116dc6b477bcb094d3ac9048d7022bf305df3357e3bdbb8db89f42957e4",
+      "rootWidth": "378",
+      "rootHeight": "1",
+      "usedIn": [
+        "detail.css",
+        "detail.js"
+      ]
+    }
+  ],
+  "v15Notes": [
+    "All six new SVGs are unchanged read-only Figma exports.",
+    "Original SVG root dimensions retained; responsive transforms apply to presentation wrappers.",
+    "Green header underlay is no longer in the HTML.",
+    "Uploaded image and reference content remains dynamic; original sample works are not included."
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "version": "v11",
+  "pipelineVersion": "2.0",
+  "testedAt": "2026-10-08",
+  "unitTests": {
+    "count": 49,
+    "passed": 49,
+    "liveAPI": false
+  },
+  "httpTests": [
+    {
+      "test": "index",
+      "status": 200
+    },
+    {
+      "test": "env blocked",
+      "status": 404
+    },
+    {
+      "test": "backend source blocked",
+      "status": 404
+    },
+    {
+      "test": "host guard",
+      "status": 403
+    },
+    {
+      "test": "origin guard",
+      "status": 403
+    },
+    {
+      "test": "client header guard",
+      "status": 403
+    },
+    {
+      "test": "unsafe URL rejected",
+      "status": 422
+    },
+    {
+      "test": "real streaming extraction",
+      "file": "프로젝트_모음.zip",
+      "progressEvents": 6,
+      "sources": 4,
+      "thumbnails": 7,
+      "pageCaptures": 6,
+      "mode": "server"
+    },
+    {
+      "test": "real streaming extraction",
+      "file": "레이어_합성.psd",
+      "progressEvents": 3,
+      "sources": 1,
+      "thumbnails": 1,
+      "pageCaptures": 0,
+      "mode": "server"
+    },
+    {
+      "test": "real streaming extraction",
+      "file": "프로젝트_문서.docx",
+      "progressEvents": 3,
+      "sources": 1,
+      "thumbnails": 4,
+      "pageCaptures": 1,
+      "mode": "server"
+    },
+    {
+      "test": "real streaming extraction",
+      "file": "프로젝트_슬라이드.pptx",
+      "progressEvents": 3,
+      "sources": 1,
+      "thumbnails": 6,
+      "pageCaptures": 3,
+      "mode": "server"
+    },
+    {
+      "test": "real streaming extraction",
+      "file": "기획표.xlsx",
+      "progressEvents": 3,
+      "sources": 1,
+      "thumbnails": 1,
+      "pageCaptures": 0,
+      "mode": "server"
+    }
+  ],
+  "browserTests": [
+    {
+      "test": "real ZIP extraction to review",
+      "title": "이어지는 색의 기록",
+      "sourceCount": 4,
+      "thumbCount": 7,
+      "tools": [
+        "Figma"
+      ],
+      "stage": "Planting"
+    },
+    {
+      "test": "responsive",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "test": "responsive",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "test": "responsive",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "test": "responsive",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "test": "responsive",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "test": "responsive",
+      "width": 1920,
+      "overflow": false
+    },
+    {
+      "test": "responsive",
+      "width": 2560,
+      "overflow": false
+    },
+    {
+      "test": "manual edits and thumbnail selections preserved on reanalysis",
+      "passed": true
+    },
+    {
+      "test": "back-next cache preservation",
+      "passed": true
+    },
+    {
+      "test": "runtime errors",
+      "errors": []
+    },
+    {
+      "test": "browser-only extraction fallback (no API)",
+      "mode": "browser"
+    }
+  ],
+  "mockedAIUI": {
+    "test": "AI consent -> mocked provider -> automatic fields -> remembered consent/reanalysis",
+    "passed": true,
+    "provider": "httpx.MockTransport, NOT live OpenAI",
+    "actualExtraction": "real PNG to loopback server",
+    "runtimeErrors": []
+  },
+  "browserHarness": "Managed Chromium URL navigation blocked. Unchanged frontend injected on about:blank; test-only transport bridge to real loopback server. No native browser network path validation.",
+  "limitations": [
+    "No live paid OpenAI request",
+    "No actual HWP5/HEIC decoder verification",
+    "No Safari/Firefox or native macOS/Windows verification",
+    "No IndexedDB reload persistence verification",
+    "External font loading not verified; no font binaries shipped",
+    "Prototype, not public-deployment security audited"
+  ],
+  "unchangedOriginalAssets": 47
+}

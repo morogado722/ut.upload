@@ -1,0 +1,440 @@
+{
+  "checks": [
+    {
+      "name": "upload starts neutral",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "green underlay removed",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "basic extraction reached review without server",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "declared local stage applied to ambience",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "file upload readiness stays 50",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "Seeding updates client-only state",
+      "pass": true,
+      "detail": {
+        "theme": "Seeding",
+        "opacity": "1",
+        "bg": "radial-gradient(47% 38% at 13% 27%, rgba(0, 255, 238, 0.13), rgba(0, 0, 0, 0) 100%), radial-gradient(44% 36% at 92% 80%, rgba(0, 255, 238, 0.18), rgba(0, 0, 0, 0) 100%)",
+        "form": "Seeding"
+      }
+    },
+    {
+      "name": "Seeding rendered gradient hue",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "Planting updates client-only state",
+      "pass": true,
+      "detail": {
+        "theme": "Planting",
+        "opacity": "1",
+        "bg": "radial-gradient(47% 38% at 13% 27%, rgba(0, 249, 152, 0.13), rgba(0, 0, 0, 0) 100%), radial-gradient(44% 36% at 92% 80%, rgba(0, 249, 152, 0.18), rgba(0, 0, 0, 0) 100%)",
+        "form": "Planting"
+      }
+    },
+    {
+      "name": "Planting rendered gradient hue",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "Growing updates client-only state",
+      "pass": true,
+      "detail": {
+        "theme": "Growing",
+        "opacity": "1",
+        "bg": "radial-gradient(47% 38% at 13% 27%, rgba(227, 234, 45, 0.13), rgba(0, 0, 0, 0) 100%), radial-gradient(44% 36% at 92% 80%, rgba(227, 234, 45, 0.18), rgba(0, 0, 0, 0) 100%)",
+        "form": "Growing"
+      }
+    },
+    {
+      "name": "Growing rendered gradient hue",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "Blooming updates client-only state",
+      "pass": true,
+      "detail": {
+        "theme": "Blooming",
+        "opacity": "1",
+        "bg": "radial-gradient(47% 38% at 13% 27%, rgba(249, 178, 0, 0.13), rgba(0, 0, 0, 0) 100%), radial-gradient(44% 36% at 92% 80%, rgba(249, 178, 0, 0.18), rgba(0, 0, 0, 0) 100%)",
+        "form": "Blooming"
+      }
+    },
+    {
+      "name": "Blooming rendered gradient hue",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "stage changes make no API calls",
+      "pass": true,
+      "detail": [
+        "./api/config"
+      ]
+    },
+    {
+      "name": "Flowering cannot be selected",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "result name and note mapped",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "new detail node",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "desktop folder width and alignment; wrapped title may grow",
+      "pass": true,
+      "detail": {
+        "x": 948,
+        "y": 346.578125,
+        "width": 432,
+        "height": 521
+      }
+    },
+    {
+      "name": "bottom wave removed",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "separate file-tab art shown",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "real file count",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "file rows display all original attachments",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "original stage illustration in file tab",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "manual stage identified, not fabricated AI reasoning",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "sample Figma manufacturing evidence not fabricated",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "asset geometry .detail-files-inactive",
+      "pass": true,
+      "detail": {
+        "w": 448,
+        "h": 537,
+        "renderW": 448,
+        "renderH": 537
+      }
+    },
+    {
+      "name": "asset geometry .detail-files-front",
+      "pass": true,
+      "detail": {
+        "w": 432,
+        "h": 516,
+        "renderW": 432,
+        "renderH": 516
+      }
+    },
+    {
+      "name": "asset geometry .detail-progress-art img",
+      "pass": true,
+      "detail": {
+        "w": 67,
+        "h": 60,
+        "renderW": 67,
+        "renderH": 60
+      }
+    },
+    {
+      "name": "asset geometry .detail-file-download img",
+      "pass": true,
+      "detail": {
+        "w": 28,
+        "h": 28,
+        "renderW": 28,
+        "renderH": 28
+      }
+    },
+    {
+      "name": "individual download targets the real Blob",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "whole download requests one ZIP",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "keyboard tab switch",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "long note can expand",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 320 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 320 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 320 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 320 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 390 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 390 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 390 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 390 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 768 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 768 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 768 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 768 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 1024 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 1024 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 1024 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 1024 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 1280 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 1280 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 1280 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 1280 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 1440 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 1440 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 1440 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 1440 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 1920 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 1920 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 1920 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 1920 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 2560 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 2560 info",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no horizontal overflow 2560 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "panel fits folder 2560 files",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "no JavaScript runtime errors",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "edited stage still in editor",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "upload return restores grey",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "notes survive result/editor roundtrip",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "reduced motion respected",
+      "pass": true,
+      "detail": {
+        "animation": "none",
+        "duration": "1e-05s",
+        "theme": "Growing"
+      }
+    }
+  ],
+  "passed": 70,
+  "total": 70,
+  "themes": {
+    "Seeding": {
+      "theme": "Seeding",
+      "opacity": "1",
+      "bg": "radial-gradient(47% 38% at 13% 27%, rgba(0, 255, 238, 0.13), rgba(0, 0, 0, 0) 100%), radial-gradient(44% 36% at 92% 80%, rgba(0, 255, 238, 0.18), rgba(0, 0, 0, 0) 100%)",
+      "form": "Seeding"
+    },
+    "Planting": {
+      "theme": "Planting",
+      "opacity": "1",
+      "bg": "radial-gradient(47% 38% at 13% 27%, rgba(0, 249, 152, 0.13), rgba(0, 0, 0, 0) 100%), radial-gradient(44% 36% at 92% 80%, rgba(0, 249, 152, 0.18), rgba(0, 0, 0, 0) 100%)",
+      "form": "Planting"
+    },
+    "Growing": {
+      "theme": "Growing",
+      "opacity": "1",
+      "bg": "radial-gradient(47% 38% at 13% 27%, rgba(227, 234, 45, 0.13), rgba(0, 0, 0, 0) 100%), radial-gradient(44% 36% at 92% 80%, rgba(227, 234, 45, 0.18), rgba(0, 0, 0, 0) 100%)",
+      "form": "Growing"
+    },
+    "Blooming": {
+      "theme": "Blooming",
+      "opacity": "1",
+      "bg": "radial-gradient(47% 38% at 13% 27%, rgba(249, 178, 0, 0.13), rgba(0, 0, 0, 0) 100%), radial-gradient(44% 36% at 92% 80%, rgba(249, 178, 0, 0.18), rgba(0, 0, 0, 0) 100%)",
+      "form": "Blooming"
+    }
+  },
+  "environment": "Chromium set_content; local asset data-URL transport only; offline fetch fails, native IndexedDB blocked; real file inputs and local extractor used.",
+  "version": 15,
+  "unitTests": {
+    "total": 79,
+    "passed": 79,
+    "liveAPI": false
+  }
+}

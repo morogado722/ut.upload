@@ -1,0 +1,2 @@
+# HEIC/HEIF photos. Optional; may require a compatible wheel for your OS.
+pillow-heif>=1.0,<2

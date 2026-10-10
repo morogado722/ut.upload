@@ -1,0 +1,116 @@
+/* Original Figma loader / 3421:2377, 3421:2564.
+   Refined motion: all four breathe in together, the pointed shape rotates in place,
+   then the group softly returns to its resting size. */
+:root { --relay-cycle: 2400ms; --relay-turn: 1100ms; }
+html.is-analysis-open { overflow: hidden; }
+.analysis-dialog {
+  position: fixed; inset: 0; width: 100%; max-width: none;
+  height: 100%; height: 100dvh; max-height: none; margin: 0; padding: 24px;
+  border: 0; background: transparent; color: white; overflow: auto;
+}
+.analysis-dialog[open] { display: grid; place-items: center; }
+.analysis-dialog::backdrop { background: rgb(0 0 0 / 40%); backdrop-filter: blur(4.4px); -webkit-backdrop-filter: blur(4.4px); }
+.analysis-center { display: flex; flex-direction: column; align-items: center; gap: 34px; width: 100%; text-align: center; }
+.analysis-center h2 { margin: 0; font-family: var(--font); font-size: 1.5rem; font-weight: 700; line-height: 1.35; color: white; overflow-wrap: anywhere; word-break: keep-all; }
+.relay-loader { width: 58px; height: 58px; flex-shrink: 0; }
+.relay-orbit { position: relative; width: 58px; height: 58px; transform-origin: 29px 29px; }
+.relay-part { position: absolute; display: block; transform-origin: center; }
+.relay-part img { display: block; } /* No width/height override on the original SVGs. */
+.relay-point { left: 30px; top: 0; width: 28px; height: 28px; }
+.relay-circle-a { left: 0; top: 1px; width: 27px; height: 27px; }
+.relay-circle-b { left: 0; top: 31px; width: 27px; height: 27px; }
+.relay-circle-c { left: 30px; top: 31px; width: 27px; height: 27px; }
+.analysis-dialog[open][data-state='loading'] .relay-orbit { animation: relay-breath var(--relay-cycle) cubic-bezier(.48,.06,.24,1) infinite; }
+.analysis-dialog[open][data-state='loading'] .relay-point { animation: relay-spin-pivot var(--relay-cycle) cubic-bezier(.52,.08,.18,1) infinite; }
+/* Shared contraction -> pointed rotation -> soft recovery. The three round shapes
+   stay still, while the pointed shape completes one centred turn per cycle. */
+@keyframes relay-breath {
+  0%, 10% { transform: scale(1); }
+  18%, 30% { transform: scale(.9); }
+  66% { transform: scale(.9); }
+  82% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+@keyframes relay-spin-pivot {
+  0%, 18% { transform: rotate(0deg); }
+  32% { transform: rotate(0deg) scale(.92); }
+  70% { transform: rotate(360deg) scale(.92); }
+  82% { transform: rotate(360deg) scale(1.03); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+/* Figma 3421:2377 updated: guidance at y=725 and a 223x52 return action
+   at y=761 for a 1024px-high canvas. Both are viewport-centered. */
+.analysis-footer {
+  position: absolute;
+  top: calc(50% + min(20.8vh, 213px));
+  left: 24px; right: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+.analysis-guidance {
+  margin: 0;
+  width: 100%; max-width: 960px;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 24px;
+  color: #FFF;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+/* Kept separate from Figma's service guidance: this build is a prototype.
+   Hidden only when a real analysis adapter is configured successfully. */
+.analysis-demo-note {
+  position: absolute;
+  left: 24px; right: 24px;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  margin: 0;
+  color: #FFF;
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: center;
+  word-break: keep-all;
+}
+.analysis-dialog[data-mode='connected']:not([data-state='error']) .analysis-demo-note { display: none; }
+/* Focus goes to the dialog on opening; only actual keyboard navigation draws
+   a ring on the common action button. */
+.analysis-dialog:focus { outline: none; }
+.analysis-dialog[data-state='error'] .relay-orbit { opacity: .65; }
+.analysis-dialog[data-paused='true'] .relay-orbit,
+.analysis-dialog[data-paused='true'] .relay-point { animation-play-state: paused !important; }
+@media (max-width: 600px) {
+  .analysis-center { gap: 28px; }
+  .analysis-center h2 { font-size: 1.25rem; line-height: 1.5; }
+  .analysis-footer { left: 20px; right: 20px; }
+  .analysis-guidance { max-width: 460px; font-size: .875rem; line-height: 22px; }
+  .analysis-demo-note { left: 20px; right: 20px; font-size: .6875rem; line-height: 18px; }
+}
+/* Compact/landscape and zoom: flow, never overlapping the loader and controls.
+   On exceptionally short screens the modal itself scrolls, not the background. */
+@media (max-height: 740px) {
+  .analysis-dialog[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 32px;
+    padding: 24px;
+  }
+  .analysis-center { margin-top: auto; flex-shrink: 0; }
+  .analysis-footer { position: static; width: 100%; flex-shrink: 0; }
+  .analysis-demo-note { position: static; width: 100%; margin-top: auto; flex-shrink: 0; }
+}
+@media (max-height: 400px) {
+  .analysis-dialog[open] { padding: 16px 20px; gap: 20px; }
+  .analysis-center { gap: 20px; }
+  .analysis-center h2 { font-size: 1.25rem; line-height: 1.4; }
+}
+/* A stationary branded mark replaces all rotational/bounce motion. */
+@media (prefers-reduced-motion: reduce) {
+  .analysis-dialog .relay-orbit, .analysis-dialog .relay-point { animation: none !important; transform: none !important; }
+}

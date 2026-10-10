@@ -1,0 +1,21 @@
+# Render 배포 설정 (Blueprint). 저장소를 Render에 연결하면 이 설정대로 서버가 만들어져요.
+services:
+  - type: web
+    name: morogaro
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips="*"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: OPENAI_MODEL
+        value: gpt-4.1-mini
+      - key: AI_DAILY_LIMIT        # 하루 AI 사용 상한(한국 시간 기준). 넘으면 AI 없이 동작해요.
+        value: "300"
+      - key: OPENAI_API_KEY        # Render 화면에서 직접 입력 (절대 코드에 넣지 않기)
+        sync: false
+      - key: RESEARCH_WEBHOOK_URL  # Apps Script 웹 앱 주소
+        sync: false
+      - key: RESEARCH_TOKEN        # Apps Script 의 TOKEN 과 같은 비밀값
+        sync: false

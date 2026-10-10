@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="432" height="521" viewBox="2234 814 432 521" fill="none"><defs><filter id="filter0_d_0_1" x="2229.4" y="803.4" width="447.201" height="536.199" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="3" dy="-3"/>
+<feGaussianBlur stdDeviation="3.8"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.02 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+</filter>
+</defs><g filter="url(#filter0_d_0_1)">
+<path d="M2433.84 814.12C2437.6 814.123 2441.22 815.534 2443.98 818.076L2482.02 853.033C2484.79 855.577 2488.41 856.989 2492.17 856.989H2651C2659.28 856.989 2666 863.705 2666 871.989V1320C2666 1328.28 2659.28 1335 2651 1335H2249C2240.71 1335 2234 1328.28 2234 1320V856.989L2234 829C2234 820.712 2240.72 813.995 2249.01 814L2433.84 814.12Z" fill="#EAEAEA"/>
+</g>
+<path d="M2466.16 819.118C2462.4 819.12 2458.78 820.532 2456.02 823.074L2423.42 853.032C2420.65 855.576 2417.03 856.988 2413.27 856.988H2249C2240.72 856.988 2234 863.704 2234 871.988V1320C2234 1328.28 2240.72 1335 2249 1335H2651C2659.29 1335 2666 1328.28 2666 1320V833.998C2666 825.71 2659.28 818.992 2650.99 818.998L2466.16 819.118Z" fill="white"/>
+</svg>

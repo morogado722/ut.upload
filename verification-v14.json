@@ -1,0 +1,358 @@
+{
+  "transport": "Playwright set_content, unchanged application scripts/CSS, original local SVG data URLs; sandbox blocks navigation and native IndexedDB. API AI proposal explicitly mocked.",
+  "checks": [
+    {
+      "test": "upload starts neutral",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "removed source selector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "upload 50%, still neutral",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "assessed stage uses Planting theme",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "stage theme Seeding",
+      "passed": true,
+      "detail": {
+        "theme": "Seeding",
+        "opacity": 1
+      }
+    },
+    {
+      "test": "stage theme Growing",
+      "passed": true,
+      "detail": {
+        "theme": "Growing",
+        "opacity": 1
+      }
+    },
+    {
+      "test": "stage theme Blooming",
+      "passed": true,
+      "detail": {
+        "theme": "Blooming",
+        "opacity": 1
+      }
+    },
+    {
+      "test": "stage theme Planting",
+      "passed": true,
+      "detail": {
+        "theme": "Planting",
+        "opacity": 1
+      }
+    },
+    {
+      "test": "Flowering stays service selected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "numeric dimensions remain editable",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "thumbnail selection actual images",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "step 6 active",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "optional checklist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "ideas maximum three",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "idea deletion frees slot",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "no-key note honest",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "clear note cancel preserves edit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "reference images saved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "return upload resets gray",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "note preserved between pages",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "note layout 1440",
+      "passed": true,
+      "detail": {
+        "width": 1440,
+        "view": 1440,
+        "note": 400,
+        "side": "sticky"
+      }
+    },
+    {
+      "test": "note layout 1280",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "view": 1280,
+        "note": 321.46875,
+        "side": "sticky"
+      }
+    },
+    {
+      "test": "note layout 1024",
+      "passed": true,
+      "detail": {
+        "width": 1024,
+        "view": 1024,
+        "note": 440.953125,
+        "side": "sticky"
+      }
+    },
+    {
+      "test": "note layout 768",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "view": 768,
+        "note": 477,
+        "side": "static"
+      }
+    },
+    {
+      "test": "note layout 390",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "view": 390,
+        "note": 307,
+        "side": "static"
+      }
+    },
+    {
+      "test": "note layout 320",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "view": 320,
+        "note": 237,
+        "side": "static"
+      }
+    },
+    {
+      "test": "note layout 2560",
+      "passed": true,
+      "detail": {
+        "width": 2560,
+        "view": 2560,
+        "note": 400,
+        "side": "sticky"
+      }
+    },
+    {
+      "test": "AI does not overwrite existing text",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "storage denied cannot report success",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "result title & note live data",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "result records remain explicitly preview",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "result actual image count",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "gallery selection works",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "five-line note can expand",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "reference gallery carries input",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "original file links",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "tab keyboard",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "bookmark local toggles",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "detail layout 1440",
+      "passed": true,
+      "detail": {
+        "width": 1440,
+        "v": 1440,
+        "side": 432,
+        "title": 189,
+        "fullHeader": 9.75,
+        "owner": 189
+      }
+    },
+    {
+      "test": "detail layout 1280",
+      "passed": true,
+      "detail": {
+        "width": 1280,
+        "v": 1280,
+        "side": 432,
+        "title": 189,
+        "fullHeader": 9.75,
+        "owner": 189
+      }
+    },
+    {
+      "test": "detail layout 1024",
+      "passed": true,
+      "detail": {
+        "width": 1024,
+        "v": 1024,
+        "side": 400,
+        "title": 189,
+        "fullHeader": 9.75,
+        "owner": 189
+      }
+    },
+    {
+      "test": "detail layout 768",
+      "passed": true,
+      "detail": {
+        "width": 768,
+        "v": 768,
+        "side": 432,
+        "title": 148,
+        "fullHeader": 7.75,
+        "owner": 749.96875
+      }
+    },
+    {
+      "test": "detail layout 390",
+      "passed": true,
+      "detail": {
+        "width": 390,
+        "v": 390,
+        "side": 350,
+        "title": 148,
+        "fullHeader": 7.75,
+        "owner": 749.96875
+      }
+    },
+    {
+      "test": "detail layout 320",
+      "passed": true,
+      "detail": {
+        "width": 320,
+        "v": 320,
+        "side": 280,
+        "title": 148,
+        "fullHeader": 7.75,
+        "owner": 749.96875
+      }
+    },
+    {
+      "test": "detail layout 2560",
+      "passed": true,
+      "detail": {
+        "width": 2560,
+        "v": 2560,
+        "side": 432,
+        "title": 189,
+        "fullHeader": 9.75,
+        "owner": 189
+      }
+    },
+    {
+      "test": "result edit preserves form",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "unknown theme neutral",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "reduced motion stops background",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "test": "no JS errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "version": 14,
+  "unitTests": {
+    "passed": 70,
+    "failed": 0
+  },
+  "liveAI": false,
+  "nativeIndexedDBRoundTripVerified": false,
+  "font": "Spoqa configured; previews use fallback",
+  "reference": {
+    "note": "3579:35",
+    "detail": "3421:2586"
+  }
+}

@@ -1,0 +1,4 @@
+/* 업로드 페이지 캡처 중: 나눠 둔 페이지를 한 장으로 펼치고, 움직임은 멈춰요. */
+html.is-capturing *, html.is-capturing *::before, html.is-capturing *::after { animation: none !important; transition: none !important; }
+html[data-maker-page='capture'] #review-content > .note-transition { margin-top: 48px; }
+html[data-maker-page='capture'] .check-next { display: none !important; }

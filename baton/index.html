@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAFAFA">
+  <title>참외, 자두, 복숭아 달력 — 모로가도 v10</title>
+  <link rel="stylesheet" href="../fonts.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="baton-live.css">
+  <!-- 메이커 안에서 열릴 때는 예시가 잠깐 보이지 않도록 기록을 받을 때까지 가려요. -->
+  <script>if(new URLSearchParams(location.search).get('embed')==='1'&&window.parent!==window)document.documentElement.classList.add('is-waiting-baton');</script>
+  <!-- app.js는 baton-render.js가 데이터를 채운 뒤 불러와요. -->
+  <script src="../download-bundle.js" defer></script>
+  <script src="baton-data.js" defer></script>
+  <script src="../vendor/modern-screenshot.js" defer></script>
+  <script src="baton-render.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <!-- Opening frame is isolated; scroll / 바톤 너머 reveals the lower document. -->
+  <div class="page" id="page" data-view="detail" data-lower-open="false" data-transitioning="false">
+    <header class="site-header">
+      <img class="header-surface" src="assets/header-surface.svg" width="1440" height="164" alt="">
+      <a class="brand" href="#detail" aria-label="모로가도 상세페이지"><img src="assets/brand-mark.svg" width="50" height="34" alt="모로가도"></a>
+      <nav class="main-nav" aria-label="주 메뉴">
+        <button class="nav-explore" type="button" aria-current="page" data-unwired="탐색">탐색</button>
+        <button class="nav-community" type="button" data-unwired="커뮤니티">커뮤니티</button>
+        <button class="nav-magazine" type="button" data-unwired="매거진">매거진</button>
+        <button class="nav-personality" type="button" data-unwired="성향 검사">내 작업성향은?</button>
+      </nav>
+      <form class="search" id="search-form" role="search">
+        <img src="assets/search-icon.svg" width="20" height="22" alt="">
+        <input type="search" aria-label="바톤 검색" placeholder="사랑과 관련된 프로젝트 기획서" autocomplete="off">
+      </form>
+      <div class="account">
+        <button class="icon-button account-bookmark" type="button" aria-label="저장한 바톤" data-unwired="저장한 바톤 목록"><img src="assets/bookmark-small.svg" width="21" height="24" alt=""></button>
+        <button class="icon-button account-notification" type="button" aria-label="알림" data-unwired="알림"><img src="assets/notification.svg" width="21" height="25" alt=""></button>
+        <!-- RUNNER is a literal label in the supplied SVG, NOT a subscription tier. -->
+        <span class="account-name"><span class="source-label">RUNNER</span><span>김찬우 님</span></span>
+        <button class="avatar account-avatar" type="button" aria-label="김찬우 프로필" data-unwired="프로필"></button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="baton-heading" aria-labelledby="baton-title">
+        <button class="back-button" id="back-button" type="button" aria-label="바톤 상세로 돌아가기"><span></span></button>
+        <h1 id="baton-title">참외, 자두, 복숭아 달력</h1>
+        <p class="baton-subtitle">좋아하는 과일의 제철 시기를 알기 위한 엽서형 달력</p>
+        <div class="category-tags" aria-label="바톤 분류"><span>편집 디자인</span><span>일러스트레이션</span><span>굿즈</span></div>
+        <div class="author-summary">
+          <span class="author-name">레고 1891</span>
+          <button class="contact-button" type="button" data-unwired="바톤 문의">바톤 문의하기</button>
+          <p class="author-bubble">30분 내에 답장할 수 있습니다! 디벨롭하면서 물어보고 싶으신 게 있으면 언제든 물어봐주세요!</p>
+        </div>
+      </section>
+
+      <section class="detail-view" id="detail-view" aria-label="바톤 상세정보">
+        <!-- Added in the supplied 상세페이지1(1).svg. Decorative source vector;
+             the existing 바톤 너머 button and its hit area remain unchanged. -->
+        <img class="detail-folder-nametag" src="assets/detail-folder-nametag.svg" width="1440" height="84" alt="" aria-hidden="true" draggable="false">
+        <div class="gallery" aria-label="바톤 이미지">
+          <button class="artwork-button" id="open-artwork" type="button" aria-label="참외 달력 크게 보기">
+            <img id="main-artwork" src="assets/detail-image-0.png" width="309" height="432" alt="노란색 바탕과 크림색 참외 모양으로 구성한 참외 달력">
+          </button>
+          <div class="thumbnails" role="tablist" aria-label="달력 이미지 선택">
+            <button class="thumbnail is-active" type="button" role="tab" aria-selected="true" tabindex="0" data-image="0" aria-controls="main-artwork" aria-label="참외 달력"><img src="assets/detail-image-1.png" width="43" height="60" alt=""></button>
+            <button class="thumbnail" type="button" role="tab" aria-selected="false" tabindex="-1" data-image="1" aria-controls="main-artwork" aria-label="자두 달력"><img src="assets/detail-image-2.png" width="34" height="48" alt=""></button>
+            <button class="thumbnail" type="button" role="tab" aria-selected="false" tabindex="-1" data-image="2" aria-controls="main-artwork" aria-label="복숭아 달력"><img src="assets/detail-image-3.png" width="34" height="48" alt=""></button>
+          </div>
+        </div>
+
+        <aside class="baton-folder" id="baton-folder" data-tab="info" aria-label="바톤 정보와 파일 목록">
+          <img class="folder-surface info-surface" src="assets/folder-info.svg" width="432" height="521" alt="">
+          <img class="folder-surface files-surface" src="assets/folder-files.svg" width="432" height="521" alt="">
+          <div class="folder-tabs" role="tablist" aria-label="바톤 자료">
+            <button id="info-tab" type="button" role="tab" aria-selected="true" aria-controls="info-panel">바톤 정보</button>
+            <button id="files-tab" type="button" role="tab" aria-selected="false" aria-controls="files-panel" tabindex="-1">파일 목록 <span class="file-count">2</span></button>
+          </div>
+          <div id="info-panel" class="folder-scroll info-scroll" role="tabpanel" aria-labelledby="info-tab" tabindex="0">
+            <div class="info-body">
+              <div class="tools-row"><span>사용 툴</span><div class="tool-pills"><span tabindex="0" class="tool-ai">Ai<span class="tool-tooltip" role="tooltip"><img src="assets/detail-image-7.png" width="66" height="64" alt="">Adobe ILLUSTRATOR</span></span><span title="Adobe Photoshop">Ps</span><span title="Figma">Fig</span></div></div>
+              <div class="period-row"><span>진행 시기</span><time datetime="2026-03-02">2026.03.02. ~ 2026.03.09</time></div>
+              <h2 class="note-label">바톤 노트</h2>
+              <p class="baton-note">좋아하는 과일의 제철 시기를 30일 단위의 월이 아니라,<br>과일이 가장 맛있는 ‘철’ 단위로 나눠보고 싶어서 시작<br>한 엽서형 달력입니다. 좋아하는 과일인 참외, 자두, 복<br>숭아 로 만들어 봤습니다. 또한 종이에 인쇄해서 양감있<br>게 제작해볼 예정입니다.</p>
+              <button class="reference-button" id="open-references" type="button"><span>레퍼런스 이미지 보기</span><span class="chevron-right" aria-hidden="true"></span><span class="reference-thumbs"><img src="assets/detail-image-4.png" width="36" height="35" alt="패키지 색상 참고"><img src="assets/detail-image-5.png" width="28" height="35" alt="과일 패키지 참고"><span class="reference-more"><img src="assets/detail-image-6.png" width="49" height="35" alt="과일 그래픽 참고"><span>+3</span></span></span></button>
+              <div class="palette-row"><span><strong>컬러팔레트</strong> <small>CMYK</small></span><div class="palette"><button style="--swatch:#FFF100" type="button" data-color="#FFF100" aria-label="노란색 #FFF100 복사"></button><button style="--swatch:#7E092B" type="button" data-color="#7E092B" aria-label="자두색 #7E092B 복사"></button><button style="--swatch:#FCE2D5" type="button" data-color="#FCE2D5" aria-label="복숭아색 #FCE2D5 복사"></button><button style="--swatch:#FFF5D9" type="button" data-color="#FFF5D9" aria-label="크림색 #FFF5D9 복사">+3</button></div></div>
+              <div class="spec-row"><span>규격</span><span>154X48(mm)</span></div>
+              <h2 class="style-label">스타일 TAG</h2>
+              <div class="style-tags"><span>과일</span><span>참외</span><span>여름</span><span>감성</span><span>복숭아</span><span>컬러풀</span><span>자두</span><span>계절</span><span>달력</span></div>
+              <h2 class="suggestions-label">다음 바톤 제안 <span>3</span></h2>
+              <ol class="suggestions"><li>다른 과일로 확장 진행 해봐주세요!</li><li>모바일 앱 및 위젯화</li><li>계절별 음식으로 진행</li></ol>
+            </div>
+          </div>
+          <div id="files-panel" class="folder-scroll files-scroll" role="tabpanel" aria-labelledby="files-tab" tabindex="0" hidden>
+            <section class="stage-summary" aria-label="현재 진행도 Planting">
+              <div class="plant-stage"><img src="assets/planting.svg" width="68" height="66" alt=""><span>Planting</span></div>
+              <ul class="stage-checks"><li>기획서(PDF) 포함, 작업 설명·제작 배경 문서화</li><li>스케치 → 툴 작업 → 3D 모델링 프로세스 완주</li><li>3D 모델 최종 렌더링</li><li>소재 4종 베리에이션</li></ul>
+            </section>
+            <div class="files-heading"><strong>파일 목록 <span class="file-count">2</span></strong><button type="button" data-source-download="전체 파일">전체다운</button></div>
+            <div class="file-list">
+              <button type="button" class="file-row" data-source-download="참외, 자두, 복숭아 달력_ai"><span class="file-type">Ai.</span><span class="file-label"><strong>참외, 자두, 복숭아 달력_ai</strong><small>ai 파일 · 8.2MB</small></span><img src="assets/file-download.svg" width="26" height="21" alt="다운로드"></button>
+              <button type="button" class="file-row" data-source-download="과일 기획_docx"><span class="file-type docx">docx.</span><span class="file-label"><strong>과일 기획_docx</strong><small>docx. 파일 · 8.2MB</small></span><img src="assets/file-download.svg" width="26" height="21" alt="다운로드"></button>
+            </div>
+          </div>
+          <div class="folder-scrollbar" id="folder-scrollbar" aria-hidden="true"><span id="folder-scroll-thumb"></span></div>
+        </aside>
+        <div class="detail-actions"><button class="icon-button" id="share-baton" type="button" aria-label="바톤 공유"><img src="assets/share.svg" width="26" height="28" alt=""></button><button class="icon-button save-baton" type="button" aria-label="바톤 저장" aria-pressed="false"><img src="assets/bookmark.svg" width="25" height="28" alt=""></button><button class="inherit-button" type="button" data-inherit="current"><span>지금 바로 이어달리기 ...🏃</span></button></div>
+        <button class="beyond-button" id="show-log" type="button" aria-label="바톤로그로 스크롤" aria-controls="log-view"><span class="chevron-down" aria-hidden="true"></span><span>바톤 너머</span></button>
+      </section>
+
+      <section class="log-view" id="log-view" aria-label="바톤로그와 댓글">
+        <section class="baton-log-section" aria-labelledby="log-title">
+          <h2 id="log-title">이 바톤의 릴레이 로그 <span>2</span></h2>
+          <button class="help-button" id="log-help" type="button" aria-label="바톤로그 조작 안내">?</button>
+          <div class="log-canvas" id="log-canvas" tabindex="0" role="region" aria-label="바톤로그. 마우스를 올리면 안내가 닫힌 뒤 관련 바톤이 오른쪽 여백의 경계에서 하나씩 출발해 점점 빠르게 왼쪽에 붙습니다. 안내 종료를 포함한 전체 진입은 3초입니다. 일반 영역의 스크롤은 관련 바톤을, 선택한 바톤 위의 스크롤은 하위 계승 분기를 탐색합니다. 좌우 방향키는 관련 바톤, 위아래 방향키는 계승 분기입니다. 영역 밖에서는 페이지가 스크롤됩니다.">
+            <div class="log-nodes" id="log-nodes"></div>
+            <div class="log-left-fade" aria-hidden="true"></div><div class="log-right-fade" aria-hidden="true"></div>
+            <button class="log-root" id="log-root" type="button" aria-label="현재 바톤. 바톤로그 처음으로 돌아가기"><img src="assets/node-root.svg" width="152" height="152" alt="참외 달력, 현재 바톤"></button>
+            <div class="branch-nodes" id="branch-nodes" aria-label="선택한 바톤의 계승 분기"></div>
+            <div class="branch-fade" id="branch-fade" hidden aria-hidden="true"></div>
+            <article class="log-preview" id="log-preview" hidden aria-label="선택한 바톤 미리보기">
+              <button class="preview-main" type="button" id="preview-open" aria-label="여름 달력 with 삼원 컬러플랜 미리보기"><img class="preview-snapshot" src="assets/node-preview.svg" width="113.53" height="251.08" alt="여름 달력 with 삼원 컬러플랜. 보라색 포도 달력과 작업 정보"></button>
+              <button class="preview-save" type="button" aria-label="선택한 바톤 저장" aria-pressed="false"><img src="assets/bookmark-small.svg" width="10" height="12" alt=""></button>
+            </article>
+            <div class="log-tutorial" id="log-tutorial" role="note" aria-label="마우스를 올리면 안내가 닫히고 관련 바톤이 한 개씩 왼쪽에 붙습니다. 키보드는 로그 영역에서 Enter를 누르세요."><span>마우스를 올려 시작하고<br>스크롤로 바톤을 선택해보세요!</span><svg width="52" height="24" viewBox="0 0 52 24" aria-hidden="true"><path d="M3 12H49M3 12L10 5M3 12L10 19M49 12L42 5M49 12L42 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+          <p class="sr-only" id="log-announcement" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="comments-section" aria-labelledby="comments-title">
+          <h2 id="comments-title">댓글 <span id="comment-count">43</span></h2>
+          <form class="comment-form" id="comment-form"><input name="comment" type="text" maxlength="500" aria-label="댓글 작성. Enter로 등록" placeholder="이 바톤에 대한 의견을 자유롭게 남겨보세요!" required><button type="submit" class="sr-only">댓글 등록</button></form>
+          <div class="comments" id="comments">
+            <article class="comment comment-first"><span class="comment-avatar cyan"></span><div><header><strong>씨앗 4412</strong><span class="handle">(jihoon_K)</span><time>2시간 전</time></header><p>레더 소재로 계승해보고 싶은데 원본 obj 파일 스케일이 어떻게 되나요?</p></div></article>
+            <article class="comment comment-reply"><span class="comment-avatar gray"></span><div><header><strong>레고 1891</strong><span class="author-badge">원작자</span><time>1시간 전</time></header><p>obj 파일은 실제 크기(mm)로 저장했어요, 치수는 함께 받는 안내 문서에 적어뒀어요!</p></div></article>
+            <article class="comment comment-second"><span class="comment-avatar pink"></span><div><header><strong>원석 1203</strong><span class="handle">(jiaja03)</span><time>5시간 전</time></header><p>그리스 신화 모티프랑 정말 잘 어울려요! 색상 버전도 기대할게요 🙌</p></div></article>
+            <article class="comment comment-third"><span class="comment-avatar pale"></span><div><header><strong>과즙 2087</strong><span class="handle">(summer_ao)</span><span class="inherited-badge">이어받은 사람</span><time>어제</time></header><p>이 바톤을 이어받아 수박 달력을 만들고 있어요. 원본 ai가 레이어별로 정리돼 있어서 바로 시작할 수 있었어요!</p></div></article>
+          </div>
+          <button class="all-comments" id="all-comments" type="button">댓글 <span id="all-comment-count">43</span>개 모두 보기</button>
+        </section>
+
+        <section class="ideas-section" aria-labelledby="ideas-title">
+          <h2 id="ideas-title">바톤 아이디어 <span>6</span></h2><button class="add-idea" type="button" data-unwired="바톤 아이디어 제안">+ 나도 제안하기</button>
+          <div class="idea-cards"><article class="idea-card"><span class="idea-badge green">아직 없는 작업</span><h3>발표 자료 만들기</h3><p>과일마다 제철을 보여주는<br>발표 자료가 아직 없어요. 원<br>작자가 가장 바라는 작업이<br>에요.</p><div class="idea-author"><i></i><strong>레고 1891</strong><span>원작자 제안</span></div><span class="interest">4명이 관심 있어요</span><button type="button" class="start-idea primary" data-inherit="presentation">이어받아 시작하기</button></article><article class="idea-card"><span class="idea-badge">댓글 아이디어</span><h3>레더 소재 버전</h3><p>달력을 레더로 옮겨 굿즈로<br>만들어보고 싶어요. 원본<br>obj는 mm 기준으로 저장돼<br>있어요.</p><div class="idea-author"><i></i><strong>씨앗 4412</strong><span>댓글 아이디어</span></div><span class="interest">3명이 관심 있어요</span><button type="button" class="start-idea" data-inherit="leather">이어받아 시작하기</button></article></div>
+        </section>
+
+        <section class="related-section" aria-labelledby="related-title"><h2 id="related-title">이 바톤도 마음에 드실 거예요:)</h2><div class="related-grid" id="related-grid"></div></section>
+        <footer class="footer"><img class="footer-brand" src="assets/brand-wordmark.svg" width="140" height="22" alt="모로가도"><p class="footer-message">모로가도에선<br>창작 생태계 속 모든 과정이 의미있으니까 -!</p><div class="footer-team"><strong>Team</strong><p>Mammoth<br><span>강지훈, 박지현, 김찬우, 최지아</span></p></div><div class="footer-rule"></div><p class="copyright">© 2026 morogaro. All rights reserved.</p></footer>
+      </section>
+    </main>
+  </div>
+  <dialog class="lightbox" id="lightbox" aria-labelledby="lightbox-title"><div class="lightbox-head"><h2 id="lightbox-title"></h2><button class="close-dialog" type="button" aria-label="닫기">×</button></div><div class="lightbox-content" id="lightbox-content"></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="noscript-message">이미지 전환과 바톤로그를 사용하려면 JavaScript를 켜주세요.</p></noscript>
+</body>
+</html>

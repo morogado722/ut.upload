@@ -1,0 +1,100 @@
+/* Figma 3423:5019 — 1440 × 156 reference header.
+   Preserve the v3 1440px body proportions; only this header is replaced.
+   Only the white surface is rendered. The former green underlay is removed,
+   avoiding green antialiased seams at every viewport and zoom level.
+   Only scrollY=0 shows the complete header. The reserved slot never changes. */
+:root {
+  --header-full-height: 9.75rem;
+  --header-visible-height: 9.75rem;
+  --header-collapse-distance: 5rem;      /* 상세페이지처럼: 접히면 위 띠가 10px 남고, 계정 줄이 위에서 11px */
+  --header-compact-height: 4.75rem;
+  --header-duration: 240ms;
+  --header-ease: cubic-bezier(.22,.7,.18,1);
+  --header-art-max: 90rem;
+  --header-search-surface: #F2F2F2;
+  --header-personality: #73EBBD;
+}
+.header-shell { position: sticky; top: 0; z-index: 50; height: 5.5rem; pointer-events: none; }
+.site-header { position: relative; height: var(--header-full-height); transition: transform var(--header-duration) var(--header-ease); }
+.header-shell[data-state='compact'] .site-header { transform: translate3d(0, calc(-1 * var(--header-collapse-distance)), 0); }
+.header-backdrop { position: absolute; inset: 0; pointer-events: none; }
+.header-art-window { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: min(100%, var(--header-art-max)); height: var(--header-full-height); overflow: hidden; }
+/* SVG roots stay 1439 × 148; their 1px frame-relative inset is preserved. */
+.header-art { position: absolute; top: 0; left: 0.0625rem; transform-origin: 0 0; transform: scale(var(--header-art-scale, 1)); }
+.header-backdrop::before, .header-backdrop::after { content: ''; position: absolute; top: 0; width: max(0rem, calc((100% - var(--header-art-max)) / 2)); background: white; }
+.header-backdrop::before { left: 0; height: 5.625rem; box-shadow: 0 0.25rem 0.375rem rgb(0 0 0 / 5%); }
+.header-backdrop::after { right: 0; height: 8.6875rem; box-shadow: 0 0.25rem 0.375rem rgb(0 0 0 / 5%); }
+.header-inner { position: relative; width: calc(100% - var(--page-gutter) * 2 - 0.0625rem); max-width: var(--content-max); height: var(--header-full-height); margin-inline: auto; }
+.header-primary { display: flex; align-items: flex-start; height: 5.625rem; padding-top: 1.875rem; }
+.brand { position: relative; flex: 0 0 2.9375rem; width: 2.9375rem; height: 2rem; margin-left: -0.0625rem; margin-right: 4.375rem; border-radius: 0.25rem; pointer-events: auto; }
+.brand::after { content: ''; position: absolute; inset: -0.375rem; }
+.brand img { position: absolute; left: -0.014875rem; top: -0.014875rem; transform: scale(var(--asset-scale)); transform-origin: top left; }
+.header-nav { display: flex; align-items: center; gap: 3.25rem; min-width: 0; height: 2.75rem; margin-top: -0.375rem; pointer-events: auto; }
+.nav-item { position: relative; flex-shrink: 0; min-height: 2.75rem; color: var(--text-inactive); font-size: 1.25rem; line-height: 1.6; font-weight: 700; white-space: nowrap; border-radius: 0.25rem; }
+.nav-item.is-current { color: #000; }
+.nav-item.nav-personality { color: var(--header-personality); }
+.nav-item:hover { color: var(--dark-forest-green); }
+.header-search { display: flex; align-items: center; gap: 0.75rem; flex: 0 0 21.125rem; width: 21.125rem; min-width: 0; height: 1.9375rem; margin: 0 0 0 auto; padding: 0.375rem 0.625rem; background: var(--header-search-surface); border: 0; border-radius: 3.25rem; pointer-events: auto; }
+.header-search:focus-within { outline: 0.125rem solid var(--spark-green); outline-offset: 0.125rem; }
+.search-submit { position: relative; display: block; flex: 0 0 0.875rem; height: 0.875rem; margin-left: 0.1875rem; }
+.search-submit::after { content: ''; position: absolute; inset: -0.9375rem; }
+.search-submit img { position: absolute; inset: 0 auto auto 0; transform: scale(var(--asset-scale)); transform-origin: top left; }
+.header-search input { min-width: 0; width: 100%; height: 1.1875rem; padding: 0; background: none; border: 0; outline: 0; font-size: 0.75rem; font-weight: 400; line-height: 1.6; letter-spacing: -0.015rem; }
+.header-search input:placeholder-shown:not(:focus) { text-align: right; }
+.header-search input::placeholder { color: #969696; opacity: 1; }
+/* Do not let invisible controls receive keyboard/pointer focus. */
+.header-shell[data-state='compact'] .header-nav,
+.header-shell[data-state='compact'] .header-search,
+.header-shell[data-state='compact'] .brand { visibility: hidden; pointer-events: none; }
+/* Keyboard-only escape from the folded header; activation first returns to y=0.
+   No mid-page menu toggle that can violate the top-only rule. */
+.header-return { position: fixed; top: 0.625rem; left: var(--page-gutter); width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; pointer-events: none; }
+.header-return:focus { z-index: 2; width: auto; height: auto; padding: 0.625rem 0.875rem; clip-path: none; overflow: visible; border-radius: 0.5rem; background: var(--relay-black); color: white; font-size: 0.875rem; pointer-events: auto; }
+@media (max-width: 1023px) {
+  :root { --header-full-height: 7.75rem; --header-compact-height: 4rem; }
+  .header-shell { height: var(--header-full-height); }
+  .header-shell[data-state='compact'] .site-header { transform: none; }
+  .header-backdrop { height: var(--header-full-height); background: white; border-radius: 0 0 1.125rem 1.125rem; box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 4%); transition: height var(--header-duration) var(--header-ease); overflow: hidden; }
+  .header-art-window, .header-backdrop::before, .header-backdrop::after { display: none; }
+  .header-shell[data-state='compact'] .header-backdrop { height: var(--header-compact-height); }
+  .header-primary { display: grid; grid-template-columns: 3rem minmax(0, 1fr); column-gap: 1.25rem; height: 4rem; padding-top: 1rem; }
+  .brand { width: 2.9375rem; margin: 0.25rem 0 0; }
+  .header-search { grid-column: 2; width: 100%; height: 2.5rem; margin: 0; padding-inline: 0.875rem; }
+  .header-search input { height: 1.625rem; font-size: 1rem; letter-spacing: 0; }
+  .header-search input:placeholder-shown:not(:focus) { text-align: left; }
+  .header-nav { position: absolute; top: 4.5rem; left: 0; right: 0; margin: 0; height: 2.75rem; justify-content: space-between; gap: clamp(0.5rem, 2vw, 2rem); transition: opacity 120ms ease, transform var(--header-duration) var(--header-ease); }
+  .nav-item { font-size: clamp(0.75rem, 2.4vw, 1rem); }
+  .header-shell[data-state='compact'] .header-nav { opacity: 0; transform: translateY(-0.75rem); }
+  /* Small-screen compact bar retains the logo and usable search, not full nav. */
+  .header-shell[data-state='compact'] .brand,
+  .header-shell[data-state='compact'] .header-search { visibility: visible; pointer-events: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header, .header-backdrop, .header-nav { transition: none !important; }
+}
+@media print {
+  .header-shell { position: relative; }
+  .site-header { transform: none !important; }
+  .header-shell[data-state='compact'] .header-nav,
+  .header-shell[data-state='compact'] .header-search,
+  .header-shell[data-state='compact'] .brand { visibility: visible; opacity: 1; transform: none; }
+  .header-return { display: none; }
+}
+
+/* Figma 3516:27817 — 헤더 아래쪽 탭 영역의 저장 · 알림 · 프로필.
+   x=1117…1379, y=105, 높이 28. 접힌 헤더에서도 이 탭 영역이 보이므로 그대로 남아요. */
+/* 계정 줄 여백은 상세페이지 헤더와 같아요: 흰 띠 바로 아래(1px)에서 시작, 탭 아래 끝까지 20px, 아이콘 사이 25px, 이름–프로필 15px. */
+.header-account { position: absolute; right: 0; top: 5.6875rem; display: flex; align-items: center; gap: 1.5625rem; height: 1.75rem; pointer-events: auto; }
+.header-account-icons { display: flex; align-items: center; gap: 1.5625rem; }
+.header-icon, .header-avatar { position: relative; display: block; width: 1.5rem; height: 1.5rem; padding: 0; border-radius: 0.25rem; }
+.header-icon::after, .header-avatar::after { content: ''; position: absolute; inset: -0.5rem; }
+.header-icon img, .header-avatar img { display: block; }
+.header-profile { display: flex; align-items: center; gap: 0.95rem; }
+.header-runner { display: inline-flex; align-items: baseline; gap: 0.5rem; font-size: 0.875rem; line-height: 1.6; color: #1A1A1A; white-space: nowrap; }
+.header-runner b { font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.25rem; }
+.header-runner span { font-weight: 300; }
+.header-avatar { width: 1.75rem; height: 1.75rem; border-radius: 50%; }
+.header-icon:hover, .header-avatar:hover { opacity: 0.7; }
+@media (max-width: 1023px) {
+  .header-account { display: none; }
+}

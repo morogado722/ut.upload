@@ -1,0 +1,278 @@
+/* v5 / Readable type + fluid layout. Loaded after original Figma styles.
+   Never scale the page, type or input targets with viewport width.
+   The 1440px design's outer limit, artwork and top-only header remain. */
+:root {
+  --text-muted: #656565;
+  --text-subtle: #747474;
+  --text-inactive: #757575;
+  --page-gutter: clamp(24px, 4.1667vw, 60px);
+  --column-gap: clamp(24px, 3.1945vw, 46px);
+  --header-personality: #14734C;
+  --asset-scale: 1;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+}
+html { font-size: 100%; }
+body { line-height: 1.5; isolation: isolate; }
+button, input, textarea, select { font-family: var(--font); }
+.workspace { row-gap: 24px; padding-bottom: 64px; }
+.intro { gap: 24px; align-items: center; min-height: 64px; }
+h1 { font-size: 1.5rem; line-height: 1.33334; }
+.project-switch { flex-basis: 400px; grid-template-columns: 1fr 1fr; margin-top: 0; }
+.option-surface { justify-content: center; }
+.option-content, .project-option:nth-of-type(2) .option-content { margin-left: 0; transform: none; opacity: 1; font-size: .875rem; gap: 8px; }
+/* Figma 3463:26802: inactive content at 60%, active at full opacity.
+   Use separate original SVGs to preserve pale fills and darker line work. */
+.project-option .option-content { color: #444; transition: opacity 180ms ease; }
+.project-option input:not(:checked) + .option-surface .option-content { color: #444; opacity: .6; }
+.project-option input:checked + .option-surface .option-content { opacity: 1; }
+.project-option .option-content img { opacity: 0; filter: none; transition: opacity 180ms ease; }
+.project-option input:not(:checked) + .option-surface .project-icon--inactive,
+.project-option input:checked + .option-surface .project-icon--active { opacity: 1; }
+/* Keep full-sized header artwork at laptop widths: crop the decorative edges
+   instead of shrinking the navigation and its white background. */
+.header-art-window { width: var(--header-art-max); max-width: none; }
+.header-backdrop { overflow: hidden; }
+.brand { margin-right: clamp(24px, 4.8611vw, 70px); }
+.header-nav { gap: clamp(20px, 3.6111vw, 52px); }
+.nav-item { color: var(--text-muted); font-size: 1.125rem; }
+.header-search { flex: 0 1 338px; min-width: 210px; height: 40px; margin-top: -4px; margin-left: auto; }
+.header-search input { font-size: .875rem; height: 24px; letter-spacing: 0; }
+.header-search input::placeholder { color: var(--text-muted); }
+.header-search input:placeholder-shown:not(:focus) { text-align: left; }
+.search-submit { flex: 0 0 14px; }
+/* Steps + quiet secondary actions: the action container never moves on add. */
+.step-summary { display: none; }
+.step-card, .has-files .step-card { height: auto; min-height: 0; padding-bottom: 0; border-radius: 12px 12px 0 0; }
+.step-list { padding: 24px 16px 0; grid-template-rows: repeat(4, 72px) 40px; }
+.step-button { width: 100%; height: 40px; grid-template-columns: 43px 1fr; column-gap: 16px; }
+.step-label, .step.is-current .step-label { margin-left: 0; font-size: .875rem; line-height: 20px; }
+.step-number { color: #656565; }
+.step.is-current .step-number { color: var(--dark-forest-green); background: var(--accent-soft); }
+.step-connector, .step:nth-child(2) .step-connector, .step:nth-child(4) .step-connector { left: 21px; top: 36px; }
+.sidebar-divider-slot { margin: 20px auto 0; }
+.completion { margin: 20px 16px 0; }
+.completion-label { font-size: .8125rem; line-height: 20px; gap: 8px; }
+.completion-value { font-size: .875rem; font-weight: 700; color: var(--dark-forest-green); }
+.completion-track { margin-top: 8px; background: #EAEFEC; }
+.completion-hint { margin-top: 8px; color: var(--text-muted); font-size: .75rem; line-height: 20px; }
+.has-files .completion-hint { color: var(--dark-forest-green); }
+.sidebar-actions { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 8px; padding: 16px; border-radius: 0 0 12px 12px; background: var(--surface); }
+.preview-button, .has-files .preview-button, .save-button { width: 100%; height: 44px; min-height: 44px; margin: 0; padding: 0 8px; font-size: .8125rem; line-height: 20px; border-radius: 999px; }
+.save-button { background: #EDF0EE; font-weight: 500; }
+.save-status, .has-files .save-status { gap: 6px; margin: 10px 2px 0; color: var(--accent-ink); font-size: .75rem; line-height: 20px; align-items: flex-start; }
+.save-status img { margin-top: 5px; }
+/* Panels: 24 outside / 16 between content / 8 inside small pairs. */
+.upload-content { gap: 24px; }
+.file-panel, .has-files .file-panel, .url-panel { min-height: 0; padding: 20px; }
+.section-title { height: 24px; align-items: center; gap: 8px; }
+.section-title h2 { font-size: 1rem; line-height: 24px; }
+.counter { font-weight: 400; color: #5D5D5D; }
+.dropzone { height: 256px; margin-top: 12px; padding: 20px; align-items: center; }
+.drop-content { transform: none; }
+.drop-message { font-size: 1rem; line-height: 24px; }
+.drop-title { color: var(--relay-black); font-weight: 500; }
+.drop-detail { margin-top: 4px; color: var(--text-muted); font-size: .875rem; line-height: 22px; }
+
+
+.has-files .dropzone { height: 216px; }
+.has-files .upload-art-slot { height: 58px; }
+.has-files .upload-art { top: -10px; }
+.file-list { gap: 12px 24px; margin: 16px 0 0; }
+.file-row { min-height: 64px; height: auto; gap: 8px; padding: 6px 8px 6px 12px; }
+.file-open { gap: 12px; min-height: 48px; height: auto; }
+.file-name { font-size: .875rem; line-height: 20px; }
+.file-meta { font-size: .75rem; line-height: 18px; }
+.remove-button { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 8px; }
+.remove-button::after { display: none; }
+.url-header { min-height: 32px; align-items: center; }
+.add-link { width: auto; padding-inline: 4px; min-height: 32px; font-size: .875rem; font-weight: 500; }
+.add-link::after { display: none; }
+.url-field { margin-top: 12px; }
+.url-list { margin-top: 12px; gap: 12px; }
+.url-row { min-height: 48px; height: auto; padding-right: 4px; }
+.url-row a { font-size: .9375rem; line-height: 24px; }
+.url-row .remove-button { opacity: .72; }
+.url-row:hover .remove-button, .url-row:focus-within .remove-button { opacity: 1; }
+.upload-actions { gap: 24px; min-height: 52px; margin-top: 0; }
+.upload-summary { font-size: .875rem; line-height: 24px; letter-spacing: 0; color: var(--text-muted); }
+/* Layout only. Shared translucent paint, type and interaction states are in
+   buttons.css for both this CTA and the loading screen's return action. */
+.next-button { flex-basis: 223px; gap: 8px; }
+.close-button { width: 44px; height: 44px; }
+.dialog-top h2 { font-size: 1.375rem; }
+.dialog-description { font-size: .875rem; }
+.dialog-bottom > span { font-size: .75rem; }
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .intro { flex-wrap: wrap; gap: 16px; }
+  .project-switch { flex-basis: 100%; width: 100%; }
+  .header-nav { gap: 24px; }
+  .brand { margin-right: 32px; }
+  .header-search { flex-basis: 250px; }
+}
+@media (max-width: 1023px) {
+  :root { --page-gutter: clamp(20px, 3.125vw, 32px); }
+  .workspace { gap: 20px; padding-top: 24px; padding-bottom: max(40px, env(safe-area-inset-bottom)); }
+  .intro { gap: 16px; }
+  h1 { font-size: 1.375rem; line-height: 30px; }
+  .project-switch { flex: 0 1 360px; }
+  .header-primary { padding-top: 16px; }
+  .header-search { margin: 0; width: 100%; min-width: 0; }
+  .header-search input { font-size: 1rem; }
+  .header-nav { gap: 12px; }
+  .nav-item { font-size: .9375rem; }
+  .brand { margin: 4px 0 0; }
+  .step-card, .has-files .step-card { width: 100%; padding: 12px 16px 16px; border-radius: 12px; }
+  .step-summary { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 40px; text-align: left; border-radius: 4px; gap: 8px; }
+  .step-summary > span:first-child { display: flex; align-items: center; gap: 12px; }
+  .step-summary strong { font-size: .875rem; font-weight: 700; }
+  .step-summary-count { border-radius: 999px; padding: 2px 10px; color: var(--dark-forest-green); background: var(--accent-soft); font-size: .75rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .step-summary-toggle { color: var(--text-muted); font-size: .75rem; white-space: nowrap; }
+  .step-summary-toggle > span { display: inline-block; margin-left: 4px; }
+  .step-summary[aria-expanded='true'] .step-summary-toggle > span { transform: rotate(180deg); }
+  .step-list { display: none; }
+  .steps-expanded .step-list { display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(5, 44px); gap: 4px; padding: 12px 0; }
+  .step-button { display: flex; flex-direction: row; height: 44px; min-height: 44px; gap: 16px; }
+  .step-label, .step.is-current .step-label { max-width: none; font-size: .875rem; line-height: 20px; text-align: left; }
+  .sidebar-divider-slot { display: none; }
+  .completion { display: block; margin: 8px 0 0; }
+  .completion-label { font-size: .8125rem; }
+  .completion-value { font-size: .875rem; }
+  .completion-track { height: 8px; margin-top: 8px; }
+  .completion-hint { display: none; }
+  .sidebar-actions { order: 3; padding: 0; background: none; gap: 12px; }
+  .preview-button, .has-files .preview-button, .save-button { min-height: 44px; margin: 0; width: 100%; font-size: .875rem; }
+  .preview-button { border: 1px solid #DFE7E2; background: rgb(255 255 255 / 70%); }
+  .save-status, .has-files .save-status { order: 4; margin: -10px 0 0; justify-content: center; font-size: .75rem; }
+  .upload-content { gap: 20px; }
+  .file-name { font-size: .875rem; }
+  .file-meta { font-size: .75rem; }
+  .upload-actions { gap: 16px; }
+  .upload-summary { font-size: .875rem; }
+  .next-button { font-size: 1rem; height: 52px; }
+}
+@media (max-width: 639px) {
+  .intro { width: 100%; }
+  .project-switch { flex-basis: 100%; width: 100%; }
+  .option-content, .project-option:nth-of-type(2) .option-content { font-size: .8125rem; gap: 6px; }
+  .file-panel, .has-files .file-panel, .url-panel { padding: 16px; }
+  .dropzone { height: 248px; padding: 16px 8px; }
+  .drop-message { font-size: .875rem; line-height: 22px; }
+  .drop-detail { font-size: .8125rem; line-height: 20px; }
+  .has-files .dropzone { height: 160px; }
+  .has-files .upload-art-slot { display: none; }
+
+
+  .file-list { grid-template-columns: 1fr; gap: 12px; }
+  .file-row { padding: 6px 4px 6px 8px; }
+  .file-open { gap: 8px; }
+  .file-extension { flex-basis: 36px; width: 36px; height: 36px; }
+  .file-name { font-size: .875rem; }
+  .file-meta { font-size: .75rem; }
+  .add-link { min-height: 44px; }
+  .url-field { padding-inline: 12px; }
+  .url-field input { font-size: 1rem; }
+  .url-row { gap: 8px; padding-left: 12px; }
+  .url-row a { font-size: .875rem; }
+  .upload-actions { flex-direction: column; align-items: stretch; gap: 12px; }
+  .upload-summary { width: 100%; text-align: center; }
+  .next-button { flex-basis: auto; width: 100%; }
+}
+@media (max-width: 359px) {
+  .nav-item { font-size: .8125rem; }
+  .header-nav { gap: 8px; }
+  .option-content, .project-option:nth-of-type(2) .option-content { gap: 4px; font-size: .75rem; }
+  .drop-detail { max-width: 200px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .completion-track span { transition: none; }
+}
+@media (max-width: 639px) {
+  .has-files .dropzone { height: auto; min-height: 184px; }
+  .has-files .upload-art-slot { display: block; height: 38px; }
+  .has-files .upload-art { top: -18px; }
+}
+/* Reset the old mobile preview grid placement and status colors. */
+.sidebar-actions .preview-button, .sidebar-actions .save-button { grid-area: auto; order: 0; }
+.save-status[data-state='error'], .has-files .save-status[data-state='error'] { color: var(--error); }
+.save-status[data-state='dirty'], .has-files .save-status[data-state='dirty'] { color: var(--text-muted); }
+
+
+/* v6 copy kept. v7 restores the Figma icon variants and translucent white CTA. */
+body {
+  background: var(--track-white);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: -18% -12%;
+  z-index: -3;
+  pointer-events: none;
+  background:
+    radial-gradient(42rem 28rem at 14% 18%, rgb(var(--accent-rgb) / 0.13), transparent 66%),
+    radial-gradient(38rem 24rem at 82% 14%, rgb(145 255 205 / 0.11), transparent 68%),
+    radial-gradient(46rem 30rem at 28% 86%, rgb(var(--accent-rgb) / 0.09), transparent 70%),
+    linear-gradient(180deg, rgb(250 250 250 / 0.9), rgb(250 250 250 / 0.98));
+  filter: blur(10px);
+  transform: translate3d(0,0,0);
+  /* 14s for each direction (28s out-and-back), previously 26s per direction.
+     body isolation keeps this fixed layer above #FAFAFA and below the UI. */
+  animation: morogaroAmbientShift var(--ambient-travel-time, 14s) ease-in-out infinite alternate;
+}
+@keyframes morogaroAmbientShift {
+  0% { transform: translate3d(-2%, -1%, 0) scale(1); }
+  50% { transform: translate3d(3%, 2%, 0) scale(1.04); }
+  100% { transform: translate3d(-1%, 4%, 0) scale(1.02); }
+}
+.page-art { opacity: .9; }
+.dropzone { transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease; }
+.drop-message {
+  max-width: 31rem;
+}
+.drop-title {
+  font-size: 1.25rem;
+  line-height: 1.45;
+  font-weight: 700;
+}
+.drop-detail {
+  margin-top: 8px;
+  color: #6F6F6F;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.has-files .dropzone {
+  min-height: 230px;
+}
+
+.has-files .drop-content {
+  gap: 8px;
+}
+.has-files .drop-title { color: var(--relay-black); }
+.upload-summary {
+  color: #666;
+}
+.next-button .send-icon-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.next-button .send-icon-slot img {
+  opacity: 1;
+}
+@media (max-width: 639px) {
+  body::before { inset: -28% -24%; --ambient-travel-time: 16s; }
+  .drop-title { font-size: 1.0625rem; line-height: 1.45; }
+  .drop-detail { font-size: .875rem; line-height: 1.5; }
+  .has-files .dropzone { min-height: 176px; }
+}
+
+/* Decorative motion never changes layout or intercepts input. */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none !important; transform: none; }
+  .project-option .option-content, .project-option .option-content img { transition: none; }
+}
+@media print {
+  body::before { animation: none; }
+}

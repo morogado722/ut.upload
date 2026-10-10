@@ -1,0 +1,51 @@
+/* The creative stage controls only the ambience, never upload readiness.
+   Separate prepainted layers cross-fade without a green frame on initial load. */
+html, body { background: #FAFAFA; }
+body { isolation: isolate; }
+body::before { display: none; }
+.ambient-background { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+/* 배경에 흐르는 색: 단계 색 원 두 개가 각자 자리 주변을 일정한 속도로 돌아요.
+   가속·멈춤·크기 변화 없이 등속으로 돌아서 어지럽지 않고, 타원이 돌며 모양이 조금씩 바뀌어 색이 흐르는 것처럼 보여요.
+   원 A: 왼쪽 위, 반지름 9vw, 14초에 한 바퀴(시계 방향) / 원 B: 오른쪽 아래, 반지름 8vw, 18초에 한 바퀴(반시계). */
+.ambient-layer { position: absolute; inset: 0; opacity: 0; transition: opacity 1100ms ease; }
+.ambient-layer::before, .ambient-layer::after { content: ''; position: absolute; border-radius: 50%; will-change: transform; }
+.ambient-layer::before {
+  width: 64vmax; height: 50vmax; left: -18vmax; top: -20vmax;
+  background: radial-gradient(closest-side, rgb(var(--ambient-rgb) / .22), rgb(var(--ambient-rgb) / .08) 55%, transparent);
+  transform-origin: calc(50% + 9vw) 50%;
+  animation: ambient-orbit 14s linear infinite;
+}
+.ambient-layer::after {
+  width: 60vmax; height: 48vmax; right: -16vmax; bottom: -18vmax;
+  background: radial-gradient(closest-side, rgb(var(--ambient-rgb) / .24), rgb(var(--ambient-rgb) / .09) 55%, transparent);
+  transform-origin: calc(50% - 8vw) 50%;
+  animation: ambient-orbit 18s linear infinite reverse;
+}
+.ambient-neutral { --ambient-rgb: 138 142 143; opacity: 1; }
+.ambient-Seeding { --ambient-rgb: 0 255 238; }
+.ambient-Planting { --ambient-rgb: 0 249 152; }
+.ambient-Growing { --ambient-rgb: 227 234 45; }
+.ambient-Blooming { --ambient-rgb: 249 178 0; }
+.ambient-Flowering { --ambient-rgb: 255 64 147; }
+html[data-baton-theme]:not([data-baton-theme='neutral']) .ambient-neutral { opacity: 0; }
+html[data-baton-theme='Seeding'] .ambient-Seeding,
+html[data-baton-theme='Planting'] .ambient-Planting,
+html[data-baton-theme='Growing'] .ambient-Growing,
+html[data-baton-theme='Blooming'] .ambient-Blooming,
+html[data-baton-theme='Flowering'] .ambient-Flowering { opacity: 1; }
+/* Their green paint is superseded by the requested stage-coloured ambience. */
+.page-art .glow-top, .page-art .glow-bottom { display: none; }
+html:not([data-baton-theme]) .page-art, html[data-baton-theme='neutral'] .page-art { filter: grayscale(1); }
+.stage[data-page='detail'] .page-art { visibility: hidden; }
+@keyframes ambient-orbit { to { transform: rotate(360deg); } }
+/* 보이는 단계 색 레이어만 움직여요(가려진 레이어는 멈춰서 기기 부담을 줄여요). */
+.ambient-layer::before, .ambient-layer::after { animation-play-state: paused; }
+html:not([data-baton-theme]) .ambient-neutral, html:not([data-baton-theme]) .ambient-neutral::before, html:not([data-baton-theme]) .ambient-neutral::after,
+html[data-baton-theme='neutral'] .ambient-neutral, html[data-baton-theme='neutral'] .ambient-neutral::before, html[data-baton-theme='neutral'] .ambient-neutral::after,
+html[data-baton-theme='Seeding'] .ambient-Seeding, html[data-baton-theme='Seeding'] .ambient-Seeding::before, html[data-baton-theme='Seeding'] .ambient-Seeding::after,
+html[data-baton-theme='Planting'] .ambient-Planting, html[data-baton-theme='Planting'] .ambient-Planting::before, html[data-baton-theme='Planting'] .ambient-Planting::after,
+html[data-baton-theme='Growing'] .ambient-Growing, html[data-baton-theme='Growing'] .ambient-Growing::before, html[data-baton-theme='Growing'] .ambient-Growing::after,
+html[data-baton-theme='Blooming'] .ambient-Blooming, html[data-baton-theme='Blooming'] .ambient-Blooming::before, html[data-baton-theme='Blooming'] .ambient-Blooming::after,
+html[data-baton-theme='Flowering'] .ambient-Flowering, html[data-baton-theme='Flowering'] .ambient-Flowering::before, html[data-baton-theme='Flowering'] .ambient-Flowering::after { animation-play-state: running; }
+
+@media(prefers-reduced-motion:reduce) { .ambient-layer, .ambient-layer::before, .ambient-layer::after { animation:none !important; } .ambient-layer { transition:none; } }

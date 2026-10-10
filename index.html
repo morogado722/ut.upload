@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FAFAFA">
+  <meta name="description" content="모로가도 바톤 메이커 — 파일과 URL로 바톤을 시작하는 1단계 화면입니다.">
+  <title>바톤 올리기 · 모로가도</title>
+  <link rel="stylesheet" href="./fonts.css">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./header.css">
+  <link rel="stylesheet" href="./refinement.css">
+  <link rel="stylesheet" href="./loading.css">
+  <link rel="stylesheet" href="./buttons.css">
+  <link rel="stylesheet" href="./review.css">
+  <link rel="stylesheet" href="./stepper.css">
+  <link rel="stylesheet" href="./ambient.css">
+  <link rel="stylesheet" href="./note.css">
+  <link rel="stylesheet" href="./detail.css">
+  <link rel="stylesheet" href="./research.css">
+  <link rel="icon" href="./assets/avatar.svg" type="image/svg+xml">
+  <script src="./app.js" defer></script>
+  <script src="./header.js" defer></script>
+  <script src="./loading.js" defer></script>
+  <script src="./file-analysis.js" defer></script>
+  <script src="./ambient.js" defer></script>
+  <script src="./stepper.js" defer></script>
+  <script src="./note-snap.js" defer></script>
+  <script src="./review.js" defer></script>
+  <script src="./note.js" defer></script>
+  <script src="./download-bundle.js" defer></script>
+  <script src="./vendor/modern-screenshot.js" defer></script>
+  <script src="./research.js" defer></script>
+  <script src="./detail.js" defer></script>
+</head>
+<body>
+  <div class="ambient-background" aria-hidden="true">
+    <div class="ambient-layer ambient-neutral" data-ambient="neutral"></div>
+    <div class="ambient-layer ambient-Seeding" data-ambient="Seeding"></div>
+    <div class="ambient-layer ambient-Planting" data-ambient="Planting"></div>
+    <div class="ambient-layer ambient-Growing" data-ambient="Growing"></div>
+    <div class="ambient-layer ambient-Blooming" data-ambient="Blooming"></div>
+    <div class="ambient-layer ambient-Flowering" data-ambient="Flowering"></div>
+  </div>
+  <a class="skip-link" href="#file-dropzone">파일 올리기로 바로 가기</a>
+  <div class="stage" data-node-id="3421:2057">
+    <div class="page-art" aria-hidden="true">
+      <img class="glow-top" src="./assets/glow-top.svg" alt="" data-node-id="3421:2058">
+      <img class="glow-bottom" src="./assets/glow-bottom.svg" alt="" data-node-id="3421:2059">
+      <img class="path-top" src="./assets/path-top.svg" alt="" data-node-id="3421:2060">
+      <img class="path-bottom" src="./assets/path-bottom.svg" alt="" data-node-id="3421:2096">
+    </div>
+
+    <!-- Figma 3423:5019. Constant desktop slot: no document reflow on fold.
+         Expanded only at scrollY=0; scrolling upward in the page stays compact. -->
+    <header class="header-shell" id="site-header" aria-label="모로가도" data-node-id="3423:5019" data-state="expanded">
+      <a class="header-return" id="header-return" href="#" tabindex="-1">맨 위로 이동해 전체 메뉴 보기</a>
+      <div class="site-header">
+        <div class="header-backdrop" aria-hidden="true">
+          <div class="header-art-window">
+            <img class="header-art" src="./assets/header-surface.svg" alt="" data-node-id="3423:5025">
+          </div>
+        </div>
+        <div class="header-inner">
+          <div class="header-primary" id="header-primary">
+            <a class="brand" id="header-brand" href="#" aria-label="모로가도, 페이지 맨 위로">
+              <img src="./assets/brand.svg" alt="" data-node-id="3423:5029">
+            </a>
+            <nav class="header-nav" id="header-nav" aria-label="주 메뉴" data-node-id="3423:5030">
+              <button class="nav-item" type="button" data-context="explore" data-node-id="3423:5031">탐색</button>
+              <button class="nav-item" type="button" data-context="community" data-node-id="3423:5032">커뮤니티</button>
+              <button class="nav-item is-current" type="button" data-context="baton-center" aria-current="page" data-node-id="3516:27815">바톤 올리기</button>
+              <button class="nav-item nav-personality" type="button" data-context="personality" data-node-id="3423:5034">내 작업성향은?</button>
+            </nav>
+            <form class="header-search" id="header-search" role="search" aria-label="바톤 검색" data-node-id="3423:5035">
+              <button class="search-submit" type="submit" aria-label="검색">
+                <img src="./assets/search.svg" alt="" data-node-id="3423:5037">
+              </button>
+              <label class="sr-only" for="search-input">검색어</label>
+              <input id="search-input" name="q" type="search" autocomplete="off" maxlength="200" placeholder="사랑과 관련된 프로젝트 기획서" data-node-id="3423:5042">
+            </form>
+          </div>
+          <!-- Figma 3516:27817 — 저장 · 알림 · 프로필. 헤더 아래쪽 탭 영역(y=105)에 놓여요. -->
+          <div class="header-account" data-node-id="3516:27817">
+            <div class="header-account-icons" data-node-id="3516:27818">
+              <button class="header-icon" type="button" data-context="saved" aria-label="저장한 바톤" data-node-id="3516:27819"><img src="./assets/bookmark.svg" width="24" height="24" alt=""></button>
+              <button class="header-icon" type="button" data-context="notifications" aria-label="알림" data-node-id="3516:27823"><img src="./assets/bell.svg" width="24" height="24" alt=""></button>
+            </div>
+            <div class="header-profile" data-node-id="3516:27828">
+              <span class="header-runner" data-node-id="3516:27830"><b>RUNNER</b><span>김찬우 님</span></span>
+              <button class="header-avatar" type="button" data-context="profile" aria-label="김찬우 프로필" data-node-id="3516:27832"><img src="./assets/avatar.svg" width="28" height="28" alt=""></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="workspace" aria-labelledby="page-title">
+      <div class="intro">
+        <h1 id="page-title" data-node-id="3421:2097">
+          <span class="greeting">찬우님,</span>
+          <span><strong>어떤 멋진 바톤</strong>을 갖고 계신가요?</span>
+        </h1>
+        <fieldset class="project-switch" data-node-id="3463:26802">
+          <legend class="sr-only">프로젝트 유형</legend>
+          <label class="project-option">
+            <input type="radio" name="project-type" value="design" checked>
+            <span class="option-surface">
+              <span class="option-content">
+                <span class="design-icon-slot" aria-hidden="true">
+                  <img class="project-icon--active" src="./assets/project-design.svg" alt="" data-node-id="3421:2102">
+                  <img class="project-icon--inactive" src="./assets/project-design-inactive.svg" alt="" data-node-id="3463:26806">
+                </span>
+                <span>디자인 프로젝트</span>
+              </span>
+            </span>
+          </label>
+          <label class="project-option">
+            <input type="radio" name="project-type" value="planning">
+            <span class="option-surface">
+              <span class="option-content">
+                <span class="planning-icon-slot" aria-hidden="true">
+                  <img class="project-icon--inactive" src="./assets/project-planning.svg" alt="" data-node-id="3421:2113">
+                  <img class="project-icon--active" src="./assets/project-planning-active.svg" alt="" data-node-id="3463:26817">
+                </span>
+                <span>기획 프로젝트</span>
+              </span>
+            </span>
+          </label>
+        </fieldset>
+      </div>
+
+      <aside class="sidebar" aria-label="바톤 메이커 단계">
+        <!-- Figma 3571:3018. No surrounding panel or card fill. -->
+        <nav class="step-card" aria-label="바톤 메이커 6단계" data-node-id="3571:3018">
+          <button class="step-summary" id="step-summary" type="button" aria-expanded="false" aria-controls="maker-steps">
+            <span><span class="step-summary-count">1 / 6</span><strong>파일 올리기</strong></span>
+            <span class="step-summary-toggle">전체 단계 <span aria-hidden="true">⌄</span></span>
+          </button>
+          <div class="step-list-wrap">
+            <img class="stepper-connector-art" src="./assets/stepper-six-connectors.svg" alt="" aria-hidden="true" data-node-id="3571:2173">
+            <ol class="step-list" id="maker-steps">
+              <li class="step is-current" data-node-id="3571:2167">
+                <button class="step-button" type="button" data-step="1" aria-current="step"><span class="step-number">1</span><span class="step-label">파일 올리기</span></button>
+              </li>
+              <li class="step" data-node-id="3571:2166">
+                <button class="step-button" type="button" data-step="2" aria-disabled="true" title="파일을 먼저 올려주세요."><span class="step-number">2</span><span class="step-label">소스 확인</span></button>
+              </li>
+              <li class="step" data-node-id="3571:2168">
+                <button class="step-button" type="button" data-step="3" aria-disabled="true" title="파일을 먼저 올려주세요."><span class="step-number">3</span><span class="step-label">썸네일 설정</span></button>
+              </li>
+              <li class="step" data-node-id="3571:2169">
+                <button class="step-button" type="button" data-step="4" aria-disabled="true" title="파일을 먼저 올려주세요."><span class="step-number">4</span><span class="step-label">프로젝트 정보</span></button>
+              </li>
+              <li class="step" data-node-id="3571:2170">
+                <button class="step-button" type="button" data-step="5" aria-disabled="true" title="파일을 먼저 올려주세요."><span class="step-number">5</span><span class="step-label">파일 정보</span></button>
+              </li>
+              <li class="step" data-node-id="3571:2171">
+                <button class="step-button" type="button" data-step="6" aria-disabled="true" title="바톤 노트 작성 화면은 아직 연결되지 않았어요."><span class="step-number">6</span><span class="step-label">바톤 노트 작성</span></button>
+              </li>
+            </ol>
+          </div>
+          <div class="sidebar-divider-slot" aria-hidden="true"><img class="sidebar-divider" src="./assets/divider.svg" alt="" data-node-id="3516:28823"></div>
+          <div class="completion">
+            <div class="completion-label"><span>업로드까지...🏃‍♂️</span><span class="completion-value" id="completion-value">0%</span></div>
+            <!-- Weighted upload preparation: one file = 50%. Not creative-stage progress or network transfer. -->
+            <div class="completion-track" role="progressbar" id="completion-track" aria-label="바톤 업로드 준비" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="바톤 업로드 준비 0%. 파일을 추가해 주세요."><span></span></div>
+            <span class="sr-only" id="completion-announcement" role="status" aria-live="polite" aria-atomic="true"></span>
+            <p class="completion-hint" id="completion-hint">파일을 올리면 절반이 완성돼요.</p>
+          </div>
+        </nav>
+        <div class="sidebar-actions">
+          <button class="preview-button" id="preview-button" type="button">미리보기</button>
+          <button class="save-button" id="save-button" type="button" data-node-id="3516:28831">임시 저장</button>
+        </div>
+        <div class="save-status" id="save-status" role="status" aria-live="polite" title="이 기기의 현재 브라우저에 저장됩니다. 서버에 업로드되지 않습니다.">
+          <img src="./assets/autosave.svg" alt="" aria-hidden="true" data-node-id="3516:28834">
+          <span id="save-status-text">아직 저장하지 않았어요</span>
+        </div>
+      </aside>
+
+      <div class="upload-content">
+        <section class="panel file-panel" id="file-panel" aria-labelledby="file-heading" data-node-id="3421:2125">
+          <div class="panel-art" aria-hidden="true" data-node-id="3421:2126"></div>
+          <div class="panel-content">
+            <div class="section-title"><h2 id="file-heading">FILE</h2><output class="counter" id="file-count" aria-label="추가한 파일 수">0</output></div>
+            <input class="sr-only" id="file-input" type="file" multiple tabindex="-1" aria-label="바톤 파일 선택">
+            <button class="dropzone" id="file-dropzone" type="button" aria-label="바톤 파일 선택" aria-describedby="drop-message local-note" data-node-id="3421:2133">
+              <span class="drop-content">
+                <span class="upload-art-slot"><img src="./assets/upload.svg" class="upload-art" alt="" data-node-id="3421:2135"></span>
+                <span id="drop-message" class="drop-message"><span class="drop-title" id="drop-title">파일을 업로드하면 내 바톤 메이킹이 시작돼요!</span><span class="drop-detail" id="drop-detail">어떤 파일이든 올려보세요:)</span></span>
+              </span>
+            </button>
+            <p id="local-note" class="sr-only">파일을 클릭해서 선택하거나 이 영역으로 끌어다 놓으세요. 기본 실행에서는 브라우저 안에서 확인해요. 분석 서버로 실행하면 다음 단계에서 파일을 서버로 보내며, AI 도움은 별도 동의 후 진행해요.</p>
+            <ul class="file-list" id="file-list" aria-label="추가한 파일" hidden></ul>
+          </div>
+        </section>
+
+        <section class="panel url-panel" id="url-panel" aria-labelledby="url-heading" data-node-id="3421:2155">
+          <div class="panel-art" aria-hidden="true" data-node-id="3421:2156"></div>
+          <form id="url-form" class="panel-content" novalidate>
+            <div class="url-header">
+              <div class="section-title"><h2 id="url-heading">URL</h2><output class="counter" id="url-count" aria-label="추가한 URL 수">0</output></div>
+              <button class="add-link" id="add-link-button" type="button"><span>링크 추가</span><span aria-hidden="true">+</span></button>
+            </div>
+            <ul class="url-list" id="url-list" aria-label="추가한 URL" hidden></ul>
+            <div class="url-field" id="url-field" data-node-id="3421:2167">
+              <span class="link-icon-slot" aria-hidden="true"><img src="./assets/link.svg" alt="" data-node-id="3421:2169"></span>
+              <label class="sr-only" for="url-input">추가할 URL</label>
+              <input id="url-input" name="url" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="웹 주소를 붙여 넣어 주세요" aria-describedby="url-error">
+            </div>
+            <p class="field-error" id="url-error" role="alert" hidden></p>
+          </form>
+        </section>
+        <div class="upload-actions" id="upload-actions" hidden>
+          <p class="upload-summary" id="upload-summary" aria-live="polite" data-node-id="3421:2376"></p>
+          <button class="next-button glass-button" id="next-button" type="button" data-node-id="3421:2367" aria-label="다음으로, 소스 확인">
+            <span>다음으로</span><span class="send-icon-slot"><img src="./assets/send.svg" alt="" data-node-id="3421:2372"></span>
+          </button>
+        </div>
+      </div>
+      <section class="review-intro" id="review-intro" hidden aria-labelledby="review-heading" data-node-id="3516:28894">
+        <div class="review-project-art"><span><img id="review-project-icon" src="./assets/project-design.svg" alt=""></span></div>
+        <div class="review-type-line"><p id="review-type">디자인 프로젝트</p><button class="info-button" type="button" data-info="project" aria-label="프로젝트 유형 안내"><img src="./assets/review-info.svg" alt=""></button></div>
+        <div class="review-title-line">
+          <h1 id="review-heading" class="sr-only" tabindex="-1">파일 정보 확인</h1>
+          <label class="sr-only" for="review-title">바톤 제목</label>
+          <input id="review-title" class="review-title-input" type="text" maxlength="120" placeholder="바톤 제목을 적어주세요" autocomplete="off" data-field="title" data-node-id="3516:28893">
+          <button class="edit-title" type="button" aria-label="바톤 제목 수정"><span><img src="./assets/review-pencil.svg" alt=""></span></button>
+        </div>
+        <div class="review-provenance"><span id="analysis-mode-label">파일 정보 확인</span><button type="button" id="show-evidence">근거·추출 범위 보기</button><button type="button" id="reanalyze-files" title="직접 수정한 값은 유지하고 AI가 다시 확인해요">AI 다시 분석</button></div>
+      </section>
+      <div class="review-content" id="review-content" hidden data-node-id="3516:28759">
+        <section class="review-panel sources-panel" id="review-sources-section" data-maker-section="2" aria-labelledby="sources-heading" data-node-id="3516:28836">
+          <div class="review-section-heading"><div class="heading-with-meta"><h2 id="sources-heading" tabindex="-1">업로드 소스 확인</h2><p id="review-source-count"></p></div><button type="button" class="text-action" id="edit-sources">수정하기</button></div>
+          <div class="review-sources" id="review-sources"></div>
+          <div class="stage-heading"><h2>바톤 진척도</h2><button type="button" class="info-button" data-info="stage" aria-label="바톤 진척도 안내"><img src="./assets/review-info.svg" alt=""></button></div>
+          <div class="stage-selector" id="stage-selector" aria-label="바톤 진척도 선택">
+            <div class="stage-options" id="stage-options"></div>
+          </div>
+          <p class="review-quiet" id="stage-provenance"></p>
+        </section>
+        <section class="review-panel thumbnails-panel" id="review-thumbnails-section" data-maker-section="3" aria-labelledby="thumbnails-heading" data-node-id="3516:28837">
+          <div class="review-section-heading"><div class="heading-with-meta"><h2 id="thumbnails-heading" tabindex="-1">바톤 썸네일 설정</h2><button class="info-button" type="button" data-info="thumbnails" aria-label="썸네일 설정 안내"><img src="./assets/review-info.svg" alt=""></button></div><div class="thumbnail-count"><img src="./assets/review-count.svg" alt=""><span><strong id="selected-count">0</strong>/10</span></div></div>
+          <div class="thumbnail-toolbar"><span id="thumbnail-candidate-count">파일에서 캡처한 후보</span><label>파일별 보기 <select id="thumbnail-source-filter" aria-label="썸네일 후보의 원본 파일"><option value="all">전체 파일</option></select></label></div>
+          <div class="thumbnail-layout">
+            <div class="cover-card"><div class="cover-preview" id="cover-preview"><span>대표 이미지를 골라주세요</span></div><button class="text-action" id="custom-thumbnail" type="button">썸네일 설정하기</button></div>
+            <div class="thumbnail-candidates"><div class="thumbnail-grid" id="thumbnail-grid"></div><p class="thumbnail-empty" id="thumbnail-empty">캡처 가능한 이미지·페이지가 없어요.<br>썸네일 설정하기에서 이미지를 추가할 수 있어요.</p></div>
+          </div>
+          <input id="thumbnail-input" type="file" accept="image/png,image/jpeg,image/webp" class="sr-only" tabindex="-1" aria-label="바톤 썸네일 이미지 선택">
+          <p class="review-quiet">선택한 순서로 표시돼요. 첫 번째 이미지가 대표 썸네일이에요.</p>
+        </section>
+        <section class="review-panel project-panel" id="review-project-section" data-maker-section="4" aria-labelledby="project-info-heading" data-node-id="3556:982">
+          <h2 id="project-info-heading" tabindex="-1">프로젝트 정보</h2>
+          <div class="review-form-row"><h3>카테고리</h3><div class="chip-field" id="categories-field" data-chips="categories"></div></div>
+          <div class="review-form-row"><h3>사용 툴</h3><div class="chip-field" id="tools-field" data-chips="tools"></div></div>
+          <div class="review-form-row"><h3>기간</h3><div class="period-fields">
+            <label>프로젝트 시작일<span class="date-field"><img src="./assets/review-calendar.svg" alt=""><input id="project-start" type="date" data-field="startDate" aria-label="프로젝트 시작일"></span></label>
+            <span class="period-separator" aria-hidden="true">~</span>
+            <label>프로젝트 종료일<span class="date-field"><img src="./assets/review-calendar.svg" alt=""><input id="project-end" type="date" data-field="endDate" aria-label="프로젝트 종료일"></span></label>
+            <span class="period-suffix" aria-hidden="true">까지</span>
+            <div class="duration-field"><span>프로젝트 기간</span><output id="project-duration">미확인</output></div>
+            <span class="period-suffix" aria-hidden="true">간</span>
+            <p class="inline-error" id="period-error" role="alert" hidden></p>
+          </div></div>
+          <div class="review-form-row production-row" id="production-row" hidden>
+            <div><h3>제작여부</h3><p class="field-explanation">굿즈 카테고리라 추가되었어요!</p></div>
+            <div class="production-fields"><label class="production-toggle"><input id="physical-made" type="checkbox"><span>실물로 인쇄/제작해봤어요</span><small id="physical-status">미확인</small></label>
+              <label class="boxed-field"><span>소재 및 후가공</span><input id="production-materials" data-field="materials" maxlength="1000" placeholder="예: 스노우지 250g, 귀도리 후가공"></label>
+              <label class="boxed-field"><span>제작하면서 알게된 점</span><textarea id="production-lessons" data-field="lessons" rows="3" maxlength="2000" placeholder="이어받는 사람이 같은 실수를 피할 수 있게, 알게된 걸 편하게 적어주세요 :)"></textarea></label>
+            </div>
+          </div>
+          <div class="review-form-row"><h3>스타일 태그</h3><div class="chip-field" id="tags-field" data-chips="tags"></div></div>
+        
+          <div class="review-form-row reference-row">
+            <div><h3>레퍼런스 이미지</h3><p class="field-explanation">프로젝트 진행 시 참고한 이미지를 올려주세요 :)</p></div>
+            <div class="reference-field" id="reference-field">
+              <p class="reference-bubble" id="reference-bubble" hidden></p>
+              <div class="reference-strip" id="reference-strip"><div id="reference-images" class="reference-tiles"></div><button id="add-reference" type="button" class="reference-add" aria-label="레퍼런스 이미지 추가"><span aria-hidden="true">+</span></button></div>
+              <input id="reference-input" class="sr-only" type="file" multiple accept="image/png,image/jpeg,image/webp" tabindex="-1" aria-label="레퍼런스 이미지 추가">
+              <p class="field-explanation" id="reference-status" role="status"></p>
+            </div>
+          </div>
+</section>
+        <section class="review-panel technical-panel" id="review-file-section" data-maker-section="5" aria-labelledby="technical-heading" data-node-id="3556:984">
+          <h2 id="technical-heading" tabindex="-1">파일 정보를 확인해주세요 :)</h2>
+          <div class="review-form-row dimensions-row"><div><h3>규격</h3></div>
+            <div><div class="dimension-fields">
+              <label class="dimension-input"><img src="./assets/review-width.svg" alt=""><input type="number" id="dimension-width" placeholder="가로" min="0.01" max="100000" step="any" aria-label="가로 크기"></label>
+              <span aria-hidden="true">×</span><label class="dimension-input"><img src="./assets/review-height.svg" alt=""><input type="number" id="dimension-height" placeholder="세로" min="0.01" max="100000" step="any" aria-label="세로 크기"></label>
+              <select id="dimension-unit" aria-label="규격 단위"><option value="px">px</option><option value="mm">mm</option><option value="cm">cm</option></select>
+            </div><p class="field-explanation" id="dimension-basis">확인되지 않은 규격은 비워두었어요.</p></div>
+          </div>
+          <div class="review-form-row palette-row"><h3>컬러팔레트</h3><div class="palette-content">
+            <div class="palette-heading"><p id="palette-summary">대표컬러를 골라주세요.</p><fieldset class="color-mode"><legend class="sr-only">팔레트 표시 방식</legend><label><input type="radio" name="color-mode" value="rgb" checked><span>RGB</span></label><label><input type="radio" name="color-mode" value="cmyk"><span>CMYK</span></label></fieldset></div>
+            <div class="palette-main" id="palette-main"></div><p class="review-quiet" id="palette-empty">색상을 직접 확인할 수 있는 파일이 없어요.</p>
+            <div class="palette-candidates"><div class="palette-candidates-heading"><p id="palette-total">감지된 색상이 없어요.</p><label class="add-color-control">+ 색상 추가<input type="color" id="custom-color" value="#00F998" aria-label="직접 추가할 색상"></label></div><div id="palette-candidates" class="palette-small"></div></div>
+            <p class="field-explanation" id="cmyk-note" hidden>CMYK는 RGB의 단순 환산 미리보기예요. ICC 프로파일을 적용한 인쇄용 색상값이 아니에요.</p>
+          </div></div>
+          <div class="review-form-row fonts-row"><div><h3>사용폰트</h3><p class="field-explanation">파일에 명시된 폰트만 불러와요. 이름과 받는 곳이 맞는지 확인해주세요.</p></div><div><div id="review-fonts" class="font-list"></div><p class="review-quiet" id="fonts-empty">정확한 폰트 정보를 확인하지 못했어요. 직접 추가할 수 있어요.</p><button type="button" class="chip-add" id="add-font">+ 폰트 추가</button></div></div>
+        </section>
+
+        <div class="note-transition" data-node-id="3579:31">
+          <span aria-hidden="true"></span><strong>확인은 끝났어요 :)</strong>
+          <p>이제 이어받을 사람에게 이야기를 남겨볼까요?</p>
+        </div>
+        <!-- Figma 3666:4124 — 카드 · 바톤 노트 -->
+        <section id="review-note-section" class="review-panel note-panel" data-maker-section="6" data-node-id="3666:4124" aria-labelledby="note-heading">
+          <h2 id="note-heading" data-node-id="3666:4125">바톤 노트</h2>
+          <div class="note-body" data-node-id="3666:4126">
+            <div class="note-row" data-node-id="3666:4128">
+              <div class="note-label" data-node-id="3666:4129"><h3>노트</h3><p>하나만 써도 충분해요</p></div>
+              <div class="note-controls" data-node-id="3666:4132">
+                <div class="note-ai-row" data-node-id="3666:4133">
+                  <p class="note-bubble" id="note-bubble" hidden data-node-id="3668:4255"><span id="note-draft-status" role="status" aria-live="polite"></span> <button type="button" id="clear-draft" class="note-bubble-action" hidden>초안 지우기</button></p>
+                  <div class="note-ai-actions" data-node-id="3668:4260">
+                    <button type="button" id="generate-note" class="ai-pill" data-node-id="3666:4220"><img src="./assets/note-spark.svg" width="14" height="14" alt=""><span id="note-ai-label">AI로 초안 쓰기</span></button>
+                    <button type="button" id="clear-note" class="note-clear" data-node-id="3666:4144">지우기</button>
+                  </div>
+                </div>
+                <div class="note-box" data-node-id="3666:4145">
+                  <label class="sr-only" for="baton-note">바톤 노트, 자유롭게 이야기를 남겨주세요</label>
+                  <textarea id="baton-note" rows="6" maxlength="5000" placeholder="어떻게 시작했고, 지금은 어디까지 왔나요?
+하나의 이야기만 남겨도 괜찮아요." aria-describedby="note-count note-draft-status"></textarea>
+                  <output id="note-count" data-node-id="3666:4149">0 자</output>
+                </div>
+                <button id="apply-note-draft" type="button" class="idea-add" hidden>새 초안 적용</button>
+              </div>
+            </div>
+            <aside class="note-guide" aria-labelledby="story-rail-title" data-node-id="3666:4151">
+              <h3 id="story-rail-title" data-node-id="3666:4153">바톤노트 가이드</h3>
+              <div id="story-groups" class="guide-groups"></div>
+            </aside>
+          </div>
+          <div class="note-divider" aria-hidden="true" data-node-id="3666:4150"></div>
+          <div class="note-row ideas-row" data-node-id="3666:4190">
+            <div class="note-label" data-node-id="3666:4191"><h3>이어받을 아이디어</h3><p>앞으로의 방향을 최대 3개까지</p></div>
+            <div class="ideas-controls" data-node-id="3666:4194">
+              <button type="button" class="ai-pill ai-pill--large" id="suggest-ideas" data-node-id="3666:4239"><img src="./assets/note-spark.svg" width="14" height="14" alt=""><span>AI 추천 방향 보기</span></button>
+              <div id="idea-suggestions" class="idea-suggestions" hidden></div>
+              <div id="idea-fields" class="idea-fields"></div>
+              <button type="button" class="idea-add" id="add-idea" data-node-id="3666:4210">+ 아이디어 추가</button>
+              <p class="note-status" id="idea-status" role="status"></p>
+            </div>
+          </div>
+        </section>
+        <div class="review-bottom"><button class="glass-button review-back" type="button" id="review-back">이전으로</button><div><button class="review-publish" type="button" id="review-publish">이대로 업로드</button><button class="glass-button review-next" type="button" id="review-next"><span class="review-next-label">다음으로</span><span class="send-icon-slot"><img src="./assets/send.svg" alt=""></span></button></div></div>
+      </div>
+    </main>
+
+    <!-- 결과 상세페이지: v10 상세페이지(baton/index.html)를 그대로 불러와 이 바톤의 정보로 채워요. -->
+    <section id="baton-detail" class="baton-frame-host" hidden aria-label="바톤 상세페이지"></section>
+  </div>
+
+  <dialog class="preview-dialog" id="preview-dialog" aria-labelledby="preview-title" aria-describedby="preview-description">
+    <div class="dialog-top">
+      <div><p class="eyebrow">바톤 메이커</p><h2 id="preview-title">미리보기</h2></div>
+      <button class="close-button" id="close-preview" type="button" aria-label="미리보기 닫기">×</button>
+    </div>
+    <p class="dialog-description" id="preview-description">추가한 파일과 URL을 확인해요. 아직 바톤이 업로드된 것은 아니에요.</p>
+    <div class="preview-type" id="preview-type"></div>
+    <div class="preview-media" id="preview-media" hidden></div>
+    <div class="preview-items" id="preview-items"></div>
+    <p class="preview-empty" id="preview-empty">파일이나 URL을 추가하면 여기서 확인할 수 있어요.</p>
+    <div class="dialog-bottom"><span>이 브라우저에만 저장되는 미리보기예요.</span><button class="dialog-done" id="preview-done" type="button">이어서 작성하기</button></div>
+  </dialog>
+  <!-- Figma 3421:2377. Only the loading layer is added; the user's live
+       attachment screen remains behind the real backdrop, not a screenshot. -->
+  <dialog class="analysis-dialog" id="analysis-dialog" tabindex="-1" aria-labelledby="analysis-title" aria-describedby="analysis-guidance analysis-note">
+    <div class="analysis-center" role="status" aria-live="polite" aria-atomic="true">
+      <div class="relay-loader" aria-hidden="true" data-node-id="3421:2564">
+        <div class="relay-orbit">
+          <span class="relay-part relay-point"><img src="./assets/loader-point.svg" alt="" data-node-id="3421:2565"></span>
+          <span class="relay-part relay-circle-a"><img src="./assets/loader-circle-a.svg" alt="" data-node-id="3421:2566"></span>
+          <span class="relay-part relay-circle-b"><img src="./assets/loader-circle-b.svg" alt="" data-node-id="3421:2567"></span>
+          <span class="relay-part relay-circle-c"><img src="./assets/loader-circle-c.svg" alt="" data-node-id="3421:2568"></span>
+        </div>
+      </div>
+      <h2 id="analysis-title" data-node-id="3421:2569">모로가도에서 바톤 분석 중...</h2>
+    </div>
+    <div class="analysis-footer">
+      <p class="analysis-guidance" id="analysis-guidance" data-node-id="3491:27021">바톤 노트는 완벽하지 않아도 괜찮아요. 막힌 부분을 적어두면 받는 사람이 거기서부터 시작해요:)</p>
+      <button class="glass-button analysis-return" id="cancel-analysis" type="button" data-node-id="3491:27012">파일 올리기로 돌아가기</button>
+    </div>
+    <p class="analysis-demo-note" id="analysis-note">파일 내용을 확인하고 있어요. 확인되지 않은 정보는 비워두어요.</p>
+  </dialog>
+  <dialog class="review-dialog" id="evidence-dialog" aria-labelledby="evidence-title">
+    <div class="review-dialog-heading"><h2 id="evidence-title">자동 입력의 근거</h2><button class="close-button" type="button" data-close-dialog aria-label="근거 닫기">×</button></div>
+    <p class="review-dialog-intro">직접 추출한 정보와 AI 제안을 구분했어요. 확인할 수 없는 정보는 비워두고, Flowering은 자동 선정하지 않아요.</p>
+    <div id="evidence-content"></div><div class="review-dialog-actions"><button type="button" class="glass-button" data-close-dialog>확인했어요</button></div>
+  </dialog>
+  <dialog class="review-dialog consent-dialog" id="ai-consent-dialog" aria-labelledby="consent-title">
+    <div class="review-dialog-heading"><h2 id="consent-title">파일을 보고 AI가 입력을 도와줄까요?</h2><button class="close-button" type="button" data-consent="cancel" aria-label="취소">×</button></div>
+    <p>AI 도움을 선택하면 분석 서버가 추출한 <strong>파일명, 문서 본문, 페이지·이미지·영상 캡처, 추출된 음성 일부(최대 3파일·각 120초)</strong>를 OpenAI로 보내 제목·카테고리·진척도 등을 제안해요. 민감한 내용이 없는지 확인해주세요.</p>
+    <p class="review-quiet">API 사용료는 설정된 키의 계정에 청구돼요. 기본 정보만 확인하면 OpenAI로 전송하지 않아요. 취소하더라도 이미 전송된 AI 요청은 비용이 발생할 수 있어요.</p>
+    <label class="remember-ai"><input id="remember-ai-choice" type="checkbox"> 이 탭에서 선택을 기억하기</label>
+    <div class="review-dialog-actions"><button class="text-action" type="button" data-consent="basic">기본 정보만 확인</button><button class="glass-button" type="button" data-consent="ai">AI 도움 받기</button></div>
+  </dialog>
+  <dialog class="review-dialog" id="review-summary-dialog" aria-labelledby="review-summary-title">
+    <div class="review-dialog-heading"><h2 id="review-summary-title">바톤 정보 확인</h2><button class="close-button" type="button" data-close-dialog aria-label="확인 창 닫기">×</button></div>
+    <p id="review-summary-note"></p><div id="review-summary-body"></div>
+    <div class="review-dialog-actions"><button class="text-action" type="button" id="export-review">작성 정보 저장하기</button><button class="glass-button" type="button" data-close-dialog>이어서 수정하기</button></div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <dialog id="note-ai-consent" class="review-dialog" aria-labelledby="note-ai-consent-title">
+    <div class="review-dialog-heading"><h2 id="note-ai-consent-title">노트 작성에 AI 도움을 받을까요?</h2></div>
+    <p>확인한 제목·카테고리·제작 정보와 추출 근거를 OpenAI로 보내요. 원본 파일을 새로 전송하지 않으며, API 사용료가 발생할 수 있어요. 초안은 확인 후 수정할 수 있어요.</p>
+    <div class="review-dialog-actions"><button class="review-publish" id="note-ai-no" type="button">직접 작성할게요</button><button class="glass-button" id="note-ai-yes" type="button">AI 도움 받기</button></div>
+  </dialog>
+  <dialog id="note-clear-dialog" class="review-dialog" aria-labelledby="note-clear-title">
+    <h2 id="note-clear-title">작성한 노트를 지울까요?</h2><p>직접 수정한 문장도 함께 지워져요. 이어받을 아이디어는 유지돼요.</p>
+    <div class="review-dialog-actions"><button class="review-publish" id="note-clear-no" type="button">유지하기</button><button class="glass-button" id="note-clear-yes" type="button">노트 지우기</button></div>
+  </dialog>
+  <dialog id="finish-dialog" class="review-dialog" aria-labelledby="finish-title">
+    <h2 id="finish-title">바톤을 상세페이지로 이어볼까요?</h2>
+    <p class="review-dialog-intro">파일과 썸네일, 지금까지 작성한 정보를 하나의 바톤으로 묶어요. 이 버전에서는 이 브라우저에만 저장되며, 다른 사용자에게 공개되지는 않아요.</p>
+    <div id="finish-summary"></div><p id="finish-error" class="inline-error" role="alert" hidden></p>
+    <div class="review-dialog-actions"><button id="finish-cancel" class="review-publish" type="button">계속 작성하기</button><button id="finish-confirm" class="glass-button" type="button">바톤 만들기</button><button id="finish-preview" class="glass-button" type="button" hidden>저장 없이 미리보기</button></div>
+  </dialog>
+  <dialog id="detail-message-dialog" class="review-dialog" aria-labelledby="detail-message-title">
+    <div class="review-dialog-heading"><h2 id="detail-message-title"></h2></div><p id="detail-message-body"></p>
+    <div class="review-dialog-actions"><button id="detail-message-close" class="glass-button" type="button">확인</button></div>
+  </dialog>
+  <noscript><p class="noscript-note">파일 추가와 임시 저장을 사용하려면 브라우저에서 JavaScript를 켜 주세요.</p></noscript>
+</body>
+</html>

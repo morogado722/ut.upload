@@ -1,0 +1,28 @@
+/* 결과 상세페이지 자리: v10 상세페이지(baton/index.html)를 화면 전체에 띄워요.
+ * 상세페이지 안의 스크롤·페이지 전환·바톤로그는 v10 그대로 동작해요. */
+html.is-baton-open, html.is-baton-open body { overflow: hidden; }
+.baton-frame-host {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #FAFAFA;
+}
+.baton-frame-host[hidden] { display: none; }
+.baton-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: transparent;
+}
+.baton-frame-loading {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  color: #7A7A7A;
+  font-size: 14px;
+}
