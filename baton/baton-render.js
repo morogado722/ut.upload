@@ -332,6 +332,7 @@
     const social = v.social;
     $('#comment-count').textContent = String(social.commentTotal);
     $('#all-comment-count').textContent = String(social.commentTotal);
+    $('#all-comments').hidden = social.commentTotal <= 3;   // 다 보이면 '모두 보기'는 숨겨요
     const host = $('#comments'); host.replaceChildren();
     for (const c of social.comments) {
       const art = E('article', `comment comment-${c.kind}`);

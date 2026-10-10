@@ -112,7 +112,7 @@
       stageStatements: stageStatements(d, files.length),
       files,
       links: (d.urls || []).map(safeLink).filter(Boolean),
-      social: DEMO_SOCIAL,
+      social: liveSocial(d.aiComments),
     };
   }
 
@@ -133,6 +133,16 @@
       ['같은 편집 디자인이에요', 2], ['발표 자료가 아직 없어요', 3], ['파일 구성이 비슷해요', 3], ['발표 자료가 아직 없어요', 1], ['같은 일러스트예요', 4],
     ],
   });
+
+  /* AI가 만든 댓글(바톤 만들 때 한 번)이 있으면 그걸, 없으면 댓글 없이 보여줘요. 관련 바톤은 아직 시연용 예시예요. */
+  function liveSocial(raw) {
+    const avatars = ['cyan', 'pink', 'pale'], kinds = ['first', 'second', 'third'], times = ['2시간 전', '5시간 전', '어제'];
+    const comments = (Array.isArray(raw) ? raw : []).slice(0, 3).map((c, i) => ({
+      kind: kinds[i], avatar: avatars[i], name: clean(c?.name).slice(0, 20) || `씨앗 ${1000 + i * 1371}`,
+      handle: clean(c?.handle).replace(/[^a-z0-9_.]/gi, '').slice(0, 20), time: times[i], inherited: Boolean(c?.inherited), text: clean(c?.text).slice(0, 200),
+    })).filter(c => c.text);
+    return { isDemo: false, commentTotal: comments.length, comments, related: DEMO_SOCIAL.related };
+  }
 
   window.MorogaroBatonData = Object.freeze({ fromMakerRecord, toolAbbr, STAGES, STAGE_COLORS, DEMO_SOCIAL });
 })();

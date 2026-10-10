@@ -398,8 +398,13 @@
     const surface = CONFIG.renderSurface;
     button.style.width = button.style.height = `${surface}px`;
     button.style.setProperty('--node-render-scale', (surface/base).toFixed(6));
+    // 실제 바톤: 시안 그림 대신 사용자가 올린 이미지를 노드마다 돌아가며 보여줘요.
+    const liveGallery = [...(window.MorogaroLive?.gallery || []), ...(window.MorogaroLive?.references || [])];
+    const liveSrc = liveGallery.length ? liveGallery[(makeVisual.count = (makeVisual.count || 0) + 1) % liveGallery.length].src : null;
+    if (liveSrc) button.classList.add('has-live-art');
     const art = sizes.map(size => {
-      const img = new Image(); img.src = asset(nodeAsset(kind,size)); img.alt = '';
+      const img = new Image(); img.src = liveSrc || asset(nodeAsset(kind,size)); img.alt = '';
+      if (liveSrc) img.classList.add('is-live-art');
       img.width = base; img.height = base; img.className = 'node-art'; img.draggable = false;
       button.append(img); return img;
     });

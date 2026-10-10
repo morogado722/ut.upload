@@ -132,3 +132,6 @@ html.has-next-hint .beyond-button .chevron-down { animation: beyond-bob 1.6s cub
 @keyframes detail-tug { 35% { transform: translate3d(0, -10px, 0); } 100% { transform: none; } }
 @media (prefers-reduced-motion: reduce) { html.has-next-hint .beyond-button .chevron-down { animation: none; } }
 .mini-progress { display: none !important; }   /* 관련 바톤 카드의 진척도 막대는 쓰지 않아요 */
+
+/* 바톤 릴레이 로그: 사용자가 올린 이미지를 시안 노드처럼 흰 카드 안에 담아요. */
+img.node-art.is-live-art { object-fit: contain; background: #FFF; padding: 9%; box-sizing: border-box; border-radius: 3px; box-shadow: 0 2px 6px rgb(0 0 0 / 12%); }

@@ -108,6 +108,20 @@
     }
   });
 
+  /* 바톤 상세페이지 댓글: AI가 이 바톤에 어울리는 댓글 2~3개를 만들어요(Apps Script 연결 시). 실패하면 댓글 없이 열려요. */
+  async function aiComments(data) {
+    const apps = (window.MOROGARO_CONFIG?.appsScriptUrl || '').trim();
+    if (!apps) return null;
+    try {
+      const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 25000);
+      const body = { action: 'comments', context: { title: data.title || '', stage: data.stage || null, categories: data.categories || [], tags: data.tags || [], tools: data.tools || [], note: String(data.batonNote || '').slice(0, 1500), ideas: (data.nextIdeas || []).filter(Boolean) } };
+      const r = await fetch(apps, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ctrl.signal });
+      clearTimeout(timer);
+      const d = await r.json();
+      return Array.isArray(d.comments) && d.comments.length ? d.comments.slice(0, 3) : null;
+    } catch { return null; }
+  }
+
   /* ───────── 바톤 만들기 확인 창 ───────── */
   function askFinish(data, payload) {
     pending = { data, payload }; $('finish-error').hidden = true; $('finish-preview').hidden = true;
@@ -119,7 +133,9 @@
     if (saving || !pending) return;
     saving = true; $('finish-confirm').disabled = true; let value;
     try {
-      value = build(pending.data, pending.payload, preview); if (!preview) await put(value); else memory.set(value.id, value);
+      value = build(pending.data, pending.payload, preview);
+      if (!preview) { $('finish-confirm').textContent = '바톤을 만드는 중…'; value.data.aiComments = await aiComments(value.data); }
+      if (!preview) await put(value); else memory.set(value.id, value);
       // 사용성 연구(동의한 경우): 상세페이지로 넘어가기 전에 업로드 페이지 전체를 캡처해 둬요.
       if (!preview && window.MorogaroResearch?.hasConsent()) { $('finish-confirm').textContent = '바톤을 만드는 중…'; await window.MorogaroResearch.beforeShow(value); }
       $('finish-dialog').close(); show(value); pending = null; captureFor = preview ? null : value.id;
