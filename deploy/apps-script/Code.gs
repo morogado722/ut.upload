@@ -46,7 +46,7 @@ const STAGE_RUBRIC = {
   Seeding: '스케치, 기획서(글 위주), 가벼운 실험·메모 수준. 완성된 이미지·그래픽·모델링은 아직 없음.',
   Planting: '이미지, 그래픽, 모델링 등 시각 작업물이 하나라도 있음(초기 시안 수준이어도 됨).',
   Growing: '시각 작업물이 여러 개이거나 Planting보다 확실히 발전·다듬어진 상태.',
-  Blooming: '발표 장표(프레젠테이션)까지 갖춰져 있고 전체 완성도가 높음.',
+  Blooming: '발표 장표(프레젠테이션 슬라이드)가 하나라도 있으면 무조건 Blooming.',
 };
 
 const ANALYZE_PROMPT = `You assist morogaro (모로가도), an OPEN relay-creation platform, not a marketplace.
@@ -69,7 +69,7 @@ With no readable content, infer from images; title evidence may be 'inferred' wi
   Seeding = only sketches, a text-heavy plan/proposal, or light experiments.
   Planting = any image, graphic, or 3D modeling exists.
   Growing = clearly more developed than Planting (several refined visuals, applied mockups, etc.).
-  Blooming = includes presentation slides/deck AND the overall finish is high.
+  Blooming = ANY presentation slides/deck pages exist (16:9 slide-like pages, title/section slides). This rule wins over all others.
   Never assign Flowering. stageReason: 1 short Korean sentence in 해요체.
 - Tools: guess likely authoring software from file extensions and visual style (e.g. Adobe Illustrator,
 Adobe Photoshop, Figma, Blender, Adobe InDesign). Up to 4.
@@ -366,4 +366,22 @@ function 설문_만들기() {
   props.setProperties({ FORM_URL: form.getPublishedUrl(), FORM_ENTRY: String(sid.getId()), FORM_EDIT_URL: form.getEditUrl() });
   Logger.log('설문 완성! 수정: ' + form.getEditUrl());
   Logger.log('응답 주소: ' + form.getPublishedUrl());
+}
+
+
+// 편집기에서 한 번 실행: 설문 응답을 기록 시트와 분리해 '모로가도 설문 응답' 새 스프레드시트로 옮겨요.
+function 설문_시트_분리() {
+  const editUrl = prop('FORM_EDIT_URL');
+  if (!editUrl) throw new Error('먼저 설문_만들기를 실행해 주세요.');
+  const form = FormApp.openByUrl(editUrl);
+  const responses = SpreadsheetApp.create('모로가도 설문 응답');
+  try { DriveApp.getFileById(responses.getId()).moveTo(rootFolder()); } catch (e) { /* 폴더 이동 실패해도 괜찮아요 */ }
+  // 기록 시트에 붙은 옛 응답 탭을 찾아 두었다가, 연결을 끊은 뒤 지워요(응답은 폼에 보관돼 새 시트로 옮겨져요).
+  const log = SpreadsheetApp.openById(SHEET_ID);
+  const old = log.getSheets().filter(sh => { try { return !!sh.getFormUrl(); } catch (e) { return false; } });
+  form.removeDestination();
+  old.forEach(sh => { if (log.getSheets().length > 1) log.deleteSheet(sh); });
+  form.setDestination(FormApp.DestinationType.SPREADSHEET, responses.getId());
+  PropertiesService.getScriptProperties().setProperty('RESPONSE_SHEET_URL', responses.getUrl());
+  Logger.log('설문 응답 시트: ' + responses.getUrl());
 }

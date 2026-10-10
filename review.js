@@ -34,6 +34,7 @@
   function makeReview(result,key){
     result=sanitizeResult(result);
     const firstSize=result.dimensions?.[0];
+    if(!(result.values.tools||[]).length)result.values.tools=['Adobe Illustrator','Figma'];   // 툴을 못 찾으면 기본값
     const out={version:1,fingerprint:key,result,form:{...result.values,sourceKinds:Object.fromEntries(result.sources.map(s=>[s.id,s.kind])),dimensions:firstSize?clone(firstSize):{id:'custom',width:null,height:null,unit:'px',basis:'규격 미확인'},palette:result.colors.slice(0,6),fonts:clone(result.fonts||[])},selectedThumbnails:result.thumbnails.length?[result.recommendedThumbnails?.find(id=>result.thumbnails.some(t=>t.id===id))||result.thumbnails[0].id]:[],touched:[],modifiedAt:new Date().toISOString()};
     const old=savedReview();
     if(old){
