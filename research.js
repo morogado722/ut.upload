@@ -10,7 +10,7 @@
 (() => {
   'use strict';
   // 서버 없이 올린 미리보기 사이트에서는 기록할 곳이 없어서 꺼 둬요.
-  if (window.MOROGARO_SITE) { window.MorogaroResearch = Object.freeze({ hasConsent: () => false, beforeShow: async () => {}, afterDetail: () => {}, state: () => ({ consent: 'off' }) }); return; }
+  if (window.MOROGARO_SITE || window.MOROGARO_MOBILE_GATE) { window.MorogaroResearch = Object.freeze({ hasConsent: () => false, beforeShow: async () => {}, afterDetail: () => {}, state: () => ({ consent: 'off' }) }); return; }
   // Apps Script 주소가 있으면 그쪽으로 바로, 없으면 파이썬 서버(/api/research)로 보내요.
   const APPS = (window.MOROGARO_CONFIG?.appsScriptUrl || '').trim();
   const ENDPOINT = APPS || '/api/research';
