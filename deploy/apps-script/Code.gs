@@ -59,12 +59,14 @@ Required outputs:
 - Propose a short informative Korean title from the central concept/content. Preserve an
 explicit project title unless the evidence indicates a different project. With no readable
 content a filename draft title is allowed, but mark filename evidence and low confidence.
-- Suggest categories (1–3) and style/topic tags (3–6) where meaningful. Never invent tags just
-for quantity. Compare related files; report conflicts/missing context in fieldNotes.
+- ALWAYS suggest 1–3 Korean categories (e.g. 편집 디자인, 전시 기획, 브랜딩, 일러스트레이션, UX/UI, 영상, 3D, 패키지) and
+3–6 short Korean style/topic tags based on the content and visuals. Compare related files; report conflicts in fieldNotes.
 - Propose a provisional stage using the provided EDITABLE SAMPLE RUBRIC, NOT official rules.
 Consider what actually exists vs stated missing work. File count, file extension, polish,
 date or word "final" alone NEVER establishes completion. Stage must have text or visual
-evidence of work state. If only references, ambiguous or contradictory, use null. Flowering
+evidence of work state. Decide the most plausible stage from what is visible (e.g. a full presentation
+deck with concrete proposals = Growing or Blooming; sketches/plans = Planting; only notes = Seeding).
+Use null only when there is truly no readable content. Flowering
 is reserved for a separate service selection; never assign it.
 - Tools: only explicit software declarations/resource metadata or recognized proprietary
 extensions. PDF/PNG/DOCX alone does not identify the authoring tool. No visual-style guesses.
@@ -84,7 +86,7 @@ support cannot justify all the tags/tools. For text evidence quote a short EXACT
 supplied text. For visual evidence describe only what is visible and include its previewId.
 For extension/filename evidence quote supplied data. Use only supplied source IDs.
 Set confidence high/medium/low (qualitative judgement, not a calibrated score).
-Low-confidence stage should stay null. Explain stageReason in 1–2 short user-facing sentences,
+ Explain stageReason in 1–2 short user-facing sentences,
 not hidden chain-of-thought. Summary must mention partial reading or mixed projects when relevant.
 Return valid structured output. No copyrighted font files, rewards, subscriptions, copyright
 claims, inheritance restrictions, or fabricated content to make the form look complete.`;

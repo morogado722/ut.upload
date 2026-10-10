@@ -26,7 +26,7 @@
     review.modifiedAt=new Date().toISOString();maker.setReview(review);
   }
   function sanitizeResult(result){
-    result.thumbnails=(result.thumbnails||[]).filter(t=>t&&analysis.isPreviewURL(t.dataUrl)).slice(0,60);
+    result.thumbnails=(result.thumbnails||[]).filter(t=>t&&analysis.isPreviewURL(t.dataUrl)).slice(0,100);
     result.colors=[...new Set((result.colors||[]).filter(h=>/^#[0-9A-F]{6}$/i.test(h)))].slice(0,24);
     if(!analysis.STAGES.includes(result.values.stage))result.values.stage=null;
     return result;

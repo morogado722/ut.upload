@@ -113,29 +113,42 @@
     const onAbort = () => task.destroy(); signal?.addEventListener('abort', onAbort, {once: true});
     try {
       const doc = await task.promise; abort(signal);
-      const pages = Math.min(doc.numPages, 40); let text = '';
-      for (let n = 1; n <= pages && text.length < 24000; n++) {
+      // 본문은 앞 40쪽(2만4천 자까지), 미리보기는 모든 쪽(최대 80쪽)을 만들어요. 썸네일 후보에서 스크롤로 골라요.
+      const pages = Math.min(doc.numPages, 40), previewPages = Math.min(doc.numPages, 80); let text = '';
+      const fontNames = new Map();
+      for (let n = 1; n <= previewPages; n++) {
         const page = await doc.getPage(n); abort(signal);
-        const content = await page.getTextContent();
-        text += content.items.map(item => item.str + (item.hasEOL ? '\n' : ' ')).join('') + '\n';
+        const content = n <= pages && text.length < 24000 ? await page.getTextContent() : null;
+        if (content) text += content.items.map(item => item.str + (item.hasEOL ? '\n' : ' ')).join('') + '\n';
         if (n === 1) {
           const v = page.getViewport({scale: 1});
           result.dimensions.push({id: source.id + '-size', sourceId: source.id, label: source.name, width: Math.round(v.width * 25.4 / 72), height: Math.round(v.height * 25.4 / 72), unit: 'mm', basis: 'PDF 첫 쪽 크기(재단 여백 포함 가능)'});
         }
-        if (n <= 8) {
-          const v = page.getViewport({scale: 1}), scale = Math.min(2, 640 / Math.max(v.width, v.height)), view = page.getViewport({scale});
-          const canvas = document.createElement('canvas'); canvas.width = Math.max(1, Math.round(view.width)); canvas.height = Math.max(1, Math.round(view.height));
-          const ctx = canvas.getContext('2d', {willReadFrequently: true}); ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-          await page.render({canvasContext: ctx, viewport: view}).promise; abort(signal);
-          result.thumbnails.push({id: `${source.id}-p${n}`, sourceId: source.id, label: `${source.name} · ${n}쪽`, page: n, kind: 'page', dataUrl: canvas.toDataURL('image/jpeg', 0.85)});
-          if (n === 1) { const copy = document.createElement('canvas'), c2 = copy.getContext('2d', {willReadFrequently: true}); sampleColors(c2, source, result, canvas); }
+        const v = page.getViewport({scale: 1}), scale = Math.min(2, (n <= 8 ? 640 : 480) / Math.max(v.width, v.height)), view = page.getViewport({scale});
+        const canvas = document.createElement('canvas'); canvas.width = Math.max(1, Math.round(view.width)); canvas.height = Math.max(1, Math.round(view.height));
+        const ctx = canvas.getContext('2d', {willReadFrequently: n === 1}); ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        await page.render({canvasContext: ctx, viewport: view}).promise; abort(signal);
+        result.thumbnails.push({id: `${source.id}-p${n}`, sourceId: source.id, label: `${source.name} · ${n}쪽`, page: n, kind: 'page', dataUrl: canvas.toDataURL('image/jpeg', n <= 8 ? 0.85 : 0.78)});
+        if (n === 1) { const copy = document.createElement('canvas'), c2 = copy.getContext('2d', {willReadFrequently: true}); sampleColors(c2, source, result, canvas); }
+        // 사용 폰트: PDF에 들어 있는 글꼴 이름(예: ABCDEF+SpoqaHanSansNeo-Bold)을 읽어요.
+        if (content && n <= 20) for (const item of content.items) {
+          try { if (!item.fontName || fontNames.has(item.fontName) || !page.commonObjs.has(item.fontName)) continue; const f = page.commonObjs.get(item.fontName); fontNames.set(item.fontName, f?.name || ''); } catch { /* 읽지 못한 글꼴 */ }
         }
         page.cleanup(); await tick();
+        if (n % 4 === 0) document.dispatchEvent(new CustomEvent('morogaro:analysis-progress', {detail: {event: 'progress', phase: 'extract', message: `PDF ${n}/${previewPages}쪽을 읽고 있어요.`}}));
+      }
+      for (const raw of new Set(fontNames.values())) {
+        const clean = String(raw).replace(/^[A-Z]{6}\+/, '').trim(); if (!clean || /^(g_d|Times|Helvetica|Courier|Symbol|ZapfDingbats|Arial(MT)?$)/i.test(clean)) continue;
+        const [family, weight = ''] = clean.split(/[-,]/);
+        const name = /[가-힣]/.test(family) ? family : family.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2');
+        const old = result.fonts.find(f => f.name === name);
+        if (old) { if (weight && !old.weights.includes(weight)) old.weights = [old.weights, weight].filter(Boolean).join(' · '); continue; }
+        result.fonts.push({name: name.slice(0, 100), weights: weight, downloadUrl: '', sourceId: source.id, basis: 'PDF에 포함된 글꼴 이름'});
       }
       text = text.replace(/[ \t]{2,}/g, ' ').replace(/[ \t]+\n/g, '\n').trim();
       source.text = text.slice(0, 12000);
       source.status = doc.numPages > pages || text.length >= 24000 ? 'partial' : 'read';
-      source.coverage = `PDF ${doc.numPages}쪽 중 앞 ${pages}쪽 본문 · 앞 ${Math.min(8, pages)}쪽 미리보기`;
+      source.coverage = `PDF ${doc.numPages}쪽 중 앞 ${pages}쪽 본문 · ${previewPages}쪽 미리보기`;
       if (!text) source.warnings.push('글자를 읽을 수 없는 PDF예요(이미지로만 된 문서일 수 있어요). 미리보기는 만들었어요.');
       inspectText(text, source, result);
       await doc.destroy();
@@ -258,19 +271,25 @@
     for(const [key,raw] of Object.entries(vals)){
       if(key==='stageReason'||raw===null||raw===undefined)continue;
       let value=raw,proof=accepted.filter(e=>e.field===key);
+      // 제목 · 진척도 · 카테고리 · 태그는 AI 판단을 그대로 제안해요(근거가 확인되지 않아도). 사용자가 확인·수정해요.
+      // 툴 · 날짜 · 실물 제작 · 재료 · 배운 점은 사실이라서, 확인된 근거가 있을 때만 채워요.
+      const loose=['title','stage','categories','tags'].includes(key);
       if(Array.isArray(value)){
-        value=unique(value.map(x=>String(x).trim().slice(0,50)).filter(x=>x&&proof.some(e=>e.value===x))).slice(0,12);
+        value=unique(value.map(x=>String(x).trim().replace(/^#/,'').slice(0,50)).filter(x=>x&&(loose||proof.some(e=>e.value===x)))).slice(0,12);
         if(!value.length)continue;
         if(key==='tools')value=unique([...base.values.tools,...value]).slice(0,12);
+        if(key==='tags'||key==='categories')value=unique([...value,...base.values[key]]).slice(0,12);
       }else{
         const canonical=typeof value==='boolean'?String(value):String(value);
-        proof=proof.filter(e=>e.value===canonical);if(!proof.length)continue;
+        const exact=proof.filter(e=>e.value===canonical);
+        if(!exact.length&&!loose)continue;
+        proof=exact;
         if(typeof value==='string')value=value.slice(0,['materials','lessons'].includes(key)?2000:120);
         if(key==='startDate'||key==='endDate'){value=safeDate(value);if(!value)continue;}
         if(key==='stage'&&!STAGES.includes(value))continue;
       }
       base.values[key]=value;applied.push(key);
-      base.fieldStatus[key]={status:'suggested',basis:'AI 제안 · 확인/수정 가능',sourceIds:unique(proof.map(e=>e.fileId)),confidence:proof.some(e=>e.confidence!=='high')?'medium':'high'};
+      base.fieldStatus[key]={status:'suggested',basis:proof.length?'AI 제안 · 확인/수정 가능':'AI 추정 · 꼭 확인해 주세요',sourceIds:unique(proof.map(e=>e.fileId)),confidence:!proof.length||proof.some(e=>e.confidence!=='high')?'medium':'high'};
     }
     if(applied.includes('stage'))base.values.stageReason=String(vals.stageReason||'').slice(0,500);
     for(const item of proposal.sourceKinds||[]){

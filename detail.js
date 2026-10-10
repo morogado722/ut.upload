@@ -14,7 +14,7 @@
   if (!review || !$('baton-detail')) return;
   const root = $('baton-detail'), workspace = document.querySelector('.workspace'), stage = document.querySelector('.stage');
   const E = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = String(text); return n; };
-  const OWNER_NAME = '김찬우';
+  const OWNER_NAME = '방문자';
   const DETAIL_PAGE = 'baton/index.html?embed=1#detail';
 
   let captureFor = null;   // 상세페이지가 다 그려지면 캡처를 요청할 바톤

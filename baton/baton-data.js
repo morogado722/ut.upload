@@ -75,7 +75,7 @@
     return [...new Set(out)].slice(0, 4);
   }
 
-  function fromMakerRecord(record, { ownerName = '김찬우' } = {}) {
+  function fromMakerRecord(record, { ownerName = '방문자' } = {}) {
     if (!record || !record.data) throw new Error('바톤 정보가 없어요.');
     const d = record.data;
     const title = clean(d.title) || '새 바톤';

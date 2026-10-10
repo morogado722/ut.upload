@@ -1061,7 +1061,7 @@
         const article = document.createElement('article'); article.className = 'comment local-comment';
         const avatar = document.createElement('span'); avatar.className = 'comment-avatar pale';
         const content = document.createElement('div'); const header = document.createElement('header');
-        const strong = document.createElement('strong'); strong.textContent = live ? live.commentAuthor : '김찬우'; const time = document.createElement('time'); time.textContent = '이 브라우저'; header.append(strong, time);
+        const strong = document.createElement('strong'); strong.textContent = live ? live.commentAuthor : '방문자'; const time = document.createElement('time'); time.textContent = '이 브라우저'; header.append(strong, time);
         const p = document.createElement('p'); p.textContent = item.text; content.append(header, p); article.append(avatar, content); host.append(article);
       }
     }
