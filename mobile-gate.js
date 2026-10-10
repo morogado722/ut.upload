@@ -46,25 +46,36 @@
       <span class="mg-url" data-url>${url.replace(/^https?:\/\//, '')}</span>
       <small data-msg></small></div></div>`;
     document.body.append(gate);
+    // 복사: 최신 방식이 막히면(인앱 브라우저) 예전 방식으로 한 번 더 시도해요.
+    async function copyText(text) {
+      try { await navigator.clipboard.writeText(text); return true; } catch { /* 아래로 */ }
+      try { const t = document.createElement('textarea'); t.value = text; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;opacity:0'; document.body.append(t); t.select(); t.setSelectionRange(0, text.length); const ok = document.execCommand('copy'); t.remove(); return ok; } catch { return false; }
+    }
     const msg = gate.querySelector('[data-msg]');
     // 로고를 누르면 모션을 다시 재생해요.
     const logo = gate.querySelector('.mg-logo');
     logo.addEventListener('click', () => { const clone = logo.cloneNode(true); logo.replaceWith(clone); clone.addEventListener('click', () => location.reload()); });
     gate.querySelector('[data-copy]').addEventListener('click', async () => {
       gate.querySelector('[data-url]').classList.add('is-on');
-      try { await navigator.clipboard.writeText(url); msg.textContent = '복사했어요! 노트북 주소창에 붙여넣어 열어보세요.'; }
+      try { if (!await copyText(url)) throw 0; msg.textContent = '복사했어요! 노트북 주소창에 붙여넣어 열어보세요.'; }
       catch { msg.textContent = '위 주소를 길게 눌러 복사해 주세요.'; }
     });
     // 공유 시트를 열고, 안 되면(카톡 인앱 브라우저 등) 주소를 복사한 뒤 카카오톡 앱을 열어 붙여넣게 해요.
     gate.querySelector('[data-share]').addEventListener('click', async () => {
       const inKakao = /KAKAOTALK/i.test(navigator.userAgent);
-      if (navigator.share && !inKakao) {
+      // 카톡 안 브라우저에선 공유가 막혀 있어서, 기본 브라우저(Safari·크롬)로 열어 다시 누르게 해요.
+      if (inKakao) {
+        msg.textContent = '기본 브라우저로 여는 중이에요. 열리면 이 버튼을 한 번 더 눌러 주세요.';
+        location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(url);
+        return;
+      }
+      if (navigator.share) {
         try { await navigator.share({ title: '모로가도 사용성 평가', text: '노트북에서 열어보기 👉 ' + url }); return; }
         catch (e) { if (e && e.name === 'AbortError') return; }
       }
       gate.querySelector('[data-url]').classList.add('is-on');
       let copied = false;
-      try { await navigator.clipboard.writeText(url); copied = true; } catch { /* 복사 막힘 */ }
+      copied = await copyText(url);
       msg.textContent = copied ? '주소를 복사했어요! 카카오톡 ‘나와의 채팅’에 붙여넣어 주세요.' : '위 주소를 길게 눌러 복사한 뒤 카카오톡 ‘나와의 채팅’에 붙여넣어 주세요.';
       if (copied && !inKakao) setTimeout(() => { location.href = 'kakaotalk://'; }, 600);
     });
