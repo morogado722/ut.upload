@@ -10,11 +10,19 @@
     const readable = files.filter(f => f.size <= MAX_FILE);
     const total = readable.reduce((s, f) => s + f.size, 0);
     const msgs = [];
-    if (big.length) msgs.push(`<strong>${big.map(f => f.name).slice(0, 3).join(', ')}${big.length > 3 ? ` 외 ${big.length - 3}개` : ''}</strong>${big.length === 1 ? `(${mb(big[0].size)})` : ''}는 50MB가 넘어서 내용을 읽을 수 없어요.`);
-    if (total > MAX_TOTAL) msgs.push(`읽을 수 있는 파일이 합계 ${mb(total)}로 100MB를 넘어, 뒤쪽 파일은 내용을 읽지 못해요.`);
-    if (files.length > MAX_COUNT) msgs.push(`파일이 ${files.length}개예요. 앞의 20개까지만 내용을 읽어요.`);
+    const short = n => n.length > 24 ? n.slice(0, 22) + '…' : n;
+    if (big.length === 1) {
+      const f = big[0], pdf = /\.pdf$/i.test(f.name);
+      msgs.push(pdf
+        ? `‘${short(f.name)}’은 ${mb(f.size)}라 내용을 읽지 못했어요. 50MB 이하로 줄이거나, 주요 페이지만 이미지로 올려주세요.`
+        : `‘${short(f.name)}’은 ${mb(f.size)}라 내용을 읽지 못했어요. 작업 화면을 PNG나 JPG로 캡처해 같이 올려주세요.`);
+    } else if (big.length > 1) {
+      msgs.push(`50MB가 넘는 파일 ${big.length}개는 내용을 읽지 못했어요. 작업 화면을 PNG·JPG·PDF로 같이 올려주세요.`);
+    }
+    if (total > MAX_TOTAL) msgs.push(`전체 용량이 100MB를 넘어서 뒤쪽 파일은 읽지 못해요.`);
+    if (files.length > MAX_COUNT) msgs.push(`파일은 20개까지만 읽어요.`);
     if (!msgs.length) { box.hidden = true; box.innerHTML = ''; return; }
-    box.innerHTML = `<span class="size-warning-icon" aria-hidden="true">!</span><span>${msgs.join(' ')}<br><em>3D · 렌더 원본처럼 큰 파일은 빼고, PNG · JPG · PDF로 내보낸 파일을 함께 올려주세요. 그래야 AI가 내용을 채워줄 수 있어요.</em></span>`;
+    box.innerHTML = `<span class="size-warning-icon" aria-hidden="true">!</span><span>${msgs.join(' ')}</span>`;
     box.hidden = false;
   }
   document.addEventListener('morogaro:attachments-changed', check);
