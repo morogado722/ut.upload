@@ -78,7 +78,7 @@
    비율은 그대로 두고 1440 시안을 화면 너비에 맞춰요. 문서 높이는 --fit-height로 맞춰요. */
 html.is-fit { overflow-x: hidden; background: #FAFAFA; }
 html.is-fit body { height: var(--fit-height, auto); overflow: clip; background: transparent; }
-html.is-fit .page { margin: 0; min-width: 0; transform-origin: 0 0; transform: scale(var(--fit-scale, 1)); }
+html.is-fit .page { margin: 0; min-width: 0; transform-origin: 0 0; transform: translateX(var(--fit-left, 0px)) scale(var(--fit-scale, 1)); }
 html.is-fit .detail-view { height: max(var(--detail-height), var(--fit-vh, 100vh)); }
 
 /* ── 진입(A) → 스크롤(B): Figma 3671:4531 → 3671:4723 ──
@@ -238,3 +238,9 @@ img.node-art.is-live-art { object-fit: contain; background: #FFF; padding: 12%; 
 .idea-submit:hover { filter: saturate(1.2); }
 .idea-card.is-new { animation: idea-in .45s cubic-bezier(.2,.9,.3,1.15); }
 .idea-card.is-new .idea-badge { background: rgb(0 249 152 / 18%); color: #00874F; }
+
+/* 넓은 화면: 헤더 흰 띠를 양옆 끝까지(왼쪽 104px · 오른쪽 계정 탭까지 153px). 페이지 뒤에 깔려 양옆만 보여요. */
+.header-bleed { position: absolute; top: 0; left: 0; width: 100%; height: 160px; z-index: 0; pointer-events: none;
+  background: linear-gradient(#FFF, #FFF) left top / 50% 104px no-repeat, linear-gradient(#FFF, #FFF) right top / 50% 153px no-repeat;
+  filter: drop-shadow(0 4px 4px rgb(0 0 0 / 4%)); }
+html.is-fit .page { z-index: 1; }

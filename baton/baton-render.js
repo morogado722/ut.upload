@@ -37,13 +37,14 @@
       if (!page) return;
       root.classList.add('is-fit');
       const w = root.clientWidth || window.innerWidth, h = window.innerHeight;
-      const next = Math.max(0.2, w / 1440);
+      const next = Math.max(0.2, Math.min(1, w / 1440));   // 1440보다 넓으면 확대하지 않고 가운데 정렬(업로드 페이지와 같은 크기)
       scale = next;
       const visible = Math.floor(h / next);                          // 한 화면에 보이는 시안 높이
       const detail = visible + ENTER_RANGE;                            // A → B로 내려갈 만큼만 상세 영역을 둬요
       root.style.setProperty('--detail-height', `${detail}px`);
       root.style.setProperty('--beyond-top', `${detail - 64}px`);      // '바톤 너머'는 B 화면 맨 아래
       root.style.setProperty('--fit-scale', String(next));
+      root.style.setProperty('--fit-left', `${Math.max(0, Math.round((w - 1440 * next) / 2))}px`);
       root.style.setProperty('--fit-vh', `${visible}px`);
       root.style.setProperty('--fit-height', `${Math.ceil(page.offsetHeight * next)}px`);
       sync();
@@ -55,6 +56,9 @@
       const inLog = document.getElementById('page')?.dataset.view === 'log';
       const pinned = inLog || y > HEADER_FOLD;
       if (header) header.style.transform = pinned ? `translate3d(0, ${y - HEADER_FOLD}px, 0)` : '';
+      let bleed = document.querySelector('.header-bleed');
+      if (!bleed) { bleed = document.createElement('div'); bleed.className = 'header-bleed'; bleed.setAttribute('aria-hidden', 'true'); document.body.prepend(bleed); }
+      bleed.style.transform = pinned ? `translate3d(0, ${(y - HEADER_FOLD) * scale}px, 0) scale(${scale})` : `scale(${scale})`; bleed.style.transformOrigin = '0 0'; bleed.style.width = `${100 / scale}%`;
       root.classList.toggle('header-compact', pinned);
       const p = Math.max(0, Math.min(1, y / ENTER_RANGE));
       root.style.setProperty('--enter-p', p.toFixed(4));
