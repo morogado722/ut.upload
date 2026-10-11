@@ -154,6 +154,24 @@
       await doc.destroy();
     } finally { signal?.removeEventListener('abort', onAbort); }
   }
+  /* 파일에 남은 날짜 흔적: 최종 수정일(브라우저가 알려줌) + 파일 속 생성일(PDF 정보·사진 EXIF·XMP) */
+  const iso=d=>d&&!isNaN(d)?new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10):null;
+  async function embeddedDate(file){
+    try{
+      const head=new Uint8Array(await file.slice(0,262144).arrayBuffer());let t='';for(let i=0;i<head.length;i++)t+=String.fromCharCode(head[i]);
+      const found=[];
+      for(const m of t.matchAll(/(?:CreationDate|CreateDate|DateTimeOriginal|DateCreated)[^0-9]{0,40}?(?:D:)?((?:19|20)\d\d)[:\-]?(\d\d)[:\-]?(\d\d)/g))found.push(`${m[1]}-${m[2]}-${m[3]}`);
+      for(const m of t.matchAll(/((?:19|20)\d\d):(\d\d):(\d\d) \d\d:\d\d:\d\d/g))found.push(`${m[1]}-${m[2]}-${m[3]}`);
+      return found.filter(d=>{const x=new Date(d);return !isNaN(x)&&x<=new Date()&&x.getFullYear()>2000;}).sort()[0]||null;
+    }catch{return null;}
+  }
+  async function fileDates(files){
+    const modified=files.map(f=>f.lastModified?iso(new Date(f.lastModified)):null).filter(Boolean).sort();
+    const created=(await Promise.all(files.slice(0,20).map(embeddedDate))).filter(Boolean).sort();
+    const start=[created[0],modified[0]].filter(Boolean).sort()[0]||null,end=modified[modified.length-1]||null;
+    if(!start&&!end)return null;
+    return {start,end:end&&start&&end<start?start:end,basis:created.length?'파일 속 생성일 · 최종 수정일':'파일 최종 수정일'};
+  }
   async function inspectBrowser(payload, {signal}={}) {
     const result=newResult(payload);
     if(payload.files.length>20 || payload.files.reduce((s,f)=>s+f.size,0)>MAX_TOTAL)result.warnings.push('분석 범위를 초과한 파일은 기본 정보만 유지합니다 (20개 / 합계 100MB).');
@@ -177,6 +195,8 @@
     if(!result.values.title && result.sources.length){result.values.title=cleanTitle(result.sources[0].name);addEvidence(result,'title',result.sources[0],result.sources[0].name,'filename','파일명에서 가져온 임시 제목');}
     if(!result.sources.length && result.links.length)result.values.title='새 바톤';
     result.warnings.unshift('브라우저 기본 추출 모드입니다. AI 의미 분석은 실행하지 않았어요.');
+    result.fileDates=await fileDates(payload.files);
+    if(result.fileDates){if(!result.values.startDate)result.values.startDate=result.fileDates.start;if(!result.values.endDate)result.values.endDate=result.fileDates.end;}
     if(result.values.startDate&&result.values.endDate&&result.values.endDate<result.values.startDate){result.values.endDate=null;result.warnings.push('종료일이 시작일보다 빨라 자동 입력하지 않았어요.');}
     return result;
   }
@@ -244,7 +264,10 @@
     }catch(error){if(error.name==='AbortError'||signal?.aborted)throw error;result.warnings.unshift('AI 응답을 받지 못해 파일에서 읽은 정보만 채웠어요.');return result;}
     if(!data?.ok||!data.proposal){result.warnings.unshift(data?.error?String(data.error).slice(0,160)+' 파일에서 읽은 정보만 채웠어요.':'AI 제안을 받지 못했어요.');return result;}
     progress('apply','추출한 값과 썸네일 후보를 정리하고 있어요.');
+    const declared={start:result.values.startDate,end:result.values.endDate};
     applyAI(result,data.proposal,new Set(previews.map(p=>p.sourceId)),sources,previews);
+    // 기간은 AI 추측보다 파일에 남은 날짜를 우선해요.
+    if(result.fileDates){if(declared.start)result.values.startDate=declared.start;if(declared.end)result.values.endDate=declared.end;}
     result.aiCoverage={textCharacters:sources.reduce((n,s)=>n+s.text.length,0),sourcesSent:sources.length,imagesSent:previews.length,previewIds:previews.map(p=>p.id)};
     return result;
   }
