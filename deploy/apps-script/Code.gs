@@ -469,9 +469,11 @@ function 설문_다듬기() {
     const mc = item.asMultipleChoiceItem(), choices = mc.getChoices().map(c => c.getValue());
     if (choices.length !== 5 || !/^1 · /.test(choices[0])) return;
     const index = item.getIndex();
+    // 앞서 실패한 실행이 맨 뒤에 남긴 같은 제목의 눈금 질문은 지워요.
+    form.getItems(FormApp.ItemType.SCALE).forEach(x => { if (x.getTitle() === mc.getTitle()) form.deleteItem(x); });
     const scale = form.addScaleItem().setTitle(mc.getTitle()).setHelpText(mc.getHelpText()).setBounds(1, 5)
       .setLabels(choices[0].replace(/^1 · /, ''), choices[4].replace(/^5 · /, '')).setRequired(mc.isRequired());
-    form.moveItem(scale, index);
+    form.moveItem(scale.getIndex(), index);
     form.deleteItem(item);
   });
   const sid = form.getItemById(Number(prop('FORM_ENTRY')));
