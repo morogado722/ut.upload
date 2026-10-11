@@ -150,8 +150,8 @@
      바톤 상세페이지의 '바톤 아이디어'에 그대로 보여요. */
   const autoIdeasDone=new Set();
   async function autoIdeas(){
-    const ctx=review.getContext();if(!ctx||ctx.result.mode!=='ai'||autoIdeasDone.has(ctx.fingerprint))return;
-    if((ctx.form.nextIdeas||[]).some(v=>String(v).trim()))return;
+    const ctx=review.getContext();if(!ctx||ctx.result.mode!=='ai'||autoIdeasDone.has(ctx.fingerprint))return true;
+    if((ctx.form.nextIdeas||[]).some(v=>String(v).trim()))return true;
     autoIdeasDone.add(ctx.fingerprint);
     const apps=(window.MOROGARO_CONFIG?.appsScriptUrl||'').trim();
     try{
@@ -160,13 +160,28 @@
         :await fetch('/api/baton-note',{method:'POST',headers:{'Content-Type':'application/json','X-Morogaro-Client':'maker-v14'},body:JSON.stringify({useAI:true,action:'ideas',context:contextForAI()})});
       const data=await response.json();
       const ideas=Array.isArray(data.ideas)?data.ideas.filter(v=>typeof v==='string'&&v.trim()).slice(0,3).map(v=>v.slice(0,240)):[];
-      if(!ideas.length||review.getContext()?.fingerprint!==ctx.fingerprint)return;
-      if((state().nextIdeas||[]).some(v=>String(v).trim()))return;   // 그사이 직접 적었으면 그대로 둬요
+      if(!ideas.length||review.getContext()?.fingerprint!==ctx.fingerprint)return false;
+      if((state().nextIdeas||[]).some(v=>String(v).trim()))return true;   // 그사이 직접 적었으면 그대로 둬요
       write({nextIdeas:ideas});renderIdeas();
       $('idea-status').textContent='AI가 이어받을 방향을 미리 적어뒀어요. 자유롭게 고치거나 지울 수 있어요.';
-    }catch{/* 실패하면 비워 둬요 */}
+      return true;
+    }catch{return false;}
   }
-  document.addEventListener('morogaro:analysis-ready',()=>setTimeout(async()=>{await autoIdeas();const ctx=review.getContext();if(ctx?.result.mode==='ai'&&!$('baton-note').value.trim())void generate('draft');},300));
+  // AI가 노트·아이디어를 쓰는 동안엔 '상세페이지로' · '이대로 업로드'를 잠가요(최대 70초).
+  function lockNext(on){
+    document.documentElement.classList.toggle('ai-writing',on);
+    for(const id of ['review-next','review-publish']){const b=$(id);if(!b)continue;b.disabled=on;b.setAttribute('aria-disabled',String(on));b.title=on?'AI가 바톤 노트와 아이디어를 쓰고 있어요':'';}
+  }
+  async function autoFill(){
+    const ctx=review.getContext();if(!ctx||ctx.result.mode!=='ai')return;
+    lockNext(true);const guard=setTimeout(()=>lockNext(false),70000);
+    $('idea-status').textContent='AI가 바톤 노트와 이어받을 아이디어를 쓰고 있어요…';
+    try{
+      if(!await autoIdeas()){autoIdeasDone.delete(ctx.fingerprint);await autoIdeas();}   // 실패하면 한 번 더
+      for(let i=0;i<2&&!$('baton-note').value.trim();i++){while(busy)await new Promise(r=>setTimeout(r,300));await generate('draft');}
+    }finally{clearTimeout(guard);lockNext(false);if($('idea-status').textContent.startsWith('AI가 바톤 노트와'))$('idea-status').textContent='';}
+  }
+  document.addEventListener('morogaro:analysis-ready',()=>setTimeout(()=>void autoFill(),300));
   window.addEventListener('pagehide',()=>controller?.abort());
   window.MorogaroNote=Object.freeze({render,cancel:()=>controller?.abort()});render();
 })();

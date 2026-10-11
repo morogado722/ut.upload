@@ -127,3 +127,8 @@
   .reference-tile, .reference-add { width:96px;height:96px; }
 }
 @media (prefers-reduced-motion: reduce) { .note-bubble, .guide-item.is-open { animation:none; } }
+
+/* AI가 노트 · 아이디어를 쓰는 동안: 다음 버튼 잠금(흰 배경 없이 흐리게) */
+.review-next:disabled, .review-publish:disabled { background: rgb(38 38 38 / 6%) !important; border-color: transparent !important; color: rgb(38 38 38 / 35%) !important; box-shadow: none !important; cursor: progress; pointer-events: none; }
+.review-next:disabled img { opacity: .35; }
+html.ai-writing #idea-status { color: #00874F; }
