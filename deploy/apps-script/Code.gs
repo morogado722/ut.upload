@@ -444,3 +444,30 @@ function 설문_시트_분리() {
   PropertiesService.getScriptProperties().setProperty('RESPONSE_SHEET_URL', responses.getUrl());
   Logger.log('설문 응답 시트: ' + responses.getUrl());
 }
+
+// 편집기에서 한 번 실행: 설문 안내문을 바꾸고, '참여 번호'를 맨 아래로 옮겨 눈에 덜 띄게 해요.
+function 설문_다듬기() {
+  const form = FormApp.openByUrl(prop('FORM_EDIT_URL'));
+  form.setTitle('🧩 모로가도 사용성 평가 설문 [졸전]');
+  form.setDescription([
+    '안녕하세요. 건국대학교 산업디자인학과 4학년 강지훈, 박자현, 김찬우, 최지아입니다.',
+    '',
+    '저희는 <UX 디자인 스튜디오> 졸업전시 프로젝트로 "모로가도"라는 창작 플랫폼을 만들고 있습니다.',
+    '모로가도는 끝내지 못한 그래픽, 일러스트, 기획 같은 미완성 작업을 올리면, 다른 사람이 이어받아 함께 완성해 나가는 서비스입니다. 릴레이 달리기에서 바톤을 넘기듯 창작을 이어간다는 개념입니다.',
+    '',
+    '방금 써 보신 업로드 화면에서 헷갈렸던 점이나 불편했던 점을 편하게 알려주세요. 정답이 있는 테스트가 아니라 서비스를 개선하기 위한 평가입니다!',
+    '',
+    '⏰ 소요 시간: 약 3분',
+    '🗓 진행 기간: 2026년 10월 11일 ~ 10월 18일 (7일 간)',
+    '🎁 연락처까지 남겨주신 분들께는 소정의 기프티콘을 드립니다!',
+    '',
+    '응답은 졸업전시 프로젝트 개선 목적으로만 사용되며, 연락처는 기프티콘 전달에만 쓰고 전시가 끝나면 삭제합니다.',
+    '바쁘시겠지만 많은 참여 부탁드립니다 🙇‍♀️'
+  ].join('\n'));
+  const sid = form.getItemById(Number(prop('FORM_ENTRY')));
+  if (sid) {
+    sid.asTextItem().setTitle('(자동 입력) 참여 번호').setHelpText('').setRequired(false);
+    form.moveItem(sid, form.getItems().length - 1);
+  }
+  Logger.log('설문 다듬기 완료: ' + form.getPublishedUrl());
+}
