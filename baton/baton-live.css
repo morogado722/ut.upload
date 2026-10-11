@@ -104,7 +104,11 @@ html.header-compact .site-header .search { visibility: hidden; pointer-events: n
 .page[data-view="log"] .detail-view { display: none; }
 .page[data-view="log"] { display: flow-root; }   /* 아래 여백이 페이지 밖으로 새지 않게 */
 .page[data-view="log"] .log-view { margin-top: 110px; }   /* 접힌 헤더(계정 탭) 아래부터 시작 */
-.log-view { background: #FAFAFA; }
+.log-view { background: linear-gradient(180deg, #FAFAFA 0, #FFFFFF 320px); }   /* 바톤 너머: 위는 상세와 같은 #FAFAFA, 아래로 자연스럽게 흰색 */
+.page { transition: background-color .6s ease; }
+.page[data-view="log"] { background: linear-gradient(180deg, #FAFAFA 0, #FFFFFF 420px); }
+html.is-fit { transition: background-color .6s ease; }
+html.is-fit:has(.page[data-view="log"]) { background: #FFFFFF; }
 
 /* 슬라이드: 지금 페이지는 위로 빠지고(아웃), 다음 페이지가 아래에서 올라와요(인). 돌아갈 땐 반대 방향. */
 .page[data-swap="to-log"] .baton-heading,
