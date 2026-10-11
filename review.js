@@ -37,7 +37,7 @@
     if(!(result.values.tools||[]).length)result.values.tools=['Adobe Illustrator','Figma'];   // 툴을 못 찾으면 기본값
     const out={version:1,fingerprint:key,result,form:{...result.values,sourceKinds:Object.fromEntries(result.sources.map(s=>[s.id,s.kind])),dimensions:firstSize?clone(firstSize):{id:'custom',width:null,height:null,unit:'px',basis:'규격 미확인'},palette:result.colors.slice(0,6),fonts:clone(result.fonts||[])},selectedThumbnails:result.thumbnails.length?[result.recommendedThumbnails?.find(id=>result.thumbnails.some(t=>t.id===id))||result.thumbnails[0].id]:[],touched:[],modifiedAt:new Date().toISOString()};
     const old=savedReview();
-    if(old){
+    if(old&&old.fingerprint===key){   // 같은 파일을 다시 분석할 때만 직접 고친 값을 이어받아요. 새 파일이면 처음부터.
       const retain=['title','stage','categories','tools','tags','startDate','endDate','physical','materials','lessons','fonts','palette','dimensions','batonNote','nextIdeas','noteChecklist','noteDraft','references','colorMode'];
       for(const k of old.touched.filter(k=>retain.includes(k))){out.form[k]=clone(old.form[k]);out.touched.push(k);}
       if(out.touched.length)out.result.warnings.push('다시 분석하면서 직접 수정한 값은 덮어쓰지 않았어요. 새 제안은 근거·추출 범위에서 확인할 수 있어요.');
