@@ -139,3 +139,27 @@ html.has-next-hint .beyond-button .chevron-down { animation: beyond-bob 1.6s cub
 
 /* 바톤 릴레이 로그: 사용자가 올린 이미지를 시안 노드처럼 흰 카드 안에 담아요. */
 img.node-art.is-live-art { object-fit: contain; background: #FFF; padding: 9%; box-sizing: border-box; border-radius: 3px; box-shadow: 0 2px 6px rgb(0 0 0 / 12%); }
+
+/* 댓글: 고정 위치 대신 위에서부터 고르게 쌓아요 */
+.is-live .comments { display: flex; flex-direction: column; gap: 22px; height: auto; max-height: 240px; overflow-y: auto; }
+.is-live .comments .comment { position: static; }
+.is-live .comments .comment-reply { margin-left: 44px; }
+.is-live .comments .local-comments { position: static; display: flex; flex-direction: column; gap: 22px; }
+
+/* 대표 컬러: +N 누르면 두 줄로 모두 */
+.is-live .palette-row { height: auto; align-items: flex-start; }
+.is-live .palette-row > span { line-height: 40px; }
+.is-live .palette { flex-wrap: wrap; justify-content: flex-end; max-width: 232px; }
+.is-live .palette .palette-more { background: rgb(38 38 38 / 8%); color: #262626; font-weight: 700; }
+.is-live .palette.is-open { max-width: 232px; }
+
+/* 스타일 태그 · 사용 폰트: 칩 */
+.is-live .style-tags { gap: 8px !important; }
+.is-live .style-tags span:not(.is-empty), .is-live .font-chips a {
+  position: static !important; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 14px;
+  border-radius: 99px; background: #FFF; border: 1px solid #E6E6E6; font-size: 13px; line-height: 1; color: #262626; text-decoration: none; white-space: nowrap;
+}
+.is-live .font-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0 9px; width: 360px; }
+.is-live .font-chips a:hover { border-color: #00C77A; color: #00874F; }
+.is-live .font-chips a small { color: #969696; font-size: 12px; }
+.is-live .font-chips a::after { content: '↓'; font-size: 12px; color: #00874F; }

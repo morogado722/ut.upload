@@ -278,6 +278,7 @@ function appendDone(d) {
   const folder = sessionFolder(d.sessionId), images = d.images || {};
   const up = images.upload ? saveImage(folder, '업로드 페이지.jpg', images.upload) : null;
   const detail = images.detail ? saveImage(folder, '상세페이지.jpg', images.detail) : null;
+  (images.works || []).slice(0, 6).forEach((u, i) => { try { saveImage(folder, '작업물 ' + (i + 1) + '.jpg', u); } catch (e) {} });
   const copy = JSON.parse(JSON.stringify(d)); delete copy.images;
   folder.createFile('기록.json', JSON.stringify(copy, null, 2), MimeType.PLAIN_TEXT);
   const v = d.values || {}, t = d.timings || {}, b = d.behavior || {}, ai = v.ai || {}, dev = d.device || {};

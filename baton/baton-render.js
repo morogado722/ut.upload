@@ -208,12 +208,14 @@
     const label = E('span'); label.append(E('strong', '', '컬러팔레트'), document.createTextNode(' '), E('small', '', v.palette.mode));
     paletteRow.append(label);
     const swatches = E('div', 'palette');
-    const shown = v.palette.colors.slice(0, 4);
-    shown.forEach((hex, i) => {
-      const b = E('button'); b.type = 'button'; b.style.setProperty('--swatch', hex); b.dataset.color = hex; b.setAttribute('aria-label', `${hex} 복사`); b.title = hex;
-      if (i === 3 && v.palette.colors.length > 4) b.textContent = `+${v.palette.colors.length - 3}`;
-      swatches.append(b);
-    });
+    const all = v.palette.colors.slice(0, 12), shown = all.length > 4 ? all.slice(0, 3) : all;
+    const swatch = hex => { const b = E('button'); b.type = 'button'; b.style.setProperty('--swatch', hex); b.dataset.color = hex; b.setAttribute('aria-label', `${hex} 복사`); b.title = hex; b.addEventListener('click', () => { navigator.clipboard?.writeText(hex).catch(() => {}); }); return b; };
+    shown.forEach(hex => swatches.append(swatch(hex)));
+    if (all.length > 4) {
+      const more = E('button', 'palette-more', `+${all.length - 3}`); more.type = 'button'; more.setAttribute('aria-label', '대표 컬러 모두 보기');
+      more.addEventListener('click', () => { more.remove(); all.slice(3).forEach(hex => swatches.append(swatch(hex))); swatches.classList.add('is-open'); });
+      swatches.append(more);
+    }
     if (!shown.length) swatches.append(E('span', 'info-value', '확인 전'));
     paletteRow.append(swatches); body.append(paletteRow);
 
@@ -232,11 +234,13 @@
     }
     if (v.fonts.length) {
       body.append(E('h2', 'extra-label', '사용 폰트'));
-      const fonts = E('ul', 'font-list');
+      const fonts = E('div', 'font-chips');
       for (const f of v.fonts) {
-        const li = E('li', '', f.name + (f.weights ? ` · ${f.weights}` : ''));
-        if (f.url) { const a = E('a', '', '받는 곳'); a.href = f.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; li.append(' · ', a); }
-        fonts.append(li);
+        const a = E('a', '', f.name); a.target = '_blank'; a.rel = 'noopener noreferrer';
+        a.href = f.url || f.downloadUrl || `https://www.google.com/search?q=${encodeURIComponent(f.name + ' 폰트 다운로드')}`;
+        a.title = `${f.name} 받으러 가기`;
+        if (f.weights) a.append(E('small', '', f.weights));
+        fonts.append(a);
       }
       body.append(fonts);
     }

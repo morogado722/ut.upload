@@ -142,16 +142,19 @@
     mark('batonCreated', false);
     completed = true; currentId = record.id;
     const uploadImage = await captureUpload();
-    pending = { record, uploadImage, values: values() };
+    const works = (window.MorogaroReview?.getData?.()?.selectedThumbnails || []).map(t => t?.dataUrl).filter(u => /^data:image\//.test(u || '')).slice(0, 6);
+    pending = { record, uploadImage, values: values(), works };
     // 상세페이지 캡처가 오지 않으면(창을 바로 닫는 등) 30초 뒤 캡처 없이라도 보내요.
     setTimeout(() => afterDetail(record.id, null), 30000);
   }
   // 상세페이지 캡처가 도착하면(또는 못 받으면) 완성 기록을 보내요.
   function afterDetail(id, detailImage) {
     if (!pending || id !== currentId) return;
-    const { uploadImage, values: v } = pending; pending = null;
+    const { uploadImage, values: v, works } = pending; pending = null;
     const total = Math.round((marks.batonCreated - started) / 100) / 10;
-    void send({ ...base('complete'), lastStep: 6, totalSeconds: total, batonId: id, values: v, images: { upload: uploadImage, detail: detailImage || null } });
+    void send({ ...base('complete'), lastStep: 6, totalSeconds: total, batonId: id, values: v, images: { upload: uploadImage, detail: detailImage || null, works } });
+    // 같은 창에서 다시 하면 새 참여로 기록돼요.
+    try { sessionStorage.removeItem('morogaro-research-session'); } catch { /* */ }
     setTimeout(showSurvey, 1200);
   }
 
