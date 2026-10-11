@@ -292,11 +292,11 @@ function appendDone(d) {
     ...TIMING_KEYS.map(k => t[k] == null ? '' : t[k]), b.stepButton || 0, b.stepScroll || 0, b.aiDraft || 0, b.aiIdeas || 0, b.aiIdeaPicked || 0,
     up ? link(up, '열기') : '', detail ? link(detail, '열기') : '', link(folder, '폴더'), shortDevice(dev.ua), dev.screen || ''];
   sheet.appendRow(row.map(x => x == null ? '' : x));
-  try { addOverview(d, folder, { work: (d.previews || {}).work, upload: (d.previews || {}).upload, detail: (d.previews || {}).detail }); } catch (e) { console.warn('한눈에 보기 실패: ' + e); }
+  try { addOverview(d, folder, { upload: up, detail: detail }); } catch (e) { console.warn('한눈에 보기 실패: ' + e); }
 }
 
-/* ───────── 한눈에 보기: 참여 1건 = 1줄, 사진이 셀 안에 보이는 정리 시트 (최신이 위) ───────── */
-const OVERVIEW_HEADERS = ['완성 시각', '총 소요', '대표 작업물', '업로드 페이지', '상세페이지', '제목', '진척도', '카테고리 · 태그 · 툴', '바톤 노트', '이어받을 아이디어', '단계별 소요', 'AI가 채운 항목 / 고친 항목', '기기', '기록 폴더'];
+/* ───────── 한눈에 보기: 참여 1건 = 1줄로 정리한 시트 (최신이 위) ───────── */
+const OVERVIEW_HEADERS = ['완성 시각', '총 소요', '제목', '진척도', '카테고리 · 태그 · 툴', '바톤 노트', '이어받을 아이디어', '단계별 소요', 'AI가 채운 항목 / 고친 항목', '기기', '업로드 캡처', '상세 캡처', '기록 폴더'];
 function overviewSheet() {
   const book = SpreadsheetApp.getActiveSpreadsheet() || SpreadsheetApp.openById(SHEET_ID);
   let sh = book.getSheetByName('한눈에 보기');
@@ -304,37 +304,30 @@ function overviewSheet() {
     sh = book.insertSheet('한눈에 보기', 0);
     sh.getRange(1, 1, 1, OVERVIEW_HEADERS.length).setValues([OVERVIEW_HEADERS]).setFontWeight('bold').setBackground('#E9FFF5').setVerticalAlignment('middle');
     sh.setFrozenRows(1); sh.setRowHeight(1, 36);
-    [130, 80, 170, 170, 170, 160, 170, 220, 360, 300, 220, 200, 120, 70].forEach((w, i) => sh.setColumnWidth(i + 1, w));
+    [130, 80, 160, 200, 230, 380, 320, 240, 180, 110, 90, 90, 70].forEach((w, i) => sh.setColumnWidth(i + 1, w));
   }
   return sh;
 }
 function mmss(sec) { if (sec == null || sec === '') return ''; sec = Math.round(Number(sec)); return Math.floor(sec / 60) + '분 ' + (sec % 60) + '초'; }
-function cellImage(dataUrl, alt) {
-  if (!dataUrl || !/^data:image\//.test(dataUrl)) return null;
-  try { return SpreadsheetApp.newCellImage().setSourceUrl(dataUrl).setAltTextTitle(alt).build(); } catch (e) { return null; }
-}
-function addOverview(d, folder, previews) {
+function addOverview(d, folder, files) {
+  files = files || {};
   const sh = overviewSheet(), v = d.values || {}, t = d.timings || {}, ai = v.ai || {}, dev = d.device || {};
   const order = ['첫 파일 업로드', '분석 완료', '2단계 소스 확인', '3단계 썸네일', '4단계 프로젝트 정보', '5단계 파일 정보', '6단계 바톤 노트', '바톤 완성'];
   const short = { '첫 파일 업로드': '업로드', '분석 완료': '분석', '2단계 소스 확인': '소스', '3단계 썸네일': '썸네일', '4단계 프로젝트 정보': '정보', '5단계 파일 정보': '파일', '6단계 바톤 노트': '노트', '바톤 완성': '완성' };
   let prev = 0; const steps = [];
   order.forEach(k => { const x = t[k]; if (x == null || x === '') return; steps.push(short[k] + ' ' + Math.max(0, Math.round(x - prev)) + '초'); prev = x; });
-  const row = [kst(d.receivedAt), mmss(d.totalSeconds), '', '', '', v.title || '',
+  const row = [kst(d.receivedAt), mmss(d.totalSeconds), v.title || '',
     (v.stage || '미정') + (v.stageReason ? '\n' + v.stageReason : ''),
     '카테고리: ' + list(v.categories) + '\n태그: ' + list(v.tags) + '\n툴: ' + list(v.tools),
     v.batonNote || '', (v.nextIdeas || []).map((x, i) => (i + 1) + '. ' + x).join('\n'), steps.join(' → '),
     (ai.filledCount || 0) + '개 채움 / ' + (ai.editedCount || 0) + '개 고침' + (ai.editedFields && ai.editedFields.length ? '\n(' + list(ai.editedFields) + ')' : ''),
-    shortDevice(dev.ua), link(folder, '열기')];
+    shortDevice(dev.ua), files.upload ? link(files.upload, '보기') : '', files.detail ? link(files.detail, '보기') : '', link(folder, '열기')];
   sh.insertRowAfter(1);
   const r = sh.getRange(2, 1, 1, row.length);
   r.setValues([row.map(x => x == null ? '' : x)]).setWrap(true).setVerticalAlignment('top').setFontWeight('normal').setBackground(null);
-  sh.setRowHeight(2, 190);
-  [['work', 3, '대표 작업물'], ['upload', 4, '업로드 페이지'], ['detail', 5, '상세페이지']].forEach(([k, col, alt]) => {
-    const img = cellImage(previews && previews[k], alt);
-    if (img) sh.getRange(2, col).setValue(img);
-  });
+  sh.setRowHeight(2, 120);
 }
-// 편집기에서 한 번 실행: 지금까지 쌓인 기록으로 '한눈에 보기'를 다시 만들어요(드라이브 폴더의 기록.json · 사진 사용).
+// 편집기에서 한 번 실행: 지금까지 쌓인 기록으로 '한눈에 보기'를 다시 만들어요(드라이브 폴더의 기록.json 사용).
 function 한눈에_보기_만들기() {
   const book = SpreadsheetApp.getActiveSpreadsheet() || SpreadsheetApp.openById(SHEET_ID);
   const old = book.getSheetByName('한눈에 보기'); if (old) book.deleteSheet(old);
@@ -352,8 +345,7 @@ function 한눈에_보기_만들기() {
     recs.forEach(d => items.push({ d: d, f: f, pics: pics }));
   }
   items.sort((a, b) => String(a.d.receivedAt || a.d.at).localeCompare(String(b.d.receivedAt || b.d.at)));
-  const thumb = file => { if (!file) return null; try { const b = file.getThumbnail(); return b ? 'data:' + (b.getContentType() || 'image/png') + ';base64,' + Utilities.base64Encode(b.getBytes()) : null; } catch (e) { return null; } };
-  items.forEach(it => { it.d.receivedAt = it.d.receivedAt || it.d.at; addOverview(it.d, it.f, { work: thumb(it.pics.work), upload: thumb(it.pics.upload), detail: thumb(it.pics.detail) }); });
+  items.forEach(it => { it.d.receivedAt = it.d.receivedAt || it.d.at; addOverview(it.d, it.f, it.pics); });
   Logger.log('한눈에 보기: ' + items.length + '건 정리했어요.');
 }
 

@@ -148,21 +148,11 @@
     setTimeout(() => afterDetail(record.id, null), 30000);
   }
   // 상세페이지 캡처가 도착하면(또는 못 받으면) 완성 기록을 보내요.
-  // 시트 '한눈에 보기' 칸에 넣을 작은 사진(가로 360px)
-  function shrink(dataUrl, width = 360, maxH = 900) {
-    return new Promise(resolve => {
-      if (!/^data:image\//.test(dataUrl || '')) return resolve(null);
-      const im = new Image();
-      im.onload = () => { try { const s = Math.min(1, width / im.naturalWidth), w = Math.round(im.naturalWidth * s), h = Math.min(maxH, Math.round(im.naturalHeight * s)); const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.fillStyle = '#FFF'; x.fillRect(0, 0, w, h); x.drawImage(im, 0, 0, w, Math.round(im.naturalHeight * s)); resolve(c.toDataURL('image/jpeg', 0.75)); } catch { resolve(null); } };
-      im.onerror = () => resolve(null); im.src = dataUrl;
-    });
-  }
   async function afterDetail(id, detailImage) {
     if (!pending || id !== currentId) return;
     const { uploadImage, values: v, works } = pending; pending = null;
-    const previews = { upload: await shrink(uploadImage), detail: await shrink(detailImage), work: await shrink(works[0]) };
     const total = Math.round((marks.batonCreated - started) / 100) / 10;
-    void send({ ...base('complete'), lastStep: 6, totalSeconds: total, batonId: id, values: v, images: { upload: uploadImage, detail: detailImage || null, works }, previews });
+    void send({ ...base('complete'), lastStep: 6, totalSeconds: total, batonId: id, values: v, images: { upload: uploadImage, detail: detailImage || null, works } });
     // 같은 창에서 다시 하면 새 참여로 기록돼요.
     try { sessionStorage.removeItem('morogaro-research-session'); } catch { /* */ }
     setTimeout(showSurvey, 1200);
