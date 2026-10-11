@@ -276,3 +276,5 @@ body::before {
 @media print {
   body::before { animation: none; }
 }
+/* 업로드 안내: 권장 형식 · 인식 범위 */
+.drop-limit { display: block; margin-top: 14px; padding: 6px 14px; border-radius: 99px; background: rgb(38 38 38 / 5%); color: #8A8A8A; font-size: .75rem; line-height: 18px; width: max-content; max-width: 100%; margin-inline: auto; }
