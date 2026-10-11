@@ -232,7 +232,7 @@
       head.append(hl, allBtn); fb.append(head);
       for (const f of v.fonts) {
         const a = E('a', 'bi-font'); a.href = fontLink(f); a.target = '_blank'; a.rel = 'noopener noreferrer'; a.title = `${f.name} 받으러 가기`;
-        a.append(E('span', '', f.name + (f.weights ? ` · ${f.weights}` : '')), E('i', 'bi-dl')); fb.append(a);
+        a.append(E('span', '', f.name + (f.weights ? ` · ${f.weights}` : '')), img('assets/font-download.svg', '', 28, 28)); fb.append(a);
       }
       body.append(fb);
     }
@@ -244,14 +244,9 @@
     tb.append(tags); body.append(tb);
 
     // 제작 정보
-    if (v.materials) body.append(row('소재 · 후가공', val(v.materials)));
-    if (v.lessons) { const lb = E('div', 'bi-block'); lb.append(E('h3', 'bi-label', '배운 점'), E('p', 'bi-note', v.lessons)); body.append(lb); }
+    if (v.materials) { const mb = E('div', 'bi-block'); mb.append(E('h3', 'bi-label', '소재 · 후가공'), E('p', 'bi-text', v.materials)); body.append(mb); }
+    if (v.lessons) { const lb = E('div', 'bi-block'); lb.append(E('h3', 'bi-label', '배운 점'), E('p', 'bi-text', v.lessons)); body.append(lb); }
 
-    // 다음 바톤 제안
-    const ib = E('div', 'bi-block'); const il = E('div', 'bi-label-group'); il.append(E('h3', 'bi-label', '다음 바톤 제안'), E('span', 'bi-count', v.nextIdeas.length)); ib.append(il);
-    const ideas = E('ol', 'bi-ideas'); for (const idea of v.nextIdeas) ideas.append(E('li', '', idea));
-    if (!v.nextIdeas.length) ideas.append(E('li', 'is-empty', '아직 제안한 방향이 없어요.'));
-    ib.append(ideas); body.append(ib);
   }
   // 폰트 받는 곳: 직접 입력한 주소 → 잘 알려진 폰트 → 검색
   const FONT_LINKS = {
@@ -367,23 +362,52 @@
 
     const cards = $('.idea-cards'); cards.replaceChildren();
     const interest = [4, 3, 2];
-    v.nextIdeas.forEach((idea, i) => {
-      const card = E('article', 'idea-card');
-      card.append(E('span', 'idea-badge' + (i === 0 ? ' green' : ''), i === 0 ? '아직 없는 작업' : '원작자 제안'));
-      const h3 = E('h3', '', idea); h3.title = idea; card.append(h3);
-      card.append(E('p', '', '원작자가 남긴 다음 방향이에요. 이어받아 시작해 보세요.'));
-      const author = E('div', 'idea-author'); author.append(E('i'), E('strong', '', v.author.name), E('span', '', '원작자 제안'));
-      card.append(author, E('span', 'interest', `${interest[i]}명이 관심 있어요`));
-      const start = E('button', 'start-idea' + (i === 0 ? ' primary' : ''), '이어받아 시작하기'); start.type = 'button'; start.dataset.inherit = `idea-${i + 1}`;
-      card.append(start); cards.append(card);
-    });
+    const ideaCard = (idea, i, who) => {
+      const card = E('article', 'idea-card' + (who ? ' is-new' : ''));
+      card.append(E('span', 'idea-badge' + (i === 0 && !who ? ' green' : ''), who ? '방문자 제안' : i === 0 ? '아직 없는 작업' : '원작자 제안'));
+      const h3 = E('h3', '', idea.title); h3.title = idea.title; card.append(h3);
+      card.append(E('p', '', idea.body || '원작자가 남긴 다음 방향이에요. 이어받아 시작해 보세요.'));
+      const author = E('div', 'idea-author'); author.append(E('i'), E('strong', '', who || v.author.name), E('span', '', who ? '방금 전' : '원작자 제안'));
+      card.append(author, E('span', 'interest', who ? '첫 관심을 기다려요' : `${interest[i] || 1}명이 관심 있어요`));
+      const startB = E('button', 'start-idea' + (i === 0 && !who ? ' primary' : ''), '이어받아 시작하기'); startB.type = 'button'; startB.dataset.inherit = `idea-${i + 1}`;
+      card.append(startB); return card;
+    };
+    v.nextIdeas.forEach((idea, i) => cards.append(ideaCard({ title: idea }, i)));
     if (!v.nextIdeas.length) {
       const card = E('article', 'idea-card is-empty');
-      card.append(E('span', 'idea-badge', '아이디어'), E('h3', '', '아직 제안이 없어요'), E('p', '', '바톤 수정하기에서 이어받을 아이디어를 적을 수 있어요.'));
+      card.append(E('span', 'idea-badge', '아이디어'), E('h3', '', '아직 제안이 없어요'), E('p', '', '나도 제안하기로 첫 방향을 남겨 보세요.'));
       cards.append(card);
     }
-    $('#ideas-title span').textContent = String(v.nextIdeas.length);
-    cards.classList.toggle('is-scrollable', v.nextIdeas.length > 2);
+    let count = v.nextIdeas.length;
+    $('#ideas-title span').textContent = String(count);
+    cards.classList.toggle('is-scrollable', count > 2);
+
+    // 나도 제안하기: 가운데 팝업으로 입력해요(이 브라우저에만 남아요).
+    const oldBtn = $('.add-idea'); const addBtn = oldBtn.cloneNode(true); addBtn.removeAttribute('data-unwired'); oldBtn.replaceWith(addBtn);
+    const dlg = E('dialog', 'idea-dialog'); dlg.setAttribute('aria-labelledby', 'idea-dialog-title');
+    dlg.innerHTML = `<form method="dialog" class="idea-form">
+      <p class="idea-dialog-eyebrow">바톤 아이디어</p>
+      <h2 id="idea-dialog-title">이 바톤, 어디로 이어가면 좋을까요?</h2>
+      <p class="idea-dialog-sub">떠오른 다음 방향을 남겨 주세요. 원작자와 다음 러너에게 힌트가 돼요.</p>
+      <label class="idea-field"><span>한 줄 제안</span><input name="title" maxlength="40" required placeholder="예: 네온 컬러로 모션 포스터 만들기" autocomplete="off"><em data-count>0/40</em></label>
+      <label class="idea-field"><span>조금 더 설명 <small>(선택)</small></span><textarea name="body" maxlength="120" rows="3" placeholder="어떤 점에서 이어가면 좋을지 적어 주세요."></textarea></label>
+      <div class="idea-actions"><button type="button" class="idea-cancel" value="cancel">취소</button><button type="submit" class="idea-submit" value="ok">제안 남기기 <span aria-hidden="true">🏃</span></button></div>
+    </form>`;
+    document.body.append(dlg);
+    const form = dlg.querySelector('form'), title = form.elements.title, cnt = form.querySelector('[data-count]');
+    title.addEventListener('input', () => { cnt.textContent = `${title.value.length}/40`; });
+    dlg.querySelector('.idea-cancel').addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+    addBtn.addEventListener('click', () => { form.reset(); cnt.textContent = '0/40'; dlg.showModal(); setTimeout(() => title.focus(), 50); });
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const t = title.value.trim(); if (!t) { title.focus(); return; }
+      cards.querySelector('.idea-card.is-empty')?.remove();
+      const card = ideaCard({ title: t, body: form.elements.body.value.trim() || '방문자가 남긴 다음 방향이에요.' }, count, '방문자');
+      cards.prepend(card); count++; $('#ideas-title span').textContent = String(count); cards.classList.toggle('is-scrollable', count > 2);
+      cards.scrollTo?.({ left: 0, behavior: 'smooth' });
+      dlg.close();
+    });
   }
 
   /* ───────── 기록 받기 → 그리기 → v10 인터랙션 실행 ───────── */

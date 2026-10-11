@@ -104,9 +104,9 @@ html.header-compact .site-header .search { visibility: hidden; pointer-events: n
 .page[data-view="log"] .detail-view { display: none; }
 .page[data-view="log"] { display: flow-root; }   /* 아래 여백이 페이지 밖으로 새지 않게 */
 .page[data-view="log"] .log-view { margin-top: 110px; }   /* 접힌 헤더(계정 탭) 아래부터 시작 */
-.log-view { background: linear-gradient(180deg, #FAFAFA 0, #FFFFFF 320px); }   /* 바톤 너머: 위는 상세와 같은 #FAFAFA, 아래로 자연스럽게 흰색 */
+.log-view { background: linear-gradient(180deg, #FAFAFA 0, #FFFFFF 56px); }   /* 바톤 너머: 위는 상세와 같은 #FAFAFA, 아래로 자연스럽게 흰색 */
 .page { transition: background-color .6s ease; }
-.page[data-view="log"] { background: linear-gradient(180deg, #FAFAFA 0, #FFFFFF 420px); }
+.page[data-view="log"] { background: linear-gradient(180deg, #FAFAFA 0, #FFFFFF 90px); }
 html.is-fit { transition: background-color .6s ease; }
 html.is-fit:has(.page[data-view="log"]) { background: #FFFFFF; }
 
@@ -201,8 +201,39 @@ img.node-art.is-live-art { object-fit: contain; background: #FFF; padding: 12%; 
 .bi-all:hover { color: #00874F; }
 .bi-font { display: flex; align-items: center; justify-content: space-between; height: 32px; padding: 0 12px 0 16px; border-radius: 27px; background: #FAFAFA; border: 1px solid #E6E6E6; color: #262626; text-decoration: none; font-size: 14px; font-weight: 700; }
 .bi-font:hover { border-color: #00C77A; }
+.bi-font img { width: 24px; height: 24px; flex: none; }
 .bi-dl { width: 18px; height: 18px; background: no-repeat center/18px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23262626' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11M7.5 10.5 12 15l4.5-4.5'/%3E%3Cpath d='M5 15v3.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V15'/%3E%3C/svg%3E"); }
 .bi-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .bi-tag { display: inline-flex; align-items: center; height: 32px; padding: 0 16px; border-radius: 6px; background: rgb(38 38 38 / 10%); font: 500 13px/1 'Noto Sans KR', sans-serif; }
 .bi-ideas { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; word-break: keep-all; display: grid; gap: 4px; }
 .bi-ideas .is-empty { list-style: none; margin-left: -20px; color: #969696; }
+
+.bi-row { align-items: flex-start; }
+.bi-row .bi-label { line-height: 28px; }
+.bi-row .bi-value { line-height: 28px; max-width: 230px; }
+.bi-text { margin: 0; font-size: 14px; line-height: 1.6; letter-spacing: .01em; word-break: keep-all; overflow-wrap: anywhere; color: #262626; }
+.bi-font { padding-right: 8px; }
+
+/* ───────── 나도 제안하기 팝업 ───────── */
+.idea-dialog { width: 460px; max-width: calc(100vw - 32px); padding: 0; border: 0; border-radius: 24px; background: #FFF; color: #262626; box-shadow: 0 30px 80px rgb(0 0 0 / 18%); font-family: 'Spoqa Han Sans Neo', sans-serif; }
+.idea-dialog[open] { animation: idea-in .32s cubic-bezier(.2,.9,.3,1.15); }
+.idea-dialog::backdrop { background: rgb(38 38 38 / 32%); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); animation: idea-fade .25s ease; }
+@keyframes idea-in { from { opacity: 0; transform: translateY(14px) scale(.97); } }
+@keyframes idea-fade { from { opacity: 0; } }
+.idea-form { display: flex; flex-direction: column; gap: 14px; padding: 30px 30px 26px; background: radial-gradient(120% 60% at 100% 0%, rgb(0 249 152 / 10%), transparent 60%), #FFF; border-radius: 24px; }
+.idea-dialog-eyebrow { margin: 0; width: max-content; padding: 4px 10px; border-radius: 99px; background: rgb(0 249 152 / 18%); color: #00874F; font-size: 12px; font-weight: 700; }
+.idea-form h2 { margin: 2px 0 0; font-size: 20px; line-height: 1.4; font-weight: 700; }
+.idea-dialog-sub { margin: -6px 0 4px; font-size: 14px; line-height: 1.6; color: #7A7A7A; }
+.idea-field { position: relative; display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500; }
+.idea-field small { color: #969696; font-weight: 400; }
+.idea-field input, .idea-field textarea { width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid #E6E6E6; border-radius: 12px; background: #FAFAFA; font: 400 15px/1.5 'Spoqa Han Sans Neo', sans-serif; color: #262626; resize: none; outline: none; transition: border-color .2s, background .2s; }
+.idea-field input { padding-right: 56px; }
+.idea-field input:focus, .idea-field textarea:focus { border-color: #81CEB0; background: #FFF; }
+.idea-field em { position: absolute; right: 14px; top: 39px; font-style: normal; font-size: 12px; color: #B0B0B0; }
+.idea-actions { display: flex; gap: 8px; margin-top: 6px; }
+.idea-actions button { height: 48px; border-radius: 38px; font: 700 15px/1 'Spoqa Han Sans Neo', sans-serif; cursor: pointer; }
+.idea-cancel { flex: 0 0 110px; border: 0; background: rgb(38 38 38 / 8%); color: #262626; }
+.idea-submit { flex: 1; border: 1px solid #81CEB0; color: #262626; background: radial-gradient(60% 140% at 8% 30%, rgb(226 245 120 / .75), transparent 70%), radial-gradient(70% 160% at 98% 60%, rgb(120 250 215 / .8), transparent 70%), #FFF; }
+.idea-submit:hover { filter: saturate(1.2); }
+.idea-card.is-new { animation: idea-in .45s cubic-bezier(.2,.9,.3,1.15); }
+.idea-card.is-new .idea-badge { background: rgb(0 249 152 / 18%); color: #00874F; }
