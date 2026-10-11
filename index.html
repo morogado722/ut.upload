@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="./fonts.css">
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./header.css?v=1011s">
-  <link rel="stylesheet" href="./refinement.css?v=1011q">
+  <link rel="stylesheet" href="./refinement.css?v=1011t">
   <link rel="stylesheet" href="./loading.css">
   <link rel="stylesheet" href="./buttons.css">
   <link rel="stylesheet" href="./review.css">
@@ -34,10 +34,11 @@
   <script src="./mobile-gate.js?v=1011p"></script>
   <script src="./fresh-start.js?v=1011p"></script>
   <script src="./config.js"></script>
+  <script src="./size-warning.js?v=1011t" defer></script>
   <script src="./app.js?v=1011p" defer></script>
   <script src="./header.js?v=1011p" defer></script>
   <script src="./loading.js?v=1011p" defer></script>
-  <script src="./file-analysis.js?v=1011p" defer></script>
+  <script src="./file-analysis.js?v=1011t" defer></script>
   <script src="./ambient.js?v=1011p" defer></script>
   <script src="./stepper.js?v=1011p" defer></script>
   <script src="./note-snap.js?v=1011p" defer></script>
@@ -207,7 +208,7 @@
               </span>
             </button>
             <p id="local-note" class="sr-only">파일을 클릭해서 선택하거나 이 영역으로 끌어다 놓으세요. 기본 실행에서는 브라우저 안에서 확인해요. 분석 서버로 실행하면 다음 단계에서 파일을 서버로 보내며, AI 도움은 별도 동의 후 진행해요.</p>
-            <ul class="file-list" id="file-list" aria-label="추가한 파일" hidden></ul>
+            <ul class="file-list" id="file-list" aria-label="추가한 파일" hidden></ul><p class="size-warning" id="size-warning" role="status" hidden></p>
           </div>
         </section>
 

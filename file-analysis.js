@@ -180,8 +180,10 @@
       abort(signal);const file=payload.files[i],extension=ext(file.name);
       const source={id:'f'+i,name:file.name,size:file.size,ext:extension,kind:TYPES[extension]||'기타 파일',kindBasis:'확장자 기준 · 직접 변경 가능',status:'metadata',coverage:'파일명·확장자·용량만 확인',warnings:[],text:''};result.sources.push(source);
       if(TOOLS[extension]){result.values.tools=unique([...result.values.tools,TOOLS[extension]]);addEvidence(result,'tools',source,extension+' 확장자에 연결된 툴 후보','extension','파일 형식');}
+      // 50MB 넘는 파일은 건너뛰되, 합계에는 넣지 않아요(큰 파일 하나 때문에 다른 파일까지 못 읽지 않게).
+      if(file.size>MAX_FILE){source.warnings.push('50MB를 넘어 내용을 읽지 않았어요. 이름 · 형식만 보관했어요.');continue;}
       bytes+=file.size;
-      if(file.size>MAX_FILE||i>=20||bytes>MAX_TOTAL){source.warnings.push('브라우저 분석 크기 제한을 초과했어요.');continue;}
+      if(i>=20||bytes>MAX_TOTAL){source.warnings.push('브라우저 분석 크기 제한을 초과했어요.');continue;}
       try {
         if(/^(png|jpe?g|webp|gif|bmp|avif)$/.test(extension))await inspectImage(file,source,result,signal);
         else if(extension==='pdf')await inspectPdf(file,source,result,signal);
