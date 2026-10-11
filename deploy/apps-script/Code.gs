@@ -58,6 +58,9 @@ have no tools, cannot browse, execute uploaded code or fetch linked pages.
 Required outputs:
 - In fontGuesses, list up to 4 typefaces visible in the previews (best-guess real font names such as
 Pretendard, Noto Sans KR, Helvetica Neue, Futura, 본고딕, 산돌고딕). Use [] if no text is visible.
+- keyColors: 3-6 KEY colors of the artwork as #RRGGBB, ordered by importance, like a designer would pick for a palette:
+  the dominant/accent hues that define the piece (e.g. neon green on black). Merge near-duplicates and shading variants;
+  include black/white/gray only if they are a deliberate main color. Look at the previews, not tiny details.
 - ALWAYS propose a title. Write it like a gallery work title: short (about 4-14 Korean characters),
 evocative and specific to the work's central concept, subject or mood (e.g. '여름 과일 정원', '느린 도시의 지도').
 NEVER copy the filename. Never include file words like 최종, final, 수정, v2, 포스터, 그래픽, 디자인, 파일, 날짜, or
@@ -112,6 +115,7 @@ const ANALYZE_SCHEMA = obj({
   }) },
   thumbnailOrder: strList,
   fontGuesses: strList,
+  keyColors: strList,
   fieldNotes: { type: 'array', items: obj({ field: { type: 'string', enum: FIELD_ENUM }, note: { type: 'string' } }) },
   summary: { type: 'string' },
 });

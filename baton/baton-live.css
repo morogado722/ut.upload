@@ -63,9 +63,9 @@
 .is-live .files-empty { margin: 14px 7px; font-size: 12px; color: #969696; }
 
 /* ── 바톤로그 루트: 내 바톤 대표 이미지 ── */
-.is-live .log-root.is-live { display: grid; place-items: center; padding: 14px; background: #262626; overflow: hidden; }
-.is-live .log-root.is-live img { max-width: 100%; max-height: 100%; object-fit: contain; }
-.is-live .log-root.is-empty span { color: #fff; font-size: 13px; line-height: 18px; text-align: center; word-break: keep-all; }
+.is-live .log-root.is-live { display: grid; place-items: center; padding: 18px; background: #FFF; border: 1px solid #ECECEC; overflow: hidden; box-sizing: border-box; }
+.is-live .log-root.is-live img { width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; }
+.is-live .log-root.is-empty span { color: #262626; font-size: 13px; line-height: 18px; text-align: center; word-break: keep-all; }
 
 /* ── 바톤 아이디어: 메이커에서 쓴 아이디어(최대 3개) ── */
 .is-live .idea-cards.is-scrollable { overflow-x: auto; padding-bottom: 8px; scrollbar-width: thin; }
@@ -138,7 +138,8 @@ html.has-next-hint .beyond-button .chevron-down { animation: beyond-bob 1.6s cub
 .mini-progress { display: none !important; }   /* 관련 바톤 카드의 진척도 막대는 쓰지 않아요 */
 
 /* 바톤 릴레이 로그: 사용자가 올린 이미지를 시안 노드처럼 흰 카드 안에 담아요. */
-img.node-art.is-live-art { object-fit: contain; background: #FFF; padding: 9%; box-sizing: border-box; border-radius: 3px; box-shadow: 0 2px 6px rgb(0 0 0 / 12%); }
+img.node-art.is-live-art { object-fit: contain; background: #FFF; padding: 12%; box-sizing: border-box; border-radius: 4px; border: 1px solid #ECECEC; }
+.has-live-art { background: transparent !important; }
 
 /* 댓글: 고정 위치 대신 위에서부터 고르게 쌓아요 */
 .is-live .comments { display: flex; flex-direction: column; gap: 22px; height: auto; max-height: 240px; overflow-y: auto; }
@@ -163,3 +164,45 @@ img.node-art.is-live-art { object-fit: contain; background: #FFF; padding: 9%; b
 .is-live .font-chips a:hover { border-color: #00C77A; color: #00874F; }
 .is-live .font-chips a small { color: #969696; font-size: 12px; }
 .is-live .font-chips a::after { content: '↓'; font-size: 12px; color: #00874F; }
+
+/* ───────── 바톤 정보 (피그마 '바톤 정보' 3625:3658) ───────── */
+.is-live .info-body.bi { display: flex; flex-direction: column; gap: 18px; width: 362px; padding: 6px 0 28px 9px; height: auto; font-family: 'Spoqa Han Sans Neo', sans-serif; color: #262626; }
+.is-live .info-body.bi > * { position: static !important; margin: 0 !important; left: auto; top: auto; width: 100%; }
+.bi-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 28px; }
+.bi-label { margin: 0; font-size: 16px; line-height: 1.6; font-weight: 500; letter-spacing: .01em; white-space: nowrap; }
+.bi-label-group { display: flex; align-items: center; gap: 4px; }
+.bi-sub { font-size: 14px; letter-spacing: .01em; }
+.bi-value { font-size: 14px; line-height: 1.6; letter-spacing: .01em; text-align: right; }
+.bi-pills { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.bi-pill { display: inline-flex; align-items: center; height: 28px; padding: 0 16px; border-radius: 27px; background: #FAFAFA; border: 1px solid #E6E6E6; font-size: 14px; font-weight: 700; }
+.bi-block { display: flex; flex-direction: column; gap: 6px; }
+.bi-note { margin: 0; font-size: 16px; line-height: 1.6; letter-spacing: .01em; white-space: pre-line; word-break: keep-all; overflow-wrap: anywhere; }
+.bi-note.is-empty { color: #969696; font-size: 14px; }
+.bi-ref { display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 16px 0 17px; margin-top: -6px !important; border: 1px solid #ECECEC; border-radius: 12px; background: transparent; font: inherit; color: #262626; cursor: pointer; }
+.bi-ref:hover { background: #FFF; }
+.bi-ref-label { display: flex; align-items: center; gap: 6px; font-size: 16px; }
+.bi-chev { width: 7px; height: 7px; border-right: 1.5px solid #262626; border-top: 1.5px solid #262626; transform: rotate(45deg); margin-left: 2px; }
+.bi-ref-thumbs { display: flex; gap: 3px; align-items: center; }
+.bi-ref-thumbs img { height: 35px; width: auto; max-width: 49px; border-radius: 4px; object-fit: cover; }
+.bi-ref-more { position: relative; display: inline-flex; }
+.bi-ref-more::after { content: ''; position: absolute; inset: 0; border-radius: 4px; background: rgb(0 0 0 / 60%); }
+.bi-ref-more > span { position: absolute; inset: 0; display: grid; place-items: center; color: #FFF; font-size: 14px; font-weight: 300; z-index: 1; }
+.bi-palette-row { align-items: flex-start; }
+.bi-palette-row .bi-label-group { height: 40px; }
+.bi-swatches { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; max-width: 184px; }
+.bi-swatch { width: 40px; height: 40px; flex: none; border: 0; border-radius: 4px; cursor: pointer; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 6%); font: 300 14px/1 'Spoqa Han Sans Neo', sans-serif; color: #262626; }
+.bi-swatch:hover { outline: 1px solid #AAA; outline-offset: 2px; }
+.bi-more { position: relative; color: #262626; }
+.bi-more::before { content: ''; position: absolute; inset: 0; border-radius: 4px; background: rgb(255 255 255 / 55%); }
+.bi-more > span { position: relative; z-index: 1; }
+.bi-count { display: inline-grid; place-items: center; min-width: 12px; height: 12px; padding: 0 2px; border-radius: 2px; background: #EAEAEA; font-size: 8px; font-weight: 700; }
+.bi-fonts { gap: 4px; }
+.bi-all { border: 0; background: none; padding: 0; font: 700 14px/1.6 'Spoqa Han Sans Neo', sans-serif; color: #262626; cursor: pointer; }
+.bi-all:hover { color: #00874F; }
+.bi-font { display: flex; align-items: center; justify-content: space-between; height: 32px; padding: 0 12px 0 16px; border-radius: 27px; background: #FAFAFA; border: 1px solid #E6E6E6; color: #262626; text-decoration: none; font-size: 14px; font-weight: 700; }
+.bi-font:hover { border-color: #00C77A; }
+.bi-dl { width: 18px; height: 18px; background: no-repeat center/18px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23262626' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 4v11M7.5 10.5 12 15l4.5-4.5'/%3E%3Cpath d='M5 15v3.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V15'/%3E%3C/svg%3E"); }
+.bi-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.bi-tag { display: inline-flex; align-items: center; height: 32px; padding: 0 16px; border-radius: 6px; background: rgb(38 38 38 / 10%); font: 500 13px/1 'Noto Sans KR', sans-serif; }
+.bi-ideas { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; word-break: keep-all; display: grid; gap: 4px; }
+.bi-ideas .is-empty { list-style: none; margin-left: -20px; color: #969696; }

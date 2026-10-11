@@ -174,83 +174,99 @@
     return row;
   }
   function renderInfo(v) {
-    const body = $('.info-body'); body.replaceChildren();
+    const body = $('.info-body'); body.replaceChildren(); body.classList.add('bi');
+    const row = (label, right, cls = '') => { const r = E('div', 'bi-row ' + cls); r.append(E('h3', 'bi-label', label)); if (right) r.append(right); return r; };
+    const val = t => E('span', 'bi-value', t);
 
-    const pills = E('div', 'tool-pills');
-    for (const t of v.tools) { const p = E('span', '', data.toolAbbr(t)); p.title = t; p.setAttribute('aria-label', t); pills.append(p); }
-    body.append(infoRow('tools-row', '사용 툴', v.tools.length ? pills : '확인 전'));
+    // 사용 툴
+    const pills = E('div', 'bi-pills');
+    for (const t of v.tools) { const p = E('span', 'bi-pill', data.toolAbbr(t)); p.title = t; pills.append(p); }
+    body.append(row('사용 툴', v.tools.length ? pills : val('확인 전')));
 
+    // 진행 시기
     const { start, end } = v.period;
     const period = start || end ? `${dot(start) || '시작일 미입력'} ~ ${dot(end) || '진행 중'}` : '기간 미입력';
-    const time = E('time', '', period); if (start) time.dateTime = start;
-    body.append(infoRow('period-row', '진행 시기', time));
+    const time = E('time', 'bi-value', period); if (start) time.dateTime = start;
+    body.append(row('진행 시기', time));
 
-    body.append(E('h2', 'note-label', '바톤 노트'));
-    body.append(E('p', 'baton-note' + (v.note ? '' : ' is-empty'), v.note || '아직 노트를 남기지 않았어요. 파일에서 이 바톤의 이야기를 이어가 보세요.'));
-
+    // 바톤 노트 + 레퍼런스
+    const note = E('div', 'bi-block');
+    note.append(E('h3', 'bi-label', '바톤 노트'), E('p', 'bi-note' + (v.note ? '' : ' is-empty'), v.note || '아직 노트를 남기지 않았어요.'));
+    body.append(note);
+    const ref = E('button', 'bi-ref'); ref.type = 'button'; ref.id = 'open-references';
     if (v.references.length) {
-      const btn = E('button', 'reference-button'); btn.type = 'button'; btn.id = 'open-references';
-      btn.append(E('span', '', '레퍼런스 이미지 보기'));
-      const chev = E('span', 'chevron-right'); chev.setAttribute('aria-hidden', 'true'); btn.append(chev);
-      const thumbs = E('span', 'reference-thumbs');
+      const lab = E('span', 'bi-ref-label', '레퍼런스 이미지 보기'); lab.append(E('i', 'bi-chev')); ref.append(lab);
+      const thumbs = E('span', 'bi-ref-thumbs');
       v.references.slice(0, 3).forEach((r, i) => {
-        const pic = img(r.src, r.alt, 35, 35);
-        if (i === 2 && v.references.length > 3) { const more = E('span', 'reference-more'); more.append(pic, E('span', '', `+${v.references.length - 3}`)); thumbs.append(more); }
+        const pic = img(r.src, r.alt, 36, 35);
+        if (i === 2 && v.references.length > 3) { const more = E('span', 'bi-ref-more'); more.append(pic, E('span', '', `+${v.references.length - 3}`)); thumbs.append(more); }
         else thumbs.append(pic);
       });
-      btn.append(thumbs); body.append(btn);
-    } else {
-      // app.js가 이 버튼에 이벤트를 걸기 때문에 숨긴 채로 둡니다.
-      const btn = E('button', 'reference-button'); btn.type = 'button'; btn.id = 'open-references'; btn.hidden = true; body.append(btn);
-    }
+      ref.append(thumbs); body.append(ref);
+    } else { ref.hidden = true; body.append(ref); }   // app.js가 이벤트를 걸어서 숨긴 채로 둬요
 
-    const paletteRow = E('div', 'palette-row');
-    const label = E('span'); label.append(E('strong', '', '컬러팔레트'), document.createTextNode(' '), E('small', '', v.palette.mode));
-    paletteRow.append(label);
-    const swatches = E('div', 'palette');
+    // 컬러팔레트
+    const left = E('div', 'bi-label-group'); left.append(E('h3', 'bi-label', '컬러팔레트'), E('span', 'bi-sub', v.palette.mode || ''));
+    const pr = E('div', 'bi-row bi-palette-row'); pr.append(left);
+    const sw = E('div', 'bi-swatches');
     const all = v.palette.colors.slice(0, 12), shown = all.length > 4 ? all.slice(0, 3) : all;
-    const swatch = hex => { const b = E('button'); b.type = 'button'; b.style.setProperty('--swatch', hex); b.dataset.color = hex; b.setAttribute('aria-label', `${hex} 복사`); b.title = hex; b.addEventListener('click', () => { navigator.clipboard?.writeText(hex).catch(() => {}); }); return b; };
-    shown.forEach(hex => swatches.append(swatch(hex)));
+    const swatch = hex => { const b = E('button', 'bi-swatch'); b.type = 'button'; b.style.background = hex; b.dataset.color = hex; b.title = hex; b.setAttribute('aria-label', `${hex} 복사`); return b; };
+    shown.forEach(h => sw.append(swatch(h)));
     if (all.length > 4) {
-      const more = E('button', 'palette-more', `+${all.length - 3}`); more.type = 'button'; more.setAttribute('aria-label', '대표 컬러 모두 보기');
-      more.addEventListener('click', () => { more.remove(); all.slice(3).forEach(hex => swatches.append(swatch(hex))); swatches.classList.add('is-open'); });
-      swatches.append(more);
+      const more = E('button', 'bi-swatch bi-more'); more.append(E('span', '', `+${all.length - 3}`)); more.type = 'button'; more.style.background = all[3]; more.setAttribute('aria-label', '대표 컬러 모두 보기');
+      more.addEventListener('click', () => { more.remove(); all.slice(3).forEach(h => { const b = swatch(h); b.addEventListener('click', () => navigator.clipboard?.writeText(h).catch(() => {})); sw.append(b); }); sw.classList.add('is-open'); });
+      sw.append(more);
     }
-    if (!shown.length) swatches.append(E('span', 'info-value', '확인 전'));
-    paletteRow.append(swatches); body.append(paletteRow);
+    if (!all.length) sw.append(val('확인 전'));
+    pr.append(sw); body.append(pr);
 
-    body.append(infoRow('spec-row', '규격', v.dimensions || '확인 전'));
+    // 규격
+    body.append(row('규격', val(v.dimensions || '확인 전')));
 
-    body.append(E('h2', 'style-label', '스타일 TAG'));
-    const tags = E('div', 'style-tags');
-    for (const t of v.tags) tags.append(E('span', '', t));
-    if (!v.tags.length) tags.append(E('span', 'is-empty', '태그 미입력'));
-    body.append(tags);
-
-    if (v.materials || v.lessons) {
-      body.append(E('h2', 'extra-label', '제작 정보'));
-      if (v.materials) body.append(infoRow('spec-row extra-row', '소재 및 후가공', v.materials));
-      if (v.lessons) body.append(E('p', 'extra-copy', v.lessons));
-    }
+    // 사용 폰트
     if (v.fonts.length) {
-      body.append(E('h2', 'extra-label', '사용 폰트'));
-      const fonts = E('div', 'font-chips');
+      const fb = E('div', 'bi-block bi-fonts');
+      const head = E('div', 'bi-row'); const hl = E('div', 'bi-label-group'); hl.append(E('h3', 'bi-label', '사용 폰트'), E('span', 'bi-count', v.fonts.length));
+      const allBtn = E('button', 'bi-all', '전체다운'); allBtn.type = 'button';
+      allBtn.addEventListener('click', () => v.fonts.forEach((f, i) => setTimeout(() => window.open(fontLink(f), '_blank', 'noopener'), i * 250)));
+      head.append(hl, allBtn); fb.append(head);
       for (const f of v.fonts) {
-        const a = E('a', '', f.name); a.target = '_blank'; a.rel = 'noopener noreferrer';
-        a.href = f.url || f.downloadUrl || `https://www.google.com/search?q=${encodeURIComponent(f.name + ' 폰트 다운로드')}`;
-        a.title = `${f.name} 받으러 가기`;
-        if (f.weights) a.append(E('small', '', f.weights));
-        fonts.append(a);
+        const a = E('a', 'bi-font'); a.href = fontLink(f); a.target = '_blank'; a.rel = 'noopener noreferrer'; a.title = `${f.name} 받으러 가기`;
+        a.append(E('span', '', f.name + (f.weights ? ` · ${f.weights}` : '')), E('i', 'bi-dl')); fb.append(a);
       }
-      body.append(fonts);
+      body.append(fb);
     }
 
-    const ideaLabel = E('h2', 'suggestions-label', '다음 바톤 제안 '); ideaLabel.append(E('span', '', v.nextIdeas.length));
-    body.append(ideaLabel);
-    const ideas = E('ol', 'suggestions');
-    for (const idea of v.nextIdeas) ideas.append(E('li', '', idea));
-    if (!v.nextIdeas.length) { ideas.classList.add('is-empty'); ideas.append(E('li', '', '아직 제안한 방향이 없어요.')); }
-    body.append(ideas);
+    // 스타일 TAG
+    const tb = E('div', 'bi-block'); tb.append(E('h3', 'bi-label', '스타일 TAG'));
+    const tags = E('div', 'bi-tags'); for (const t of v.tags) tags.append(E('span', 'bi-tag', t));
+    if (!v.tags.length) tags.append(val('태그 미입력'));
+    tb.append(tags); body.append(tb);
+
+    // 제작 정보
+    if (v.materials) body.append(row('소재 · 후가공', val(v.materials)));
+    if (v.lessons) { const lb = E('div', 'bi-block'); lb.append(E('h3', 'bi-label', '배운 점'), E('p', 'bi-note', v.lessons)); body.append(lb); }
+
+    // 다음 바톤 제안
+    const ib = E('div', 'bi-block'); const il = E('div', 'bi-label-group'); il.append(E('h3', 'bi-label', '다음 바톤 제안'), E('span', 'bi-count', v.nextIdeas.length)); ib.append(il);
+    const ideas = E('ol', 'bi-ideas'); for (const idea of v.nextIdeas) ideas.append(E('li', '', idea));
+    if (!v.nextIdeas.length) ideas.append(E('li', 'is-empty', '아직 제안한 방향이 없어요.'));
+    ib.append(ideas); body.append(ib);
+  }
+  // 폰트 받는 곳: 직접 입력한 주소 → 잘 알려진 폰트 → 검색
+  const FONT_LINKS = {
+    'pretendard': 'https://github.com/orioncactus/pretendard/releases', 'spoqa han sans neo': 'https://spoqa.github.io/spoqa-han-sans/',
+    '본고딕': 'https://github.com/adobe-fonts/source-han-sans/releases', 'source han sans': 'https://github.com/adobe-fonts/source-han-sans/releases',
+    '본명조': 'https://github.com/adobe-fonts/source-han-serif/releases', 'nanum gothic': 'https://fonts.google.com/specimen/Nanum+Gothic', '나눔고딕': 'https://fonts.google.com/specimen/Nanum+Gothic',
+    'helvetica neue': 'https://www.myfonts.com/collections/helvetica-neue-font-linotype', 'helvetica': 'https://www.myfonts.com/collections/helvetica-font-linotype',
+    'futura': 'https://www.myfonts.com/collections/futura-font-bitstream', 'gmarket sans': 'https://corp.gmarket.com/fonts/', '산돌고딕': 'https://www.sandollcloud.com/',
+  };
+  function fontLink(f) {
+    if (f.url) return f.url;
+    const key = f.name.toLowerCase().trim();
+    if (FONT_LINKS[key]) return FONT_LINKS[key];
+    if (/^(noto|nanum|roboto|inter|open sans|montserrat|lato|poppins|gowun|ibm plex|black han sans|do hyeon|jua|gothic a1|song myung|gaegu)/i.test(key)) return `https://fonts.google.com/specimen/${encodeURIComponent(f.name.trim()).replace(/%20/g, '+')}`;
+    return `https://www.google.com/search?q=${encodeURIComponent(f.name + ' 폰트 다운로드')}`;
   }
 
   /* ───────── 파일 목록 탭 ───────── */

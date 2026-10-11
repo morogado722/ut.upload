@@ -271,6 +271,8 @@
     result.aiCoverage={textCharacters:sources.reduce((n,s)=>n+s.text.length,0),sourcesSent:sources.length,imagesSent:previews.length,previewIds:previews.map(p=>p.id)};
     return result;
   }
+  const FONT_LINKS={'pretendard':'https://github.com/orioncactus/pretendard/releases','spoqa han sans neo':'https://spoqa.github.io/spoqa-han-sans/','본고딕':'https://github.com/adobe-fonts/source-han-sans/releases','source han sans':'https://github.com/adobe-fonts/source-han-sans/releases','본명조':'https://github.com/adobe-fonts/source-han-serif/releases','gmarket sans':'https://corp.gmarket.com/fonts/','helvetica neue':'https://www.myfonts.com/collections/helvetica-neue-font-linotype','futura':'https://www.myfonts.com/collections/futura-font-bitstream'};
+  function fontLink(name){const k=name.toLowerCase().trim();if(FONT_LINKS[k])return FONT_LINKS[k];if(/^(noto|nanum|roboto|inter|open sans|montserrat|lato|poppins|gowun|ibm plex|black han sans|do hyeon|jua|gothic a1|song myung|gaegu)/i.test(k))return 'https://fonts.google.com/specimen/'+encodeURIComponent(name.trim()).replace(/%20/g,'+');return 'https://www.google.com/search?q='+encodeURIComponent(name+' 폰트 다운로드');}
   function applyAI(base,proposal,visualIds,sentSources,previews){
     const originals=Object.fromEntries(base.sources.map(s=>[s.id,s])),sent=Object.fromEntries(sentSources.map(s=>[s.id,s])),previewMap=Object.fromEntries(previews.map(p=>[p.id,p]));
     const accepted=[];
@@ -319,7 +321,10 @@
     for(const item of proposal.sourceKinds||[]){
       if(originals[item.fileId]&&accepted.some(e=>e.fileId===item.fileId&&e.field==='sourceKind'&&e.value===item.kind)){originals[item.fileId].kind=String(item.kind).slice(0,60);originals[item.fileId].kindBasis='AI 제안 · 직접 수정 가능';}
     }
-    if(!base.fonts.length)for(const name of (proposal.fontGuesses||[]).slice(0,4)){const n=String(name).trim().slice(0,100);if(n&&!base.fonts.some(f=>f.name===n))base.fonts.push({name:n,weights:'',downloadUrl:'',sourceId:base.sources[0]?.id||'',basis:'AI가 이미지로 추정한 글꼴'});}
+    if(!base.fonts.length)for(const name of (proposal.fontGuesses||[]).slice(0,4)){const n=String(name).replace(/[\[\]"']/g,'').trim().slice(0,100);if(n&&/[A-Za-z가-힣]/.test(n)&&!base.fonts.some(f=>f.name===n))base.fonts.push({name:n,weights:'',downloadUrl:fontLink(n),sourceId:base.sources[0]?.id||'',basis:'AI가 이미지로 추정한 글꼴'});}
+    // 대표 컬러: AI가 고른 키컬러를 맨 앞에 두고, 픽셀에서 뽑은 색은 뒤로 보내요.
+    const keys=(proposal.keyColors||[]).map(h=>String(h).trim().toUpperCase()).filter(h=>/^#[0-9A-F]{6}$/.test(h)).slice(0,6);
+    if(keys.length){base.colors=unique([...keys,...(base.colors||[]).map(h=>String(h).toUpperCase())]).slice(0,24);base.keyColors=keys;}
     const selected=unique((proposal.thumbnailOrder||[]).filter(id=>previewMap[id])).slice(0,10);
     if(selected.length){base.recommendedThumbnails=selected;base.thumbnailRanking='ai';}
     base.evidence.push(...accepted.filter(e=>e.field==='sourceKind'||applied.includes(e.field)));

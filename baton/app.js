@@ -405,8 +405,7 @@
     if (liveSrc) button.classList.add('has-live-art');
     const art = sizes.map(size => {
       const img = new Image(); img.src = liveSrc || asset(nodeAsset(kind,size)); img.alt = '';
-      if (liveSrc) img.classList.add('is-live-art');
-      img.width = base; img.height = base; img.className = 'node-art'; img.draggable = false;
+      img.width = base; img.height = base; img.className = 'node-art' + (liveSrc ? ' is-live-art' : ''); img.draggable = false;
       button.append(img); return img;
     });
     const visual = {button, base, surface, art, value:{...initial}, target:{...initial},
