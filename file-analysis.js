@@ -71,9 +71,9 @@
       const w=image.naturalWidth,h=image.naturalHeight;
       if(w*h>40000000 || !w || !h) throw new Error('이미지 해상도가 너무 커 기본 정보만 보관했어요.');
       result.dimensions.push({id:source.id+'-size',sourceId:source.id,label:source.name,width:w,height:h,unit:'px',basis:'이미지 디코더로 읽은 픽셀 크기'});
-      const canvas=document.createElement('canvas');const factor=Math.min(1,640/Math.max(w,h));canvas.width=Math.max(1,Math.round(w*factor));canvas.height=Math.max(1,Math.round(h*factor));
-      const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0,canvas.width,canvas.height);
-      result.thumbnails.push({id:source.id+'-thumb',sourceId:source.id,label:source.name,dataUrl:canvas.toDataURL('image/png')});
+      const canvas=document.createElement('canvas');const factor=Math.min(1,1600/Math.max(w,h));canvas.width=Math.max(1,Math.round(w*factor));canvas.height=Math.max(1,Math.round(h*factor));
+      const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.fillStyle='#FFFFFF';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(image,0,0,canvas.width,canvas.height);
+      result.thumbnails.push({id:source.id+'-thumb',sourceId:source.id,label:source.name,dataUrl:canvas.toDataURL('image/jpeg',0.9)});
       canvas.width=64;canvas.height=64;ctx.clearRect(0,0,64,64);ctx.drawImage(image,0,0,64,64);
       const pixels=ctx.getImageData(0,0,64,64).data,bins=new Map();
       for(let i=0;i<pixels.length;i+=4){if(pixels[i+3]<180)continue;const rgb=[pixels[i],pixels[i+1],pixels[i+2]],key=rgb.map(n=>Math.round(n/24)).join(',');let b=bins.get(key);if(!b){b={n:0,sum:[0,0,0]};bins.set(key,b);}b.n++;rgb.forEach((n,j)=>b.sum[j]+=n);}
@@ -124,7 +124,7 @@
           const v = page.getViewport({scale: 1});
           result.dimensions.push({id: source.id + '-size', sourceId: source.id, label: source.name, width: Math.round(v.width * 25.4 / 72), height: Math.round(v.height * 25.4 / 72), unit: 'mm', basis: 'PDF 첫 쪽 크기(재단 여백 포함 가능)'});
         }
-        const v = page.getViewport({scale: 1}), scale = Math.min(2, (n <= 8 ? 640 : 480) / Math.max(v.width, v.height)), view = page.getViewport({scale});
+        const v = page.getViewport({scale: 1}), scale = Math.min(4, (n <= 8 ? 1400 : 640) / Math.max(v.width, v.height)), view = page.getViewport({scale});
         const canvas = document.createElement('canvas'); canvas.width = Math.max(1, Math.round(view.width)); canvas.height = Math.max(1, Math.round(view.height));
         const ctx = canvas.getContext('2d', {willReadFrequently: n === 1}); ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, canvas.width, canvas.height);
         await page.render({canvasContext: ctx, viewport: view}).promise; abort(signal);
@@ -253,16 +253,20 @@
     // 미리보기는 파일마다 돌아가며 최대 10장(뒤쪽 파일이 빠지지 않게).
     const groups=result.sources.map(s=>result.thumbnails.filter(t=>t.sourceId===s.id)),previews=[];
     for(let i=0;i<4;i++)for(const g of groups)if(g[i]&&previews.length<10)previews.push(g[i]);
+    // AI에는 가볍게(긴 변 1024px) 보내요. 화면용 썸네일은 고화질 그대로 둬요.
+    const small=u=>new Promise(res=>{const im=new Image();im.onload=()=>{const f=Math.min(1,1024/Math.max(im.naturalWidth,im.naturalHeight));if(f>=1)return res(u);const c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*f);c.height=Math.round(im.naturalHeight*f);const x=c.getContext('2d');x.fillStyle='#FFF';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.85));};im.onerror=()=>res(u);im.src=u;});
+    for(const p of previews)p.aiUrl=await small(p.dataUrl);
     const per=Math.min(12000,Math.max(1000,Math.floor(60000/Math.max(1,result.sources.length))));
     const sources=result.sources.map(s=>({id:s.id,name:s.name,ext:s.ext,kind:s.kind,coverage:s.coverage,text:(s.text||'').slice(0,per),warnings:s.warnings}));
     progress('ai','캡처와 본문을 함께 보고 제목·진척도·분류를 제안하고 있어요.');
     let data;
-    const call=async()=>{const response=await fetch(APPS,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'analyze',projectType:payload.projectType,sources,previews:previews.map(p=>({id:p.id,sourceId:p.sourceId,label:p.label,kind:p.kind||null,page:p.page||null,dataUrl:p.dataUrl})),links:result.links}),signal});return response.json();};
+    const call=async()=>{const response=await fetch(APPS,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'analyze',projectType:payload.projectType,sources,previews:previews.map(p=>({id:p.id,sourceId:p.sourceId,label:p.label,kind:p.kind||null,page:p.page||null,dataUrl:p.aiUrl||p.dataUrl})),links:result.links}),signal});return response.json();};
     try{
       try{data=await call();}catch(e){if(e.name==='AbortError'||signal?.aborted)throw e;data=null;}
       if(!data?.ok){abort(signal);progress('ai','AI 응답이 늦어 한 번 더 요청하고 있어요.');data=await call();}
     }catch(error){if(error.name==='AbortError'||signal?.aborted)throw error;result.warnings.unshift('AI 응답을 받지 못해 파일에서 읽은 정보만 채웠어요.');return result;}
     if(!data?.ok||!data.proposal){result.warnings.unshift(data?.error?String(data.error).slice(0,160)+' 파일에서 읽은 정보만 채웠어요.':'AI 제안을 받지 못했어요.');return result;}
+    previews.forEach(p=>delete p.aiUrl);
     progress('apply','추출한 값과 썸네일 후보를 정리하고 있어요.');
     const declared={start:result.values.startDate,end:result.values.endDate};
     applyAI(result,data.proposal,new Set(previews.map(p=>p.sourceId)),sources,previews);

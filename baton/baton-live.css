@@ -13,8 +13,9 @@
 .is-live .author-name { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ── 갤러리: 이미지 비율을 유지 ── */
-.is-live .artwork-button { box-shadow: none; display: grid; place-items: center; }
-.is-live .artwork-button img { width: auto; height: auto; max-width: 309px; max-height: 432px; object-fit: contain; box-shadow: 3px 4px 5px #00000018; }
+/* 피그마 '바톤 상세 이미지 비율별': 세로 432px 고정, 가로는 비율대로(최대 811px), x=500 기준 가운데 */
+.is-live .artwork-button { box-shadow: none; display: grid; place-items: center; left: -251px; width: 811px; height: 432px; }
+.is-live .artwork-button img { width: auto; height: 432px; max-width: 811px; object-fit: contain; box-shadow: 3px 4px 5px #00000018; }
 .is-live .artwork-button.is-empty { border: 1.5px dashed #D2D2D2; border-radius: 12px; background: #fff; align-content: center; gap: 8px; padding: 24px; text-align: center; cursor: default; }
 .is-live .artwork-button.is-empty strong { font-size: 16px; }
 .is-live .artwork-button.is-empty span { font-size: 13px; color: #969696; }
