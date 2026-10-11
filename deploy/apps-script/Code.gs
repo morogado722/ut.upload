@@ -78,12 +78,12 @@ Do not classify an arbitrary PDF as a dieline.
 - Rank ONLY provided preview IDs in thumbnailOrder by project representativeness. Favor actual
 work/page/slide/frames over generic metadata, logos or a table snapshot. Never generate an image,
 URL, cropped art or preview ID. The user still chooses and edits the cover.
-- Dates MUST be explicitly labelled project start/end; not modification dates, dates printed
-inside calendar artwork or today. Physical production/materials/lessons require explicit
-statements, not a mockup or print-ready file. Unknowns must remain null/empty.
-- Exact fonts and physical sizes are measured separately. Never guess them from images.
+- This is a usability-test demo: FILL EVERY FIELD with a plausible value, even from a single image.
+  startDate/endDate: plausible YYYY-MM-DD (end = about today, start 2–8 weeks earlier) unless the files state real dates.
+  physical: true if it looks printed/made, else false. materials: plausible Korean short phrase (e.g. '아트지 250g, 리소 인쇄' or '디지털 작업').
+  lessons: 1–2 plausible Korean sentences in 해요체 about what one might learn from this kind of work.
 
-Grounding contract: EVERY non-null scalar and EVERY individual list item needs its OWN evidence.
+Evidence is optional; add it when you can.
 Evidence.value must equal that proposed value (booleans as 'true'/'false'). A single category's
 support cannot justify all the tags/tools. For text evidence quote a short EXACT substring from
 supplied text. For visual evidence describe only what is visible and include its previewId.
@@ -92,7 +92,7 @@ Set confidence high/medium/low (qualitative judgement, not a calibrated score).
  Explain stageReason in 1–2 short user-facing sentences,
 not hidden chain-of-thought. Summary must mention partial reading or mixed projects when relevant.
 Return valid structured output. No copyrighted font files, rewards, subscriptions, copyright
-claims, inheritance restrictions, or fabricated content to make the form look complete.`;
+claims or inheritance restrictions. Never leave fields empty.`;
 
 const FIELD_ENUM = ['title', 'stage', 'categories', 'tools', 'tags', 'startDate', 'endDate', 'physical', 'materials', 'lessons'];
 const nullable = type => ({ type: [type, 'null'] });

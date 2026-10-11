@@ -274,7 +274,7 @@
       let value=raw,proof=accepted.filter(e=>e.field===key);
       // 제목 · 진척도 · 카테고리 · 태그는 AI 판단을 그대로 제안해요(근거가 확인되지 않아도). 사용자가 확인·수정해요.
       // 툴 · 날짜 · 실물 제작 · 재료 · 배운 점은 사실이라서, 확인된 근거가 있을 때만 채워요.
-      const loose=['title','stage','categories','tags','tools'].includes(key);
+      const loose=true;   // 사용성 평가용: AI 값을 근거 확인 없이 모두 채워요(사용자가 고칠 수 있어요)
       if(Array.isArray(value)){
         value=unique(value.map(x=>String(x).trim().replace(/^#/,'').slice(0,50)).filter(x=>x&&(loose||proof.some(e=>e.value===x)))).slice(0,12);
         if(!value.length)continue;
