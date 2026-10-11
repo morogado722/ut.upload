@@ -128,7 +128,10 @@
 }
 @media (prefers-reduced-motion: reduce) { .note-bubble, .guide-item.is-open { animation:none; } }
 
-/* AI가 노트 · 아이디어를 쓰는 동안: 다음 버튼 잠금(흰 배경 없이 흐리게) */
-.review-next:disabled, .review-publish:disabled { background: rgb(38 38 38 / 6%) !important; border-color: transparent !important; color: rgb(38 38 38 / 35%) !important; box-shadow: none !important; cursor: progress; pointer-events: none; }
-.review-next:disabled img { opacity: .35; }
+/* AI가 노트 · 아이디어를 쓰는 동안: 다음 버튼은 회색 + 흰 글자 · 아이콘으로 잠가요 */
+.review-next:disabled, .review-publish:disabled { background: #CFCFCF !important; border-color: transparent !important; color: #FFF !important; box-shadow: none !important; cursor: progress; pointer-events: none; }
+.review-next:disabled img, .review-publish:disabled img { filter: brightness(0) invert(1); opacity: 1; }
 html.ai-writing #idea-status { color: #00874F; }
+#baton-note.is-ai-writing::placeholder { color: #00874F; opacity: .75; }
+#baton-note.is-ai-writing { background-image: linear-gradient(100deg, transparent 30%, rgb(0 249 152 / 10%) 50%, transparent 70%); background-size: 220% 100%; animation: note-ai-shimmer 1.6s linear infinite; }
+@keyframes note-ai-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }

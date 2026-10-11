@@ -176,10 +176,12 @@
     const ctx=review.getContext();if(!ctx||ctx.result.mode!=='ai')return;
     lockNext(true);const guard=setTimeout(()=>lockNext(false),70000);
     $('idea-status').textContent='AI가 바톤 노트와 이어받을 아이디어를 쓰고 있어요…';
+    const note=$('baton-note');
+    if(!note.value.trim()){note.dataset.placeholder=note.placeholder;note.placeholder='올려주신 작업을 보면서 AI가 노트 초안을 쓰고 있어요…';note.classList.add('is-ai-writing');$('note-draft-status').textContent='AI가 작업을 살펴보고 바톤 노트를 쓰는 중이에요 ✍️';syncBubble();}
     try{
       if(!await autoIdeas()){autoIdeasDone.delete(ctx.fingerprint);await autoIdeas();}   // 실패하면 한 번 더
       for(let i=0;i<2&&!$('baton-note').value.trim();i++){while(busy)await new Promise(r=>setTimeout(r,300));await generate('draft');}
-    }finally{clearTimeout(guard);lockNext(false);if($('idea-status').textContent.startsWith('AI가 바톤 노트와'))$('idea-status').textContent='';}
+    }finally{const n=$('baton-note');n.classList.remove('is-ai-writing');if(n.dataset.placeholder){n.placeholder=n.dataset.placeholder;delete n.dataset.placeholder;}if($('note-draft-status').textContent.includes('쓰는 중이에요'))$('note-draft-status').textContent='';syncBubble();clearTimeout(guard);lockNext(false);if($('idea-status').textContent.startsWith('AI가 바톤 노트와'))$('idea-status').textContent='';}
   }
   document.addEventListener('morogaro:analysis-ready',()=>setTimeout(()=>void autoFill(),300));
   window.addEventListener('pagehide',()=>controller?.abort());

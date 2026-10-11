@@ -165,11 +165,16 @@
     let c; try { c = await (await fetch(APPS + '?action=config')).json(); } catch { formShown = false; return; }
     if (!c.formUrl) { formShown = false; return; }
     const url = c.formUrl.replace(/\/(viewform|edit).*$/, '/viewform') + (c.formEntry ? `?usp=pp_url&entry.${c.formEntry}=${encodeURIComponent(sessionId)}` : '');
-    const a = document.createElement('a');
-    a.className = 'survey-cta'; a.href = url; a.target = '_blank'; a.rel = 'noopener';
-    a.innerHTML = '<strong>설문 작성하고 선물 받기 🎁</strong><span>3분이면 끝나요</span>';
-    document.body.appendChild(a);
-    requestAnimationFrame(() => a.classList.add('is-in'));
+    const box = document.createElement('aside');
+    box.className = 'survey-cta'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', '사용성 평가 설문');
+    box.innerHTML = `<button class="survey-close" type="button" aria-label="닫기">×</button>
+      <strong>사용성 평가 후기를 남겨주시면 저희에게<br>큰 도움이 됩니다... 작은 선물도 준비했답니다...🎁</strong>
+      <span>3분이면 끝나요!</span>
+      <a href="${url}" target="_blank" rel="noopener">설문 폼 작성 해주러 가시기 <i aria-hidden="true">→</i></a>`;
+    document.body.appendChild(box);
+    box.querySelector('.survey-close').addEventListener('click', () => { box.classList.remove('is-in'); box.classList.add('is-min'); });
+    box.addEventListener('click', e => { if (box.classList.contains('is-min') && !e.target.closest('a')) { box.classList.remove('is-min'); box.classList.add('is-in'); } });
+    requestAnimationFrame(() => requestAnimationFrame(() => box.classList.add('is-in')));
   }
 
   // 들어온 순간에도 한 줄 남겨요(아무것도 안 하고 나간 사람까지 '이탈 (1 파일 올리기)'로 보이도록).
