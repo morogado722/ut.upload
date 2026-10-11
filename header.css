@@ -98,3 +98,8 @@
 @media (max-width: 1023px) {
   .header-account { display: none; }
 }
+
+/* 넓은 화면: 양옆 흰 띠가 가운데 헤더 그림과 끊겨 보이지 않게 2px 겹치고, 그림자는 아래로만 */
+.header-backdrop::before, .header-backdrop::after { width: max(0rem, calc((100% - var(--header-art-max)) / 2 + 2px)); clip-path: inset(0 0 -14px 0); }
+.header-backdrop::after { clip-path: inset(0 0 -14px 0); }
+.header-backdrop::after { width: max(0rem, calc((100% - var(--header-art-max)) / 2 + 16px)); z-index: 1; }
