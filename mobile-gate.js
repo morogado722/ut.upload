@@ -12,6 +12,8 @@
     location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href);
   }
   document.documentElement.classList.add('is-mobile-gate');
+  // 모바일에선 무거운 바톤 메이커를 아예 불러오지 않아요(불러오는 동안 버튼이 안 눌리던 문제). 나머지 HTML 읽기를 여기서 멈춰요.
+  if (document.readyState === 'loading') { try { document.write('<plaintext style="display:none">'); } catch { /* */ } }
   const url = location.origin + location.pathname;
   const css = `html.is-mobile-gate body > *:not(.mobile-gate){display:none!important}
   .mobile-gate{position:fixed;inset:0;z-index:9999;overflow:auto;background:#FAFAFA;font-family:'Spoqa Han Sans Neo',system-ui,sans-serif;color:#262626;text-align:center;word-break:keep-all}
