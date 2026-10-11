@@ -464,6 +464,16 @@ function 설문_다듬기() {
     '응답은 졸업전시 프로젝트 개선 목적으로만 사용되며, 연락처는 기프티콘 전달에만 쓰고 전시가 끝나면 삭제합니다.',
     '바쁘시겠지만 많은 참여 부탁드립니다 🙇‍♀️'
   ].join('\n'));
+  // 객관식(1 · 너무 싫음 …)으로 된 질문을 다른 질문과 같은 1~5 눈금형으로 바꿔요.
+  form.getItems(FormApp.ItemType.MULTIPLE_CHOICE).forEach(item => {
+    const mc = item.asMultipleChoiceItem(), choices = mc.getChoices().map(c => c.getValue());
+    if (choices.length !== 5 || !/^1 · /.test(choices[0])) return;
+    const index = item.getIndex();
+    const scale = form.addScaleItem().setTitle(mc.getTitle()).setHelpText(mc.getHelpText()).setBounds(1, 5)
+      .setLabels(choices[0].replace(/^1 · /, ''), choices[4].replace(/^5 · /, '')).setRequired(mc.isRequired());
+    form.moveItem(scale, index);
+    form.deleteItem(item);
+  });
   const sid = form.getItemById(Number(prop('FORM_ENTRY')));
   if (sid) {
     sid.asTextItem().setTitle('(자동 입력) 참여 번호').setHelpText('').setRequired(false);
