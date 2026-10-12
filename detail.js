@@ -127,7 +127,7 @@
     pending = { data, payload }; $('finish-error').hidden = true; $('finish-preview').hidden = true;
     const list = E('dl', 'review-summary-list');
     for (const [k, v] of [['바톤 제목', data.title || '새 바톤'], ['진척도', data.stage || '미확인'], ['대표 이미지', (data.selectedThumbnails || []).length + '개'], ['바톤 노트', data.batonNote?.trim() ? '작성했어요' : '남기지 않았어요'], ['이어받을 아이디어', (data.nextIdeas || []).filter(s => s.trim()).length + '개']]) list.append(E('dt', '', k), E('dd', '', v));
-    $('finish-summary').replaceChildren(list); $('finish-dialog').showModal();
+    $('finish-summary').replaceChildren(list); $('finish-dialog').showModal(); setTimeout(() => $('finish-confirm').focus({ preventScroll: true }), 30);
   }
   async function finish(preview = false) {
     if (saving || !pending) return;
@@ -146,7 +146,7 @@
   document.addEventListener('morogaro:detail-preview', e => { e.preventDefault(); const value = build(e.detail.review, e.detail.payload, true); memory.set(value.id, value); show(value); });
   document.addEventListener('morogaro:publish-request', e => { e.preventDefault(); askFinish(e.detail.review, e.detail.payload); });
   document.addEventListener('morogaro:review-next', e => { e.preventDefault(); if (window.MorogaroStepper?.current() !== 6) { window.MorogaroStepper?.jumpTo(6); } else askFinish(e.detail.review, e.detail.payload); });
-  document.addEventListener('morogaro:active-step', e => { $('review-next').querySelector('.review-next-label').textContent = e.detail.step === 6 ? '상세페이지로' : '다음으로'; });
+  document.addEventListener('morogaro:active-step', e => { const last = e.detail.step === 6; $('review-next').querySelector('.review-next-label').textContent = last ? '업로드 하기' : '다음으로'; const pub = document.getElementById('review-publish'); if (pub) pub.hidden = last; });
   const finishLabel = $('finish-confirm').textContent;
   $('finish-confirm').addEventListener('click', () => void finish());
   $('finish-preview').addEventListener('click', () => void finish(true));

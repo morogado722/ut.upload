@@ -130,8 +130,19 @@
     else if (!atEdge) edgeArmed = false;
     if (atEdge && pageName() === 'check') showHint(); else hideHint();
   }, {passive: true});
+  // 글 상자처럼 안에서 스크롤되는 곳이면 그 안에서만 움직이고, 페이지 넘김은 하지 않아요.
+  function innerScroller(target, dy) {
+    for (let el = target; el && el !== document.body && el !== document.documentElement; el = el.parentElement) {
+      if (el.scrollHeight <= el.clientHeight + 1) continue;
+      const oy = getComputedStyle(el).overflowY;
+      if (!(el.tagName === 'TEXTAREA' || oy === 'auto' || oy === 'scroll')) continue;
+      return el;
+    }
+    return null;
+  }
   window.addEventListener('wheel', event => {
     if (event.ctrlKey || event.metaKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+    if (innerScroller(event.target, event.deltaY)) return;
     const unit = event.deltaMode === 1 ? 20 : event.deltaMode === 2 ? window.innerHeight : 1;
     const abs = Math.abs(event.deltaY * unit), now = performance.now();
     fresh = isFresh(now, abs);
@@ -145,7 +156,7 @@
     fresh = !event.repeat;
     if (handle(keys[event.key])) event.preventDefault();
   });
-  window.addEventListener('touchstart', event => { touchY = event.touches[0]?.clientY ?? null; touchUsed = false; fresh = true; }, {passive: true});
+  window.addEventListener('touchstart', event => { if (innerScroller(event.target, 0)) { touchY = null; return; } touchY = event.touches[0]?.clientY ?? null; touchUsed = false; fresh = true; }, {passive: true});
   window.addEventListener('touchmove', event => {
     if (touchY === null) return;
     if (touchUsed || animating) { if (event.cancelable) event.preventDefault(); return; }

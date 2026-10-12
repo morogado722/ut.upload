@@ -135,3 +135,18 @@ html.ai-writing #idea-status { color: #00874F; }
 #baton-note.is-ai-writing::placeholder { color: #00874F; opacity: .75; }
 #baton-note.is-ai-writing { background-image: linear-gradient(100deg, transparent 30%, rgb(0 249 152 / 10%) 50%, transparent 70%); background-size: 220% 100%; animation: note-ai-shimmer 1.6s linear infinite; }
 @keyframes note-ai-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+/* 노트 글 상자: 안에서 스크롤할 때 페이지로 번지지 않게 */
+#baton-note { overscroll-behavior: contain; }
+/* 가이드 체크는 자동(노트에 적혀 있으면 체크) · 입력칸은 실제로 쓸 수 있게 */
+.guide-check { cursor: default; pointer-events: none; }
+textarea.guide-example { width: 100%; box-sizing: border-box; resize: none; font: inherit; font-size: 13px; line-height: 19px; font-weight: 400; color: #262626; outline: none; }
+textarea.guide-example:focus { border-color: #81CEB0; background: #FFF; }
+
+/* 바톤 만들기 확인 창: '바톤 만들기'가 주 버튼, '계속 작성하기'는 보조 */
+#finish-dialog #finish-cancel { border: 0 !important; background: transparent !important; color: #7A7A7A; box-shadow: none !important; outline: none; }
+#finish-dialog #finish-cancel:hover { color: #262626; text-decoration: underline; text-underline-offset: 4px; }
+#finish-dialog .finish-primary { border: 1px solid #81CEB0 !important; color: #262626; font-weight: 700; padding-inline: 32px; box-shadow: 0 6px 18px rgb(0 199 122 / 18%) !important;
+  background: radial-gradient(60% 140% at 8% 30%, rgb(226 245 120 / .85), transparent 70%), radial-gradient(70% 160% at 98% 60%, rgb(120 250 215 / .9), transparent 70%), #FFF !important; }
+#finish-dialog .finish-primary:hover { filter: saturate(1.15); transform: translateY(-1px); }
+#finish-dialog .finish-primary:focus-visible { outline: 2px solid #00C77A; outline-offset: 3px; }
+#review-publish[hidden] { display: none !important; }

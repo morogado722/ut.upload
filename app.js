@@ -430,14 +430,15 @@
   // Product rule: choosing a file is the major milestone. Additional files/URLs
   // do not add points. Remaining milestones belong to future screens, not here.
   function getUploadProgress() {
-    return state.files.length > 0 ? 50 : 0;
+    if (!state.files.length) return 0;
+    return Math.max(50, Math.min(100, Number(window.MorogaroProgressBoost) || 0));   // 다음 단계 진행에 따라 올라가요(progress-boost.js)
   }
 
   function renderUploadProgress() {
     const percent = getUploadProgress();
     const previous = Number(ui.progress.getAttribute('aria-valuenow'));
-    const description = percent === 50
-      ? '바톤 업로드 준비 50%. 파일을 올려 절반을 준비했어요.'
+    const description = percent >= 100 ? '바톤 업로드 준비 100%. 이제 업로드할 수 있어요.'
+      : percent >= 50 ? `바톤 업로드 준비 ${percent}%.`
       : '바톤 업로드 준비 0%. 파일을 추가해 주세요.';
     // Visual width, visible label and accessibility value share one source.
     ui.progress.style.setProperty('--upload-progress', `${percent}%`);
@@ -447,6 +448,7 @@
     if (previous !== percent) ui.progressAnnouncement.textContent = description;
   }
 
+  document.addEventListener('morogaro:progress-refresh', () => renderUploadProgress());
   function renderAttachmentState() {
     const hasFiles = state.files.length > 0;
     renderUploadProgress();

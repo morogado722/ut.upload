@@ -24,33 +24,43 @@
   let busy=false,controller=null,consentResolver=null,lastFocus=null,pendingDraft=null,editRevision=0;
   const state=()=>review.getContext()?.form||{};
   function write(values){return review.updateNote(values);}
-  function noteCount(){const length=Array.from($('baton-note').value).length;$('note-count').textContent=`${length} 자`;syncBubble();}
+  function noteCount(){const length=Array.from($('baton-note').value).length;$('note-count').textContent=`${length} 자`;syncBubble();updateChecks();}
   // 말풍선(Figma 3668:4255): AI 초안 안내와 오류를 노트 위에 보여줘요.
   function syncBubble(){const status=$('note-draft-status'),draft=state().noteDraft,current=$('baton-note').value;
     const showClear=Boolean(draft?.origin==='ai'&&draft.text&&current&&current===draft.text);
     $('clear-draft').hidden=!showClear;$('note-bubble').hidden=!status.textContent.trim();$('note-bubble').classList.toggle('is-error',status.classList.contains('is-error'));}
   function clearStatus(){for(const id of ['note-draft-status','idea-status']){$(id).textContent='';$(id).classList.remove('is-error');}syncBubble();}
-  function toggleDone(key){const next={...(state().noteChecklist||{})};next[key]=next[key]==='done'?'open':'done';write({noteChecklist:next});renderRail();}
+  // 가이드 체크는 사용자가 누르지 않아요. 노트에 그 항목([항목 이름] …)이 적혀 있으면 자동으로 체크돼요.
+  const guideDrafts={};
+  const isDone=label=>{const t=$('baton-note').value;const i=t.indexOf(`[${label}]`);if(i<0)return false;const rest=t.slice(i+label.length+2).split(/\n\s*\n|\n\[/)[0];return rest.trim().length>0;};
+  function updateChecks(){
+    for(const [key,label] of questions){const item=document.querySelector(`.guide-item[data-key="${key}"]`);if(!item)continue;const done=isDone(label);item.classList.toggle('is-done',done);const img=item.querySelector('.guide-check img');if(img)img.src='./assets/note-check-'+(done?'on':'off')+'.svg';item.querySelector('.guide-check')?.setAttribute('aria-label',`${label} — ${done?'노트에 적었어요':'아직 적지 않았어요'}`);}
+  }
   function insertQuestion(key,label){
-    const area=$('baton-note'),value=area.value.replace(/\s+$/,''),line=`[${label}] `;
+    const area=$('baton-note'),value=area.value.replace(/\s+$/,''),typed=(guideDrafts[key]||'').trim(),line=`[${label}] ${typed}`;
     const text=(value?value+'\n\n':'')+line;area.value=text;editRevision++;write({batonNote:text});
-    const next={...(state().noteChecklist||{})};next[key]='done';write({noteChecklist:next});
+    guideDrafts[key]='';openQuestion=null;
     noteCount();renderRail();area.focus();area.setSelectionRange(text.length,text.length);area.scrollTop=area.scrollHeight;
   }
   function renderRail(){
-    const statuses=state().noteChecklist||{};
     $('story-groups').replaceChildren();
     for(const [from,to] of groups){
       const group=E('div','guide-group');
       for(const [key,label,help,example] of questions.slice(from,to)){
-        const done=statuses[key]==='done',open=openQuestion===key;
-        const item=E('div','guide-item'+(open?' is-open':'')+(done?' is-done':''));
+        const done=isDone(label),open=openQuestion===key;
+        const item=E('div','guide-item'+(open?' is-open':'')+(done?' is-done':''));item.dataset.key=key;
         const line=E('div','guide-line');
-        const check=B('','guide-check',()=>toggleDone(key));check.setAttribute('aria-pressed',String(done));check.setAttribute('aria-label',`${label} — 노트에 적었어요`);
-        check.title='노트에 이 이야기를 적었다면 체크해 주세요. 필수는 아니에요.';check.append(I('./assets/note-check-'+(done?'on':'off')+'.svg'));
+        const check=E('span','guide-check');check.setAttribute('role','img');check.setAttribute('aria-label',`${label} — ${done?'노트에 적었어요':'아직 적지 않았어요'}`);
+        check.title='노트에 이 이야기가 있으면 자동으로 체크돼요.';check.append(I('./assets/note-check-'+(done?'on':'off')+'.svg'));
         const name=B(label,'guide-name',()=>{openQuestion=open?null:key;renderRail();});name.setAttribute('aria-expanded',String(open));
         line.append(check,name);item.append(line);
-        if(open){item.append(E('p','guide-help',help),E('p','guide-example',example));const actions=E('div','guide-actions');actions.append(B('글에 넣기','guide-insert',()=>insertQuestion(key,label)));item.append(actions);}
+        if(open){
+          const input=document.createElement('textarea');input.className='guide-example';input.rows=2;input.placeholder=example;input.value=guideDrafts[key]||'';input.setAttribute('aria-label',label);
+          input.addEventListener('input',()=>{guideDrafts[key]=input.value;});
+          input.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();insertQuestion(key,label);}});
+          item.append(E('p','guide-help',help),input);const actions=E('div','guide-actions');actions.append(B('글에 넣기','guide-insert',()=>insertQuestion(key,label)));item.append(actions);
+          setTimeout(()=>input.focus(),0);
+        }
         group.append(item);
       }
       $('story-groups').append(group);
@@ -60,9 +70,11 @@
     const ideas=(state().nextIdeas||['']).slice(0,3);if(!ideas.length)ideas.push('');
     $('idea-fields').replaceChildren();
     ideas.forEach((value,index)=>{const row=E('div','idea-field'),input=E('input');input.className='idea-input';input.type='text';input.maxLength=240;input.value=value;input.placeholder=index?'예: 다른 주제로 확장해보세요':'어떤 방향으로 이어가면 좋을까요?';input.setAttribute('aria-label',`이어받을 아이디어 ${index+1}`);
-      input.addEventListener('input',()=>{const next=(state().nextIdeas||ideas).slice(0,3);next[index]=input.value;write({nextIdeas:next});});
+      input.addEventListener('input',()=>{const next=(state().nextIdeas||ideas).slice(0,3);next[index]=input.value;write({nextIdeas:next});$('suggest-ideas').hidden=next.filter(v=>String(v).trim()).length>=3;});
       const remove=B('×','idea-remove',()=>{const next=(state().nextIdeas||ideas).filter((_,i)=>i!==index);write({nextIdeas:next.length?next:['']});renderIdeas();});remove.setAttribute('aria-label',`아이디어 ${index+1} 삭제`);row.append(E('span','idea-number',String(index+1)),input,remove);$('idea-fields').append(row);
     });$('add-idea').disabled=ideas.length>=3;$('add-idea').hidden=ideas.length>=3;
+    // AI가 이미 3개를 채웠으면 추천 버튼은 숨겨요(지우면 다시 보여요).
+    const full=ideas.filter(v=>String(v).trim()).length>=3;$('suggest-ideas').hidden=full;if(full)$('idea-suggestions').replaceChildren();
   }
   function renderReferences(){
     const refs=(state().references||[]).filter(ref=>analysis.isPreviewURL(ref.dataUrl));$('reference-images').replaceChildren();

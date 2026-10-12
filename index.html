@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="./review.css">
   <link rel="stylesheet" href="./stepper.css">
   <link rel="stylesheet" href="./ambient.css">
-  <link rel="stylesheet" href="./note.css?v=1011p">
+  <link rel="stylesheet" href="./note.css?v=1012b">
   <link rel="stylesheet" href="./detail.css">
   <link rel="stylesheet" href="./research.css?v=1011p">
   <link rel="icon" href="./assets/favicon-32.png?v=2" type="image/png" sizes="32x32">
@@ -35,19 +35,20 @@
   <script src="./fresh-start.js?v=1011p"></script>
   <script src="./config.js"></script>
   <script src="./size-warning.js?v=1012a" defer></script>
-  <script src="./app.js?v=1011p" defer></script>
+  <script src="./progress-boost.js?v=1012b" defer></script>
+  <script src="./app.js?v=1012b" defer></script>
   <script src="./header.js?v=1011p" defer></script>
   <script src="./loading.js?v=1011p" defer></script>
   <script src="./file-analysis.js?v=1012a" defer></script>
   <script src="./ambient.js?v=1011p" defer></script>
   <script src="./stepper.js?v=1011p" defer></script>
-  <script src="./note-snap.js?v=1011p" defer></script>
+  <script src="./note-snap.js?v=1012b" defer></script>
   <script src="./review.js?v=1011p" defer></script>
-  <script src="./note.js?v=1011p" defer></script>
+  <script src="./note.js?v=1012b" defer></script>
   <script src="./download-bundle.js?v=1011p" defer></script>
   <script src="./vendor/modern-screenshot.js" defer></script>
   <script src="./research.js?v=1011p" defer></script>
-  <script src="./detail.js?v=1011p" defer></script>
+  <script src="./detail.js?v=1012b" defer></script>
 </head>
 <body>
   <div class="ambient-background" aria-hidden="true">
@@ -432,7 +433,7 @@
     <h2 id="finish-title">바톤을 상세페이지로 이어볼까요?</h2>
     <p class="review-dialog-intro">파일과 썸네일, 지금까지 작성한 정보를 하나의 바톤으로 묶어요. 이 버전에서는 이 브라우저에만 저장되며, 다른 사용자에게 공개되지는 않아요.</p>
     <div id="finish-summary"></div><p id="finish-error" class="inline-error" role="alert" hidden></p>
-    <div class="review-dialog-actions"><button id="finish-cancel" class="review-publish" type="button">계속 작성하기</button><button id="finish-confirm" class="glass-button" type="button">바톤 만들기</button><button id="finish-preview" class="glass-button" type="button" hidden>저장 없이 미리보기</button></div>
+    <div class="review-dialog-actions"><button id="finish-cancel" class="review-publish" type="button">계속 작성하기</button><button id="finish-confirm" class="glass-button finish-primary" type="button">바톤 만들기 <span aria-hidden="true">🏃</span></button><button id="finish-preview" class="glass-button" type="button" hidden>저장 없이 미리보기</button></div>
   </dialog>
   <dialog id="detail-message-dialog" class="review-dialog" aria-labelledby="detail-message-title">
     <div class="review-dialog-heading"><h2 id="detail-message-title"></h2></div><p id="detail-message-body"></p>
