@@ -32,7 +32,9 @@
   function clearStatus(){for(const id of ['note-draft-status','idea-status']){$(id).textContent='';$(id).classList.remove('is-error');}syncBubble();}
   // 가이드 체크는 사용자가 누르지 않아요. 노트에 그 항목([항목 이름] …)이 적혀 있으면 자동으로 체크돼요.
   const guideDrafts={};
-  const isDone=label=>{const t=$('baton-note').value;const i=t.indexOf(`[${label}]`);if(i<0)return false;const rest=t.slice(i+label.length+2).split(/\n\s*\n|\n\[/)[0];return rest.trim().length>0;};
+  // AI가 쓴 노트처럼 [항목] 표시가 없어도, 그 이야기가 들어 있으면 체크돼요(낱말로 판단).
+  const GUIDE_WORDS={who:/(위한|대상|사용자|타깃|타겟|누구|관객|독자|학생|사람들?에게)/,feel:/(느낌|분위기|인상|톤|감성|무드|따뜻|차분|강렬|산뜻)/,block:/(막혔|막힌|어려웠|어려운|고민|해결하지|정하지 못)/,stop:/(그만|멈췄|멈춘|중단|미완|시간이 부족|끝내지 못)/,learn:/(알게|배웠|배운|깨달|느꼈|발견)/,care:/(주의|조심|유의|아웃라인|깨질|다를 수)/,next:/(이어가|이어받|이어서|다음 사람|다음 작업|시작하면|부터 손)/};
+  const isDone=label=>{const t=$('baton-note').value;const i=t.indexOf(`[${label}]`);if(i>=0){const rest=t.slice(i+label.length+2).split(/\n\s*\n|\n\[/)[0];if(rest.trim())return true;}const key=(questions.find(q=>q[1]===label)||[])[0];return !!(key&&GUIDE_WORDS[key]&&GUIDE_WORDS[key].test(t.replace(/\[[^\]]*\]/g,'')));};
   function updateChecks(){
     for(const [key,label] of questions){const item=document.querySelector(`.guide-item[data-key="${key}"]`);if(!item)continue;const done=isDone(label);item.classList.toggle('is-done',done);const img=item.querySelector('.guide-check img');if(img)img.src='./assets/note-check-'+(done?'on':'off')+'.svg';item.querySelector('.guide-check')?.setAttribute('aria-label',`${label} — ${done?'노트에 적었어요':'아직 적지 않았어요'}`);}
   }
@@ -70,11 +72,11 @@
     const ideas=(state().nextIdeas||['']).slice(0,3);if(!ideas.length)ideas.push('');
     $('idea-fields').replaceChildren();
     ideas.forEach((value,index)=>{const row=E('div','idea-field'),input=E('input');input.className='idea-input';input.type='text';input.maxLength=240;input.value=value;input.placeholder=index?'예: 다른 주제로 확장해보세요':'어떤 방향으로 이어가면 좋을까요?';input.setAttribute('aria-label',`이어받을 아이디어 ${index+1}`);
-      input.addEventListener('input',()=>{const next=(state().nextIdeas||ideas).slice(0,3);next[index]=input.value;write({nextIdeas:next});$('suggest-ideas').hidden=next.filter(v=>String(v).trim()).length>=3;});
+      input.addEventListener('input',()=>{const next=(state().nextIdeas||ideas).slice(0,3);next[index]=input.value;write({nextIdeas:next});$('suggest-ideas').querySelector('span').textContent=next.filter(v=>String(v).trim()).length>=3?'다시 생각해보기':'AI 추천 방향 보기';});
       const remove=B('×','idea-remove',()=>{const next=(state().nextIdeas||ideas).filter((_,i)=>i!==index);write({nextIdeas:next.length?next:['']});renderIdeas();});remove.setAttribute('aria-label',`아이디어 ${index+1} 삭제`);row.append(E('span','idea-number',String(index+1)),input,remove);$('idea-fields').append(row);
-    });$('add-idea').disabled=ideas.length>=3;$('add-idea').hidden=ideas.length>=3;
+    });$('add-idea').disabled=ideas.length>=3;$('add-idea').hidden=false;$('add-idea').title=ideas.length>=3?'아이디어는 최대 3개예요':'';
     // AI가 이미 3개를 채웠으면 추천 버튼은 숨겨요(지우면 다시 보여요).
-    const full=ideas.filter(v=>String(v).trim()).length>=3;$('suggest-ideas').hidden=full;if(full)$('idea-suggestions').replaceChildren();
+    const full=ideas.filter(v=>String(v).trim()).length>=3;$('suggest-ideas').querySelector('span').textContent=full?'다시 생각해보기':'AI 추천 방향 보기';if(full)$('idea-suggestions').replaceChildren();
   }
   function renderReferences(){
     const refs=(state().references||[]).filter(ref=>analysis.isPreviewURL(ref.dataUrl));$('reference-images').replaceChildren();
@@ -125,7 +127,7 @@
   }
   $('baton-note').addEventListener('input',()=>{editRevision++;write({batonNote:$('baton-note').value});noteCount();});
   $('add-idea').addEventListener('click',()=>{const next=[...(state().nextIdeas||[''])];if(next.length>=3)return;next.push('');write({nextIdeas:next});renderIdeas();$('idea-fields').lastElementChild.querySelector('input').focus();});
-  $('generate-note').addEventListener('click',()=>void generate('draft'));$('suggest-ideas').addEventListener('click',()=>void generate('ideas'));
+  $('generate-note').addEventListener('click',()=>void generate('draft'));$('suggest-ideas').addEventListener('click',()=>{const filled=(state().nextIdeas||[]).filter(v=>String(v).trim()).length;if(filled>=3)void rethinkIdeas();else void generate('ideas');});
   $('note-ai-yes').addEventListener('click',()=>resolveConsent(true));$('note-ai-no').addEventListener('click',()=>resolveConsent(false));$('note-ai-consent').addEventListener('cancel',e=>{e.preventDefault();resolveConsent(false);});
   let replaceDraft=false;
   $('apply-note-draft').addEventListener('click',()=>{if(!pendingDraft)return;replaceDraft=true;$('note-clear-title').textContent='현재 노트를 새 AI 초안으로 바꿀까요?';$('note-clear-dialog').showModal();});
@@ -178,6 +180,22 @@
       $('idea-status').textContent='AI가 이어받을 방향을 미리 적어뒀어요. 자유롭게 고치거나 지울 수 있어요.';
       return true;
     }catch{return false;}
+  }
+  // 3개가 다 찬 상태에서 '다시 생각해보기': 새 방향 3개로 바꿔요.
+  async function rethinkIdeas(){
+    const btn=$('suggest-ideas'),label=btn.querySelector('span'),status=$('idea-status');if(btn.disabled)return;
+    btn.disabled=true;label.textContent='다시 생각하는 중…';status.textContent='지금 아이디어와 다른 방향으로 다시 생각하고 있어요…';
+    const apps=(window.MOROGARO_CONFIG?.appsScriptUrl||'').trim(),before=(state().nextIdeas||[]).filter(v=>String(v).trim());
+    try{
+      const base=contextForAI(),ctx={...base,summary:`${base.summary||''}\n[요청] 아래 아이디어와 겹치지 않는 새로운 방향 3개를 제안해 주세요: ${before.join(' / ')}`.trim()};
+      const response=apps?await fetch(apps,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'note',noteAction:'ideas',context:ctx})})
+        :await fetch('/api/baton-note',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({useAI:true,action:'ideas',context:ctx})});
+      const data=await response.json();
+      const ideas=Array.isArray(data.ideas)?data.ideas.filter(v=>typeof v==='string'&&v.trim()&&!before.includes(v.trim())).slice(0,3).map(v=>v.slice(0,240)):[];
+      if(!ideas.length)throw new Error();
+      write({nextIdeas:ideas});renderIdeas();status.textContent='새로운 방향으로 바꿔봤어요. 마음에 드는 것만 남겨도 돼요.';
+    }catch{status.textContent='다시 생각하지 못했어요. 잠시 뒤 다시 눌러 주세요.';}
+    finally{btn.disabled=false;renderIdeas();}
   }
   // AI가 노트·아이디어를 쓰는 동안엔 '상세페이지로' · '이대로 업로드'를 잠가요(최대 70초).
   function lockNext(on){
