@@ -1,4 +1,4 @@
-/* 업로드 진행률: 파일 50% → 분석 · 단계마다 조금씩 → 바톤 노트와 아이디어까지 채우면 100% */
+/* 업로드 진행률: 파일 50% → 분석 끝 70% → 단계마다 5%씩 → 바톤 노트와 아이디어까지 채우면 100% */
 (() => {
   'use strict';
   let step = 0, analyzed = false;
@@ -9,8 +9,8 @@
   };
   function update() {
     let p = 50;
-    if (analyzed) p = 60;
-    if (step >= 2) p = Math.max(p, 60 + (step - 2) * 6);   // 2단계 60 · 3단계 66 · 4단계 72 · 5단계 78 · 6단계 84
+    if (analyzed) p = 70;
+    if (step >= 2) p = Math.max(p, 70 + (step - 2) * 5);   // 분석 끝 70 · 3단계 75 · 4단계 80 · 5단계 85 · 6단계 90
     if (step >= 6 && noteFilled()) p = 100;
     if (window.MorogaroProgressBoost !== p) { window.MorogaroProgressBoost = p; document.dispatchEvent(new CustomEvent('morogaro:progress-refresh')); }
   }
