@@ -150,3 +150,7 @@ textarea.guide-example:focus { border-color: #81CEB0; background: #FFF; }
 #finish-dialog .finish-primary:hover { filter: saturate(1.15); transform: translateY(-1px); }
 #finish-dialog .finish-primary:focus-visible { outline: 2px solid #00C77A; outline-offset: 3px; }
 #review-publish[hidden] { display: none !important; }
+/* '다시 생각해보기'도 위의 '다시 쓰기'와 같은 크기로 */
+.ai-pill--large { gap:6px; padding:6px 12px 6px 10px; font-size:12px; line-height:17px; }
+/* 노트 단락 사이 숨 쉴 틈 */
+#baton-note { line-height: 1.75; }

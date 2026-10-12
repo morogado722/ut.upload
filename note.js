@@ -113,7 +113,9 @@
       if(apps&&data.ok===false)throw new Error(String(data.error||'AI 제안을 받지 못했어요.'));
       if(review.getContext()?.fingerprint!==fingerprint)return;
       if(data.mode!=='ai')throw new Error('AI 초안이 없어 내용을 변경하지 않았어요.');
-      const text=typeof data.note==='string'?data.note.slice(0,5000):'';
+      let text=typeof data.note==='string'?data.note.slice(0,5000):'';
+      // 예전 서버처럼 한 덩어리로 오면 두 문장씩 단락을 나눠요.
+      if(text&&!text.includes('\n')){const ss=text.match(/[^.!?。]+[.!?。]+[\s]*/g)||[text];const paras=[];for(let i=0;i<ss.length;i+=2)paras.push(ss.slice(i,i+2).join('').trim());text=paras.join('\n\n');}
       if(action==='draft'&&text){
         pendingDraft={text,origin:'ai',generatedAt:new Date().toISOString(),evidence:data.evidence||[]};write({noteDraft:pendingDraft});
         if(!$('baton-note').value.trim()&&editRevision===rev){write({batonNote:text});$('baton-note').value=text;noteCount();pendingDraft=null;status.textContent='기획서와 카테고리, 제작 정보를 읽고 초안을 써봤어요.';}

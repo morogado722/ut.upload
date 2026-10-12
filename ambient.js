@@ -22,7 +22,7 @@
     Flowering:{accent:'#FF4093',rgb:'255 64 147', ink:'#B0105A',deep:'#45061F',soft:'#FFE8F1'},
   });
   // 초록(#00F998)이 들어간 업로드 페이지 아이콘. 헤더 로고·아바타는 브랜드 요소라 그대로 둬요.
-  const TINTED=new Set(['link','note-spark','send','upload','review-bubble','project-design','project-planning-active','path-top','glow-top','glow-bottom','glow-top-loaded','glow-bottom-loaded']);
+  const TINTED=new Set(['link','note-spark','ai-spark','send','upload','review-bubble','project-design','project-planning-active','path-top','glow-top','glow-bottom','glow-top-loaded','glow-bottom-loaded']);
   const ICON=/^(.*?assets\/)(?:tint\/[A-Za-z]+\/)?([a-z-]+)\.svg$/;
   let tintStage=null;
   function tintImage(img){
