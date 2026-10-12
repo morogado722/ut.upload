@@ -4,7 +4,9 @@
 (() => {
   'use strict';
   const MAX_FILE = 50 * 1024 * 1024;
-  const MAX_TOTAL = 100 * 1024 * 1024;
+  const MAX_DESIGN_FILE = 150 * 1024 * 1024;   // AI · PSD는 원본이 커서 150MB까지
+  const MAX_TOTAL = 200 * 1024 * 1024;
+  const limitFor = ext => /^(ai|psd|psb)$/.test(ext) ? MAX_DESIGN_FILE : MAX_FILE;
   const TEXT_LIMIT = 128 * 1024;
   const STAGES = ['Seeding', 'Planting', 'Growing', 'Blooming'];
   const TYPES = {ai:'디자인 원본 파일',psd:'디자인 원본 파일',fig:'디자인 원본 파일',sketch:'디자인 원본 파일',blend:'3D 원본 파일',pdf:'문서',docx:'문서',pptx:'문서',txt:'메모',md:'메모',html:'코드',css:'코드',js:'코드',json:'데이터',svg:'벡터 이미지',png:'이미지',jpg:'이미지',jpeg:'이미지',webp:'이미지',gif:'이미지'};
@@ -172,6 +174,46 @@
     if(!start&&!end)return null;
     return {start,end:end&&start&&end<start?start:end,basis:created.length?'파일 속 생성일 · 최종 수정일':'파일 최종 수정일'};
   }
+  /* 일러스트레이터(.ai): 기본 저장 옵션('PDF 호환 파일 만들기')이면 안에 PDF가 들어 있어 PDF처럼 읽어요. */
+  async function inspectAi(file, source, result, signal) {
+    const head = new TextDecoder().decode(await file.slice(0, 1024).arrayBuffer());
+    if (!head.includes('%PDF')) { source.warnings.push('PDF 호환으로 저장되지 않은 AI 파일이라 내용을 읽지 못했어요. PDF나 PNG로 내보내 함께 올려주세요.'); return; }
+    await inspectPdf(file, source, result, signal);
+    source.coverage = 'AI 안의 PDF 호환 데이터(아트보드 미리보기 · 텍스트 · 글꼴)';
+  }
+  /* 포토샵(.psd): 합쳐진 최종 이미지를 꺼내 이미지처럼 읽고, 텍스트 레이어에서 글꼴을 찾아요. */
+  let psdLib;
+  function loadPsd() {
+    if (window.agPsd) return Promise.resolve(window.agPsd);
+    if (!psdLib) psdLib = new Promise((resolve, reject) => { const sc = document.createElement('script'); sc.src = new URL('./vendor/ag-psd/ag-psd.min.js', location.href).href; sc.onload = () => window.agPsd ? resolve(window.agPsd) : reject(new Error('PSD 도구를 불러오지 못했어요.')); sc.onerror = () => reject(new Error('PSD 도구를 불러오지 못했어요.')); document.head.append(sc); });
+    return psdLib;
+  }
+  async function inspectPsd(file, source, result, signal) {
+    const lib = await loadPsd(); abort(signal);
+    const psd = lib.readPsd(await file.arrayBuffer(), { skipLayerImageData: true, skipThumbnail: false, skipLinkedFilesData: true });
+    abort(signal);
+    let art = psd.canvas;
+    if (!art && psd.imageResources?.thumbnail) art = psd.imageResources.thumbnail;
+    if (!art) { source.warnings.push('PSD에 합쳐진 미리보기가 없어 내용을 읽지 못했어요(호환성 최대화 끔). PNG로 내보내 함께 올려주세요.'); return; }
+    const f = Math.min(1, 2400 / Math.max(art.width, art.height)), c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(art.width * f)); c.height = Math.max(1, Math.round(art.height * f));
+    const x = c.getContext('2d'); x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, c.width, c.height); x.drawImage(art, 0, 0, c.width, c.height);
+    const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+    await inspectImage(new File([blob], file.name.replace(/\.ps[db]$/i, '.png'), { type: 'image/png' }), source, result, signal);
+    result.dimensions = result.dimensions.filter(d => d.id !== source.id + '-size');
+    result.dimensions.push({ id: source.id + '-size', sourceId: source.id, label: source.name, width: psd.width, height: psd.height, unit: 'px', basis: 'PSD 캔버스 크기' });
+    const names = new Set();
+    (function walk(list) { for (const l of list || []) { const t = l.text; if (t) { [t.style, ...(t.styleRuns || []).map(r => r.style)].forEach(st => { const n = st?.font?.name; if (n) names.add(n); }); } walk(l.children); } })(psd.children);
+    for (const raw of names) {
+      const clean = String(raw).replace(/^[A-Z]{6}\+/, '').trim(); if (!clean) continue;
+      const [family, weight = ''] = clean.split(/[-,]/);
+      const name = /[가-힣]/.test(family) ? family : family.replace(/([a-z])([A-Z])/g, '$1 $2');
+      const old = result.fonts.find(fo => fo.name === name);
+      if (old) { if (weight && !old.weights.includes(weight)) old.weights = [old.weights, weight].filter(Boolean).join(' · '); continue; }
+      result.fonts.push({ name: name.slice(0, 100), weights: weight, downloadUrl: '', sourceId: source.id, basis: 'PSD 텍스트 레이어의 글꼴' });
+    }
+    source.coverage = `합쳐진 최종 이미지 · 캔버스 크기${names.size ? ' · 텍스트 레이어 글꼴' : ''}`;
+  }
   async function inspectBrowser(payload, {signal}={}) {
     const result=newResult(payload);
     if(payload.files.length>20 || payload.files.reduce((s,f)=>s+f.size,0)>MAX_TOTAL)result.warnings.push('분석 범위를 초과한 파일은 기본 정보만 유지합니다 (20개 / 합계 100MB).');
@@ -181,12 +223,14 @@
       const source={id:'f'+i,name:file.name,size:file.size,ext:extension,kind:TYPES[extension]||'기타 파일',kindBasis:'확장자 기준 · 직접 변경 가능',status:'metadata',coverage:'파일명·확장자·용량만 확인',warnings:[],text:''};result.sources.push(source);
       if(TOOLS[extension]){result.values.tools=unique([...result.values.tools,TOOLS[extension]]);addEvidence(result,'tools',source,extension+' 확장자에 연결된 툴 후보','extension','파일 형식');}
       // 50MB 넘는 파일은 건너뛰되, 합계에는 넣지 않아요(큰 파일 하나 때문에 다른 파일까지 못 읽지 않게).
-      if(file.size>MAX_FILE){source.warnings.push('50MB를 넘어 내용을 읽지 않았어요. 이름 · 형식만 보관했어요.');continue;}
+      if(file.size>limitFor(extension)){source.warnings.push(`${Math.round(limitFor(extension)/1048576)}MB를 넘어 내용을 읽지 않았어요. 이름 · 형식만 보관했어요.`);continue;}
       bytes+=file.size;
       if(i>=20||bytes>MAX_TOTAL){source.warnings.push('브라우저 분석 크기 제한을 초과했어요.');continue;}
       try {
         if(/^(png|jpe?g|webp|gif|bmp|avif)$/.test(extension))await inspectImage(file,source,result,signal);
         else if(extension==='pdf')await inspectPdf(file,source,result,signal);
+        else if(extension==='ai')await inspectAi(file,source,result,signal);
+        else if(extension==='psd'||extension==='psb')await inspectPsd(file,source,result,signal);
         else if(/^(txt|md|html?|css|json|svg|csv|js|ts|xml)$/.test(extension)||file.type.startsWith('text/')){
           const text=await file.slice(0,TEXT_LIMIT).text();abort(signal);source.text=text.slice(0,12000);source.status=file.size>TEXT_LIMIT?'partial':'read';source.coverage=file.size>TEXT_LIMIT?'본문 앞 128KB':'텍스트 본문';inspectText(text,source,result);
         } else {source.warnings.push('이 형식의 본문은 브라우저에서 해석하지 않았어요. 이미지·PDF·텍스트 파일은 내용까지 읽어요.');}
