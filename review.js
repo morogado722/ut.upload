@@ -112,11 +112,11 @@
         review.form.stage=name;persist('stage');renderStages();
       });choice.setAttribute('aria-label',name+(name==='Flowering'?' · 서비스 선정 단계':''));choice.setAttribute('aria-pressed',String(name===review.form.stage));
       if(name==='Flowering')choice.setAttribute('aria-disabled','true');
-      const art=E('span','stage-illustration');art.append(img(`./assets/stage-${name.toLowerCase()}.svg`));choice.append(art,E('span','stage-label',name));card.append(choice,E('span','stage-meter'));
-      if(index===current){const bubble=button('','stage-bubble',()=>openEvidence('stage'));bubble.append(img('./assets/review-bubble.svg'));const aiStage=review.result.values?.stage,differs=review.touched.includes('stage')&&aiStage&&aiStage!==name;const label=E('span','',differs?'AI 판단과 달라요 · ':'AI가 판단한 진척도 · ');label.append(E('strong','','근거 보기'));bubble.append(label);if(differs)bubble.classList.add('is-warning');card.append(bubble);}
+      const art=E('span','stage-illustration');art.append(img(`./assets/stage-${name.toLowerCase()}${index===current?'-on':''}.svg`));choice.append(art,E('span','stage-label',name));card.append(choice,E('span','stage-meter'));
+      if(index===current){const bubble=button('','stage-bubble',()=>openEvidence('stage'));const aiStage=review.result.values?.stage,differs=review.touched.includes('stage')&&aiStage&&aiStage!==name;const label=E('span','',differs?'AI 판단과 달라요 · ':'AI가 판단한 진척도 · ');label.append(E('strong','','근거 보기'));bubble.append(label);if(differs)bubble.classList.add('is-warning');card.append(bubble);}
       host.append(card);
     });
-    $('stage-provenance').textContent=review.touched.includes('stage')?(review.result.values?.stage&&review.result.values.stage!==review.form.stage?`AI는 올린 작업을 보고 ${review.result.values.stage}로 판단했어요. 지금 단계가 맞는지 한 번 더 확인해 주세요.`:'직접 선택한 단계예요.'):review.form.stage?review.result.values.stageReason:'현재 바톤의 단계를 선택해 주세요.';
+    $('stage-provenance').textContent=review.touched.includes('stage')?(review.result.values?.stage&&review.result.values.stage!==review.form.stage?`AI는 올린 작업을 보고 ${review.result.values.stage}로 판단했어요. 지금 단계가 맞는지 한 번 더 확인해 주세요.`:(review.result.values?.stageReason||'AI가 판단한 단계예요.')):review.form.stage?review.result.values.stageReason:'현재 바톤의 단계를 선택해 주세요.';
   }
   function renderThumbnails(){
     $('thumbnail-candidate-count').textContent=`파일에서 추출한 후보 ${review.result.thumbnails.length}개`;

@@ -269,6 +269,8 @@ html.ambient-reveal .ambient-layer { transition-duration: 2200ms; }
 .ratio-picker button { border: 0; background: transparent; border-radius: 8px; padding: 4px 10px; font: inherit; font-size: 12px; color: #626262; cursor: pointer; }
 .ratio-picker button[aria-pressed='true'] { background: #FFF; color: #262626; font-weight: 700; box-shadow: 0 1px 3px rgb(0 0 0 / 8%); }
 /* 진척도를 AI 판단과 다르게 고르면: 말풍선에 경고 · 아래 안내문은 진하게 */
-.stage-bubble.is-warning, .stage-bubble { min-width: 190px; }
-.stage-bubble.is-warning img { width: 100%; height: 100%; }
+.stage-bubble { width: max-content; min-width: 0; height: 34px; padding: 0 16px; place-items: center; border-radius: 14px; background: var(--accent); top: 4px; }
+.stage-bubble::after { content: ''; position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); border: 6px solid transparent; border-bottom: 0; border-top-color: var(--accent); }
 #stage-provenance { transition: color .2s; }
+/* 플랜팅 그림만 원본이 진해서, 선택 안 됐을 땐 다른 단계처럼 흐리게 */
+.stage-option:not(.is-selected) .stage-illustration img[src*="stage-planting"] { opacity: .35; }
