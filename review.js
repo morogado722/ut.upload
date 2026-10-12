@@ -113,10 +113,10 @@
       });choice.setAttribute('aria-label',name+(name==='Flowering'?' · 서비스 선정 단계':''));choice.setAttribute('aria-pressed',String(name===review.form.stage));
       if(name==='Flowering')choice.setAttribute('aria-disabled','true');
       const art=E('span','stage-illustration');art.append(img(`./assets/stage-${name.toLowerCase()}.svg`));choice.append(art,E('span','stage-label',name));card.append(choice,E('span','stage-meter'));
-      if(index===current){const bubble=button('','stage-bubble',()=>openEvidence('stage'));bubble.append(img('./assets/review-bubble.svg'));const label=E('span','',review.touched.includes('stage')?'내가 선택한 단계 · ':'왜 '+name+'? ');label.append(E('strong','','근거 보기'));bubble.append(label);card.append(bubble);}
+      if(index===current){const bubble=button('','stage-bubble',()=>openEvidence('stage'));bubble.append(img('./assets/review-bubble.svg'));const aiStage=review.result.values?.stage,differs=review.touched.includes('stage')&&aiStage&&aiStage!==name;const label=E('span','',differs?'⚠ AI 판단과 달라요 · ':review.touched.includes('stage')?'내가 선택한 단계 · ':'왜 '+name+'? ');label.append(E('strong','','근거 보기'));bubble.append(label);if(differs)bubble.classList.add('is-warning');card.append(bubble);}
       host.append(card);
     });
-    $('stage-provenance').textContent=review.touched.includes('stage')?'직접 선택한 단계예요.':review.form.stage?review.result.values.stageReason:'현재 바톤의 단계를 선택해 주세요.';
+    $('stage-provenance').textContent=review.touched.includes('stage')?(review.result.values?.stage&&review.result.values.stage!==review.form.stage?`AI는 올린 작업을 보고 ${review.result.values.stage}로 판단했어요. 지금 단계가 맞는지 한 번 더 확인해 주세요.`:'직접 선택한 단계예요.'):review.form.stage?review.result.values.stageReason:'현재 바톤의 단계를 선택해 주세요.';
   }
   function renderThumbnails(){
     $('thumbnail-candidate-count').textContent=`파일에서 추출한 후보 ${review.result.thumbnails.length}개`;
@@ -232,7 +232,6 @@
     if(review.result.summary)body.append(E('p','analysis-summary',review.result.summary));
     for(const note of review.result.fieldNotes||[])if(field==='all'||field===note.field)body.append(E('p','review-quiet',(FIELDS[note.field]||note.field)+': '+note.note));
     if(review.result.aiCoverage&&field==='all'){const c=review.result.aiCoverage;body.append(E('p','review-quiet',`AI에 전달: 소스 ${c.sourcesSent}개 · 텍스트 ${c.textCharacters.toLocaleString()}자 · 캡처 ${c.imagesSent}개. 전체 페이지/프레임을 모두 확인한 것은 아니에요.`));}
-    if(review.touched.length){body.append(E('p','review-quiet','직접 수정한 항목: '+review.touched.map(k=>FIELDS[k]||({fonts:'사용폰트',palette:'대표컬러',dimensions:'규격',thumbnails:'썸네일',sourceKinds:'파일 분류'}[k]||k)).join(', ')+'. 아래에는 최초 자동 입력의 근거를 표시해요.'));}
     if(field==='all'||field.startsWith('source:')){
       for(const source of review.result.sources.filter(s=>field==='all'||field==='source:'+s.id)){
         const block=E('div','evidence-block');block.append(E('h3','',source.name),E('p','',source.coverage||'기본 정보만 확인'));
