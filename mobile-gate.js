@@ -60,15 +60,48 @@
       <span class="mg-url" data-url>${url.replace(/^https?:\/\//, '')}</span>
       <small data-msg></small></div></div>`;
     document.body.append(gate);
-    // 로고 모션이 끝나면 아래로 스르륵 내려서 '카톡으로 보내기' 버튼이 보이게 해요. 그 전에 직접 스크롤하면 건드리지 않아요.
+    // 로고 모션이 끝나면 천천히 '슈웅' 내려가서, 제목~'주소 복사하기'까지가 화면 위아래 여백이 같게(가운데) 오도록 해요.
+    // 그 전에 직접 스크롤하면 건드리지 않아요.
     let touched = false;
-    ['touchstart', 'wheel'].forEach((ev) => gate.addEventListener(ev, () => { touched = true; }, { passive: true, once: true }));
+    const stop = () => { touched = true; };
+    ['touchstart', 'wheel'].forEach((ev) => gate.addEventListener(ev, stop, { passive: true }));
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    setTimeout(() => {
+    const ease = (t) => (t < .5 ? 16 * t ** 5 : 1 - (-2 * t + 2) ** 5 / 2); // 천천히 출발 → 슈웅 → 사뿐히 멈춤
+    function glide() {
       if (touched) return;
-      const top = gate.scrollHeight - gate.clientHeight;
-      if (top > 4) gate.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
-    }, reduce ? 300 : 2700);
+      const inner = gate.firstElementChild;
+      const off = (el) => el.getBoundingClientRect().top - gate.getBoundingClientRect().top + gate.scrollTop;
+      const seed = gate.querySelector('.mg-seed');
+      const first = off(gate.querySelector('.mg-top')) + Math.min(0, seed ? seed.offsetTop : 0); // 흔들림(회전)과 상관없이 캐릭터 머리 기준
+      const copy = gate.querySelector('.mg-secondary');
+      const last = off(copy) + copy.offsetHeight - 12; // 버튼 안쪽 여백 말고 글자 끝 기준
+      const vh = gate.clientHeight;
+      const h = last - first;
+      let target = h <= vh ? first - (vh - h) / 2 : last - vh + 20;
+      if (target <= 4) return; // 이미 다 보이면 그대로
+      // 가운데로 맞추려면 아래 공간이 모자랄 수 있어서, 필요한 만큼만 아래 여백을 늘려요.
+      const lack = target + vh - gate.scrollHeight;
+      if (lack > 0) inner.style.paddingBottom = `calc(env(safe-area-inset-bottom) + ${40 + Math.ceil(lack)}px)`;
+      target = Math.round(target);
+      if (reduce) { gate.scrollTop = target; return; }
+      const from = gate.scrollTop, dist = target - from, dur = 1600;
+      let t0 = 0;
+      const step = (now) => {
+        if (touched) return;
+        if (!t0) t0 = now;
+        const t = Math.min(1, (now - t0) / dur);
+        gate.scrollTop = from + dist * ease(t);
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+    setTimeout(glide, reduce ? 300 : 2600);
+    // 내려가면서 로고는 스르르 사라져요(위에 반쯤 잘려 보이지 않게). 다시 올리면 돌아와요.
+    gate.addEventListener('scroll', () => {
+      const lg = gate.querySelector('.mg-logo'); if (!lg) return;
+      const r = lg.getBoundingClientRect(), top = r.top - gate.getBoundingClientRect().top; // 화면 위 끝 기준 로고 위치
+      lg.style.opacity = String(Math.min(1, Math.max(0, (top + r.height * .6) / (r.height * .6 + 16))));
+    }, { passive: true });
     // 복사: 최신 방식이 막히면(인앱 브라우저) 예전 방식으로 한 번 더 시도해요.
     async function copyText(text) {
       try { await navigator.clipboard.writeText(text); return true; } catch { /* 아래로 */ }
