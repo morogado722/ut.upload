@@ -66,7 +66,7 @@
     const stop = () => { touched = true; };
     ['touchstart', 'wheel'].forEach((ev) => gate.addEventListener(ev, stop, { passive: true }));
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const ease = (t) => (t < .5 ? 16 * t ** 5 : 1 - (-2 * t + 2) ** 5 / 2); // 천천히 출발 → 슈웅 → 사뿐히 멈춤
+    const ease = (t) => (t < .5 ? 8 * t ** 4 : 1 - (-2 * t + 2) ** 4 / 2); // 천천히 출발 → 슈웅 → 사뿐히 멈춤
     function glide() {
       if (touched) return;
       const inner = gate.firstElementChild;
@@ -77,14 +77,14 @@
       const last = off(copy) + copy.offsetHeight - 12; // 버튼 안쪽 여백 말고 글자 끝 기준
       const vh = gate.clientHeight;
       const h = last - first;
-      let target = h <= vh ? first - (vh - h) / 2 : last - vh + 20;
+      let target = h <= vh ? first - (vh - h) * .68 : last - vh + 20; // 위 여백을 조금 더 넉넉히(아래쪽으로 앉게)
       if (target <= 4) return; // 이미 다 보이면 그대로
       // 가운데로 맞추려면 아래 공간이 모자랄 수 있어서, 필요한 만큼만 아래 여백을 늘려요.
       const lack = target + vh - gate.scrollHeight;
       if (lack > 0) inner.style.paddingBottom = `calc(env(safe-area-inset-bottom) + ${40 + Math.ceil(lack)}px)`;
       target = Math.round(target);
       if (reduce) { gate.scrollTop = target; return; }
-      const from = gate.scrollTop, dist = target - from, dur = 1600;
+      const from = gate.scrollTop, dist = target - from, dur = 2600;
       let t0 = 0;
       const step = (now) => {
         if (touched) return;
