@@ -60,6 +60,15 @@
       <span class="mg-url" data-url>${url.replace(/^https?:\/\//, '')}</span>
       <small data-msg></small></div></div>`;
     document.body.append(gate);
+    // 로고 모션이 끝나면 아래로 스르륵 내려서 '카톡으로 보내기' 버튼이 보이게 해요. 그 전에 직접 스크롤하면 건드리지 않아요.
+    let touched = false;
+    ['touchstart', 'wheel'].forEach((ev) => gate.addEventListener(ev, () => { touched = true; }, { passive: true, once: true }));
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(() => {
+      if (touched) return;
+      const top = gate.scrollHeight - gate.clientHeight;
+      if (top > 4) gate.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
+    }, reduce ? 300 : 2700);
     // 복사: 최신 방식이 막히면(인앱 브라우저) 예전 방식으로 한 번 더 시도해요.
     async function copyText(text) {
       try { await navigator.clipboard.writeText(text); return true; } catch { /* 아래로 */ }
